@@ -2,7 +2,7 @@
 # SETUP
 # ===================================================
 cmake_minimum_required(VERSION 3.21)
-project(flugel VERSION 0.1.0)
+project(flugel_engine VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(TARGET_NAME "libflugel")
 
