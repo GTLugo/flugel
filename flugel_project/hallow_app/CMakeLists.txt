@@ -2,7 +2,7 @@
 # SETUP
 # ===================================================
 cmake_minimum_required(VERSION 3.21)
-project(app VERSION 0.1.0)
+project(hallow_app VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(TARGET_NAME "${PROJECT_NAME}")
 
@@ -36,7 +36,11 @@ set_target_properties(${TARGET_NAME} PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}")
 
 # Preprocessor Defines
-target_compile_definitions(${TARGET_NAME} PUBLIC)
+target_compile_definitions(${TARGET_NAME} PRIVATE
+     $<$<CONFIG:debug>:DEBUG=1>
+     $<$<CONFIG:release>:RELEASE=1>
+     $<$<CONFIG:relwithdebinfo>:RELDEB=1>
+     $<$<CONFIG:minsizerel>:MINREL=1>)
 
 # ===================================================
 # DEPENDENCIES

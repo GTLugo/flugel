@@ -11,4 +11,7 @@ namespace Flugel {
       void run();
     private:
   };
+
+  // To be defined in project app
+  App* CreateApp();
 }
