@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
-#ifdef defined(_WIN32) && (defined(RELEASE) || defined(MINREL))
+#if defined(_WIN32) && (defined(RELEASE) || defined(MINREL))
 #include <windows.h>
 #endif
 
@@ -21,7 +21,7 @@ int run(int argc = 0, char* argv[] = nullptr) {
     if (app != nullptr) delete app;
     return EXIT_FAILURE;
   }
-  
+
   if (app != nullptr) delete app;
   return EXIT_SUCCESS;
 }

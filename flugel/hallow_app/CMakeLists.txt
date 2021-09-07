@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(hallow_app VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
-set(TARGET_NAME "${PROJECT_NAME}")
+set(TARGET_NAME "HALLOW")
 
 set(SRC_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(LIB_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/lib")
@@ -30,10 +30,13 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 # ===================================================
 # ADD EXECUTABLE TARGET
 # ===================================================
-add_executable(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+add_executable(${TARGET_NAME} 
+     ${HEADER_FILES} 
+     ${SOURCE_FILES})
 set_target_properties(${TARGET_NAME} PROPERTIES
      VERSION "${PROJECT_VERSION}"
-	RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}")
+	RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}"
+     WIN32_EXECUTABLE $<OR:$<CONFIG:release>,$<CONFIG:minsizerel>>)
 
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME} PRIVATE
