@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "log.hpp"
+
 namespace Flugel {
   App::App() {
 
@@ -14,6 +16,7 @@ namespace Flugel {
   void App::run() {
     while (true) {
       // std::cout << "Running!\n";
+      FGL_DEBUG("Running!");
     }
   }
 }

@@ -46,7 +46,7 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
      $<$<CONFIG:minsizerel>:MINREL=1>)
 
 # ===================================================
-# DEPENDENCIES
+# DEPENDENCIES - VCPKG SUGGESTED
 # ===================================================
 # We need a CMAKE_DIR with some code to find external dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")

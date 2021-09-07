@@ -48,25 +48,30 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
      FGL_BUILD_DLL=1)
 
 # ===================================================
-# DEPENDENCIES
+# DEPENDENCIES - VCPKG SUGGESTED
 # ===================================================
 # We need a CMAKE_DIR with some code to find external dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-# GLFW
+# glew
 find_package(glew CONFIG REQUIRED)
 set(GLEW_LIBRARY GLEW::GLEW)
 message(STATUS "glew included!")
 
-# GLFW
+# glfw3
 find_package(glfw3 CONFIG REQUIRED)
 set(GLFW_LIBRARY glfw)
 message(STATUS "glfw3 included!")
 
-# GLM
+# glm
 find_package(glm CONFIG REQUIRED)
 set(GLM_LIBRARY glm::glm)
 message(STATUS "glm included!")
+
+# spdlog
+find_package(spdlog CONFIG REQUIRED)
+set(SPDLOG_LIBRARY spdlog::spdlog) #spdlog::spdlog_header_only
+message(STATUS "spdlog included!")
 
 # ===================================================
 # INCLUDING & LINKING
@@ -84,6 +89,10 @@ target_include_directories(${TARGET_NAME} INTERFACE
 )
 
 # Put all libraries into a variable & link the libraries
-set(LIBS ${GLEW_LIBRARY} ${GLM_LIBRARY} ${GLFW_LIBRARY})
+set(LIBS 
+     ${GLEW_LIBRARY} 
+     ${GLM_LIBRARY} 
+     ${GLFW_LIBRARY}
+     ${SPDLOG_LIBRARY})
 #
 target_link_libraries(${TARGET_NAME} ${LIBS})

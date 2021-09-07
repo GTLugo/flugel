@@ -8,10 +8,19 @@
 #endif
 
 #include "app.hpp"
+#include "log.hpp"
 
 extern Flugel::App* Flugel::CreateApp();
 
 int run(int argc = 0, char* argv[] = nullptr) {
+  Flugel::Log::init();
+  FGL_ENGINE_INFO("Initialized engine logger!");
+  FGL_INFO("Initialized app logger!");
+
+  // FGL_ENGINE_DEBUG("debug log test!");
+  // FGL_ENGINE_CRIT("critical error log test!");
+  // FGL_WARN("warn log test!");
+  // FGL_ERROR("error log test!");
   Flugel::App* app = nullptr;
   try {
     app = Flugel::CreateApp();

@@ -4,12 +4,12 @@
 
 namespace Flugel {
   class FLUGEL_API App {
-    public:
-      App();
-      virtual ~App();
+  public:
+    App();
+    virtual ~App();
 
-      void run();
-    private:
+    void run();
+  private:
   };
 
   // To be defined in project app
