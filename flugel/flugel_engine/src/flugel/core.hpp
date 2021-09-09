@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef FGL_BUILD_DLL
+#ifdef FLUGEL_BUILD_DLL
   #ifdef _WIN32 // Windows
     #define FLUGEL_API __declspec(dllexport)
   #elif __GNUC__ >= 4 // GCC
@@ -15,3 +15,5 @@
     #define FLUGEL_API
   #endif
 #endif
+
+#define BIT(x) (1 << x)

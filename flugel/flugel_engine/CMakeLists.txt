@@ -45,7 +45,7 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
      $<$<CONFIG:release>:RELEASE=1>
      $<$<CONFIG:relwithdebinfo>:RELDEB=1>
      $<$<CONFIG:minsizerel>:MINREL=1>
-     FGL_BUILD_DLL=1)
+     FLUGEL_BUILD_DLL=1)
 
 # ===================================================
 # DEPENDENCIES - VCPKG SUGGESTED

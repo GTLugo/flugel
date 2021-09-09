@@ -1,12 +1,12 @@
 #include "flugel.hpp"
 
-class Hallow : public Flugel::App {
+class HallowApp : public Flugel::App {
   public:
-    Hallow() {}
-    ~Hallow() {}
+    HallowApp() {}
+    ~HallowApp() {}
   private:
 };
 
 Flugel::App* Flugel::CreateApp() {
-  return new Hallow{};
+  return new HallowApp{};
 }

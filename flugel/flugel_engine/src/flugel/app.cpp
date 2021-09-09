@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "log.hpp"
+#include "logging/log.hpp"
 
 namespace Flugel {
   App::App() {

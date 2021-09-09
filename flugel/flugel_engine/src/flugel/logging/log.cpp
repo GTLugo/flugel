@@ -38,5 +38,8 @@ namespace Flugel {
     
     appLogger_ = spdlog::stdout_color_mt("APP");
     appLogger_->set_level(spdlog::level::trace);
+
+    FLUGEL_INFO_ENGINE("Initialized engine logger!");
+    FLUGEL_INFO("Initialized app logger!");
   }
 }
