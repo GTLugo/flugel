@@ -1,8 +1,8 @@
 #include "app.hpp"
 
-#include <iostream>
-
 #include "logging/log.hpp"
+
+#include <iostream>
 
 namespace Flugel {
   App::App() {
@@ -14,9 +14,12 @@ namespace Flugel {
   }
 
   void App::run() {
-    while (true) {
+    int x = 0;
+    while (x < 1000) {
       // std::cout << "Running!\n";
-      FGL_DEBUG("Running!");
+      FLUGEL_DEBUG("Running...");
+      ++x;
     }
+    FLUGEL_DEBUG("Finished running!");
   }
 }

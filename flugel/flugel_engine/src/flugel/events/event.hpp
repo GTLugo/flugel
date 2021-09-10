@@ -2,7 +2,7 @@
 
 // REIMPLEMENTATION OF EVENT SYSTEM BY TheCherno
 
-#include "flugel/core.hpp"
+#include "../core.hpp"
 
 #include <string>
 #include <functional>
@@ -44,5 +44,9 @@ namespace Flugel {
     
   protected:
     bool handled_ = false;
+  };
+
+  class EventDispatcher {
+    
   };
 }

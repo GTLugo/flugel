@@ -3,7 +3,7 @@
 // #include <cstdlib>
 // #include <iostream>
 // #include <stdexcept>
-#if defined(_WIN32) && (defined(RELEASE) || defined(MINREL))
+#if defined(_WIN32) && defined(NDEBUG)
 #include <windows.h>
 #endif
 
@@ -23,7 +23,7 @@ int run(int argc = 0, char* argv[] = nullptr) {
 }
 
 #ifdef _WIN32
-  #if defined(RELEASE) || defined(MINREL)
+  #ifdef NDEBUG
     int WINAPI WinMain(
         HINSTANCE h_instance, 
         HINSTANCE h_prev_instance, 
@@ -31,7 +31,7 @@ int run(int argc = 0, char* argv[] = nullptr) {
         int n_cmd_show) {
       return run();
     }
-  #elif defined(DEBUG) || defined(RELDEB)
+  #else
     int main(int argc, char* argv[]) {
       return run(argc, argv);
     }

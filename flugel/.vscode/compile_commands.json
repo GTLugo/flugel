@@ -1,0 +1,16 @@
+[
+{
+  "directory": "C:\\Home\\Projects\\Personal\\flugel\\flugel",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\\VC\\Tools\\MSVC\\14.30.30423\\bin\\HostX64\\x64\\cl.exe", "/c", "/EHsc", "/nologo", "/std:c++20", "/DDEBUG", "/DFLUGEL_BUILD_DLL", "/DGLEW_NO_GLU", "/DGLEW_STATIC", "/DGLFW_INCLUDE_NONE", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\g\\glew\\2.2.0\\618c7b92c819453eaa1a00a41d1d32e3\\include", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\g\\glfw\\3.3.4\\b28486932c4340c9b8517e00cf266130\\include", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\g\\glm\\0.9.9+8\\8335bab7c0314ab9921440de58961aac\\include", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\s\\spdlog\\v1.9.1\\f27636445f3b44e0b5e43a81ca4bac1e\\include", "/Fobuild\\.objs\\flugel_engine\\windows\\x64\\debug\\flugel_engine\\src\\flugel\\app.cpp.obj", "flugel_engine\\src\\flugel\\app.cpp"],
+  "file": "flugel_engine\\src\\flugel\\app.cpp"
+},
+{
+  "directory": "C:\\Home\\Projects\\Personal\\flugel\\flugel",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\\VC\\Tools\\MSVC\\14.30.30423\\bin\\HostX64\\x64\\cl.exe", "/c", "/EHsc", "/nologo", "/std:c++20", "/DDEBUG", "/DFLUGEL_BUILD_DLL", "/DGLEW_NO_GLU", "/DGLEW_STATIC", "/DGLFW_INCLUDE_NONE", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\g\\glew\\2.2.0\\618c7b92c819453eaa1a00a41d1d32e3\\include", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\g\\glfw\\3.3.4\\b28486932c4340c9b8517e00cf266130\\include", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\g\\glm\\0.9.9+8\\8335bab7c0314ab9921440de58961aac\\include", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\s\\spdlog\\v1.9.1\\f27636445f3b44e0b5e43a81ca4bac1e\\include", "/Fobuild\\.objs\\flugel_engine\\windows\\x64\\debug\\flugel_engine\\src\\flugel\\logging\\log.cpp.obj", "flugel_engine\\src\\flugel\\logging\\log.cpp"],
+  "file": "flugel_engine\\src\\flugel\\logging\\log.cpp"
+},
+{
+  "directory": "C:\\Home\\Projects\\Personal\\flugel\\flugel",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\\VC\\Tools\\MSVC\\14.30.30423\\bin\\HostX64\\x64\\cl.exe", "/c", "/EHsc", "/nologo", "/std:c++20", "/Ialpha_app\\src", "/Iflugel_engine\\src", "/DDEBUG", "/DGLEW_NO_GLU", "/DGLEW_STATIC", "/DGLFW_INCLUDE_NONE", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\g\\glew\\2.2.0\\618c7b92c819453eaa1a00a41d1d32e3\\include", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\g\\glfw\\3.3.4\\b28486932c4340c9b8517e00cf266130\\include", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\g\\glm\\0.9.9+8\\8335bab7c0314ab9921440de58961aac\\include", "/IC:\\Users\\galex\\AppData\\Local\\.xmake\\packages\\s\\spdlog\\v1.9.1\\f27636445f3b44e0b5e43a81ca4bac1e\\include", "/Fobuild\\.objs\\alpha_app\\windows\\x64\\debug\\alpha_app\\src\\alpha.cpp.obj", "alpha_app\\src\\alpha.cpp"],
+  "file": "alpha_app\\src\\alpha.cpp"
+}]

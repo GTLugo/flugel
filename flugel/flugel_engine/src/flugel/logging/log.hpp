@@ -1,9 +1,9 @@
 #pragma once
 
-#include <memory>
-
 #include "../core.hpp"
 #include "spdlog/spdlog.h"
+
+#include <memory>
 
 namespace Flugel {
   class FLUGEL_API Log {
@@ -16,7 +16,6 @@ namespace Flugel {
   private:
     static std::shared_ptr<spdlog::logger> engineLogger_;
     static std::shared_ptr<spdlog::logger> appLogger_;
-
   };
 }
 
@@ -36,7 +35,7 @@ namespace Flugel {
 #define FLUGEL_CRIT(...)  ::Flugel::Log::getAppLogger()->critical(__VA_ARGS__)
 
 // Disable logging macros on release builds
-#if defined(RELEASE) || defined(MINREL)
+#if defined(NDEBUG)
 // Engine Log macros
 #define FLUGEL_TRACE_ENGINE
 #define FLUGEL_DEBUG_ENGINE
