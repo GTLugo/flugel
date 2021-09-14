@@ -14,7 +14,7 @@ extern Flugel::App* Flugel::CreateApp();
 
 int run(int argc = 0, char* argv[] = nullptr) {
   Flugel::Log::init();
-
+  
   Flugel::App* app = Flugel::CreateApp();
   app->run();
   delete app;
