@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 3.21)
+set(CMAKE_CXX_STANDARD 20)
+
+set(BIN_DIR  "${CMAKE_SOURCE_DIR}/build/${BUILD_TYPE_DIR}/${PLATFORM_DIR}")
+
+function(add_files src)
+  set(SRC_DIR  "${src}/src")
+  set(LIB_DIR  "${src}/lib")
+  set(INCL_DIR "${src}/include")
+  set(RES_DIR  "${src}/res")
+endfunction()
+
+
+set(TARGET_NAME "libflugel")
+add_files

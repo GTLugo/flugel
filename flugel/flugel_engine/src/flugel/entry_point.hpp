@@ -22,20 +22,14 @@ int run(int argc = 0, char* argv[] = nullptr) {
   return EXIT_SUCCESS;
 }
 
-#ifdef _WIN32
-  #ifdef NDEBUG
-    int WINAPI WinMain(
-        HINSTANCE h_instance, 
-        HINSTANCE h_prev_instance, 
-        LPSTR lp_cmd_line, 
-        int n_cmd_show) {
-      return run();
-    }
-  #else
-    int main(int argc, char* argv[]) {
-      return run(argc, argv);
-    }
-  #endif
+#if defined(_WIN32) && defined(NDEBUG)
+  int WINAPI WinMain(
+      HINSTANCE h_instance, 
+      HINSTANCE h_prev_instance, 
+      LPSTR lp_cmd_line, 
+      int n_cmd_show) {
+    return run();
+  }
 #else
   int main(int argc, char* argv[]) {
     return run(argc, argv);

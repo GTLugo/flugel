@@ -58,6 +58,11 @@ find_package(glew CONFIG REQUIRED)
 set(GLEW_LIBRARY GLEW::GLEW)
 message(STATUS "glew included!")
 
+# glad
+find_package(glad CONFIG REQUIRED)
+set(GLAD_LIBRARY glad::glad)
+message(STATUS "glew included!")
+
 # glfw3
 find_package(glfw3 CONFIG REQUIRED)
 set(GLFW_LIBRARY glfw)
@@ -68,9 +73,14 @@ find_package(glm CONFIG REQUIRED)
 set(GLM_LIBRARY glm::glm)
 message(STATUS "glm included!")
 
+# fmt
+find_package(fmt CONFIG REQUIRED)
+set(FMT_LIBRARY fmt::fmt-header-only)
+message(STATUS "fmt included!")
+
 # spdlog
 find_package(spdlog CONFIG REQUIRED)
-set(SPDLOG_LIBRARY spdlog::spdlog) #spdlog::spdlog_header_only
+set(SPDLOG_LIBRARY spdlog::spdlog_header_only) #spdlog::spdlog OR spdlog::spdlog_header_only
 message(STATUS "spdlog included!")
 
 # ===================================================
@@ -90,9 +100,10 @@ target_include_directories(${TARGET_NAME} INTERFACE
 
 # Put all libraries into a variable & link the libraries
 set(LIBS 
-     ${GLEW_LIBRARY} 
-     ${GLM_LIBRARY} 
+     ${GLEW_LIBRARY}
+     ${GLAD_LIBRARY}
      ${GLFW_LIBRARY}
+     ${GLM_LIBRARY}
+     ${FMT_LIBRARY}
      ${SPDLOG_LIBRARY})
-#
 target_link_libraries(${TARGET_NAME} ${LIBS})

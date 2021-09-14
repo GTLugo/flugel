@@ -20,22 +20,22 @@ namespace Flugel {
 }
 
 // Engine Log macros
-#define FLUGEL_TRACE_ENGINE(...) ::Flugel::Log::getEngineLogger()->trace(__VA_ARGS__)
-#define FLUGEL_DEBUG_ENGINE(...) ::Flugel::Log::getEngineLogger()->debug(__VA_ARGS__)
-#define FLUGEL_INFO_ENGINE(...)  ::Flugel::Log::getEngineLogger()->info(__VA_ARGS__)
-#define FLUGEL_WARN_ENGINE(...)  ::Flugel::Log::getEngineLogger()->warn(__VA_ARGS__)
-#define FLUGEL_ERROR_ENGINE(...) ::Flugel::Log::getEngineLogger()->error(__VA_ARGS__)
-#define FLUGEL_CRIT_ENGINE(...)  ::Flugel::Log::getEngineLogger()->critical(__VA_ARGS__)
+#define FLUGEL_TRACE_ENGINE(...) Flugel::Log::getEngineLogger()->trace(__VA_ARGS__)
+#define FLUGEL_DEBUG_ENGINE(...) Flugel::Log::getEngineLogger()->debug(__VA_ARGS__)
+#define FLUGEL_INFO_ENGINE(...)  Flugel::Log::getEngineLogger()->info(__VA_ARGS__)
+#define FLUGEL_WARN_ENGINE(...)  Flugel::Log::getEngineLogger()->warn(__VA_ARGS__)
+#define FLUGEL_ERROR_ENGINE(...) Flugel::Log::getEngineLogger()->error(__VA_ARGS__)
+#define FLUGEL_CRIT_ENGINE(...)  Flugel::Log::getEngineLogger()->critical(__VA_ARGS__)
 // App Log macros
-#define FLUGEL_TRACE(...) ::Flugel::Log::getAppLogger()->trace(__VA_ARGS__)
-#define FLUGEL_DEBUG(...) ::Flugel::Log::getAppLogger()->debug(__VA_ARGS__)
-#define FLUGEL_INFO(...)  ::Flugel::Log::getAppLogger()->info(__VA_ARGS__)
-#define FLUGEL_WARN(...)  ::Flugel::Log::getAppLogger()->warn(__VA_ARGS__)
-#define FLUGEL_ERROR(...) ::Flugel::Log::getAppLogger()->error(__VA_ARGS__)
-#define FLUGEL_CRIT(...)  ::Flugel::Log::getAppLogger()->critical(__VA_ARGS__)
+#define FLUGEL_TRACE(...) Flugel::Log::getAppLogger()->trace(__VA_ARGS__)
+#define FLUGEL_DEBUG(...) Flugel::Log::getAppLogger()->debug(__VA_ARGS__)
+#define FLUGEL_INFO(...)  Flugel::Log::getAppLogger()->info(__VA_ARGS__)
+#define FLUGEL_WARN(...)  Flugel::Log::getAppLogger()->warn(__VA_ARGS__)
+#define FLUGEL_ERROR(...) Flugel::Log::getAppLogger()->error(__VA_ARGS__)
+#define FLUGEL_CRIT(...)  Flugel::Log::getAppLogger()->critical(__VA_ARGS__)
 
 // Disable logging macros on release builds
-#if defined(NDEBUG)
+#if defined(RELEASE) || defined(MINREL)
 // Engine Log macros
 #define FLUGEL_TRACE_ENGINE
 #define FLUGEL_DEBUG_ENGINE

@@ -33,4 +33,18 @@ namespace Flugel {
   private:
     int repeatCount_;
   };
+
+  class FLUGEL_API KeyReleasedEvent : public KeyboardEvent {
+  public:
+    KeyReleasedEvent(int keyCode, int repeatCount)
+      : KeyboardEvent{keyCode} {}
+    
+    std::string toString() const override {
+      std::stringstream ss;
+      ss << "EVENT <KeyPressed> (" << keyCode_ << ")";
+      return ss.str();
+    }
+
+    EVENT_CLASS_TYPE(KeyReleased)
+  };
 }

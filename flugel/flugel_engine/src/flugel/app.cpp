@@ -17,9 +17,14 @@ namespace Flugel {
     int x = 0;
     while (x < 1000) {
       // std::cout << "Running!\n";
-      FLUGEL_DEBUG("Running...");
-      ++x;
+      FLUGEL_DEBUG_ENGINE("Running...");
+      // ++x;
     }
-    FLUGEL_DEBUG("Finished running!");
+    FLUGEL_DEBUG_ENGINE("Finished running!");
+
+    // #ifndef NDEBUG
+    // FLUGEL_INFO_ENGINE("Press ENTER to continue...");
+    // std::cin.get();
+    // #endif
   }
 }
