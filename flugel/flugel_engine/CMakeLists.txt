@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.21)
 project(flugel_engine VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(TARGET_NAME "libflugel")
+message(STATUS "Configuring: ${PROJECT_NAME}")
 
 # BIN_DIR uses highest level cmake source dir
 set(BIN_DIR  "${CMAKE_SOURCE_DIR}/build/${CMAKE_SYSTEM_NAME}")
@@ -40,7 +41,7 @@ set_target_properties(${TARGET_NAME} PROPERTIES
 	OUTPUT_NAME "${TARGET_NAME}"
      CXX_VISIBILITY_PRESET hidden
 	RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}")
-message(STATUS "Engine bin Dir: ${BIN_DIR}")
+message(DEBUG "Engine bin Dir: ${BIN_DIR}")
 
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME} PRIVATE 
@@ -57,34 +58,40 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # glew
+message(CHECK_START "Finding glew...")
 find_package(glew CONFIG REQUIRED)
 set(GLEW_LIBRARY GLEW::GLEW)
-message(STATUS "glew included!")
+message(CHECK_PASS "glew included!")
 
 # glad
+message(CHECK_START "Finding glad...")
 find_package(glad CONFIG REQUIRED)
 set(GLAD_LIBRARY glad::glad)
-message(STATUS "glew included!")
+message(CHECK_PASS "glad included!")
 
 # glfw3
+message(CHECK_START "Finding glfw3...")
 find_package(glfw3 CONFIG REQUIRED)
 set(GLFW_LIBRARY glfw)
-message(STATUS "glfw3 included!")
+message(CHECK_PASS "glfw3 included!")
 
 # glm
+message(CHECK_START "Finding glm...")
 find_package(glm CONFIG REQUIRED)
 set(GLM_LIBRARY glm::glm)
-message(STATUS "glm included!")
+message(CHECK_PASS "glm included!")
 
 # fmt
+message(CHECK_START "Finding fmt...")
 find_package(fmt CONFIG REQUIRED)
 set(FMT_LIBRARY fmt::fmt-header-only)
-message(STATUS "fmt included!")
+message(CHECK_PASS "fmt included!")
 
 # spdlog
+message(CHECK_START "Finding spdlog...")
 find_package(spdlog CONFIG REQUIRED)
 set(SPDLOG_LIBRARY spdlog::spdlog_header_only) #spdlog::spdlog OR spdlog::spdlog_header_only
-message(STATUS "spdlog included!")
+message(CHECK_PASS "spdlog included!")
 
 # ===================================================
 # INCLUDING & LINKING
