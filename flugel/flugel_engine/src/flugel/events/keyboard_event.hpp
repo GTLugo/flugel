@@ -25,7 +25,7 @@ namespace Flugel {
     inline int getRepeatCount() const { return repeatCount_; }
     std::string toString() const override {
       std::stringstream ss;
-      ss << "EVENT <KeyPressed> (" << keyCode_ << ", " << repeatCount_ << "repeats)";
+      ss << "EVENT <" << getName() << "> (" << keyCode_ << ", " << repeatCount_ << "repeats)";
       return ss.str();
     }
 

@@ -18,12 +18,10 @@ namespace Flugel {
 
   enum EventCategory {
     None = 0,
-    EventCategoryApp         = BIT(0),
-    EventCategoryInput       = BIT(1),
-    EventCategoryKeyboard    = BIT(2),
-    EventCategoryMouse       = BIT(3),
-    EventCategoryMouseMoved  = BIT(4),
-    EventCategoryMouseButton = BIT(5),
+    EventCategoryApp           = BIT(0),
+    EventCategoryInput         = BIT(1),
+    EventCategoryKeyboard      = BIT(2),
+    EventCategoryMouse         = BIT(3),
   };
 
   #define EVENT_CLASS_TYPE(type) static EventType getStaticType() { return EventType::##type; }\
