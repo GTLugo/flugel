@@ -12,7 +12,7 @@
 
 extern Flugel::App* Flugel::CreateApp();
 
-int run(int argc = 0, char* argv[] = nullptr) {
+int main(int argc = 0, char* argv[] = nullptr) {
   Flugel::Log::init();
   
   Flugel::App* app = Flugel::CreateApp();
@@ -28,10 +28,6 @@ int run(int argc = 0, char* argv[] = nullptr) {
       HINSTANCE h_prev_instance, 
       LPSTR lp_cmd_line, 
       int n_cmd_show) {
-    return run();
-  }
-#else
-  int main(int argc, char* argv[]) {
-    return run(argc, argv);
+    return main();
   }
 #endif

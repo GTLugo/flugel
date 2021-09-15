@@ -6,6 +6,8 @@ project(alpha_app VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(TARGET_NAME "ALPHA")
 
+# BIN_DIR uses highest level cmake source dir
+set(BIN_DIR  "${CMAKE_SOURCE_DIR}/build/${CMAKE_SYSTEM_NAME}")
 set(SRC_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(LIB_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 set(INCL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -37,6 +39,7 @@ set_target_properties(${TARGET_NAME} PROPERTIES
      VERSION "${PROJECT_VERSION}"
 	RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}"
      WIN32_EXECUTABLE $<OR:$<CONFIG:release>,$<CONFIG:minsizerel>>)
+message(STATUS "App bin Dir: ${BIN_DIR}")
 
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME} PRIVATE
