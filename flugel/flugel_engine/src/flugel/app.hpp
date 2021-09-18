@@ -1,16 +1,28 @@
 #pragma once
 
+#include "window.hpp"
+#include "time/time.hpp"
+
 namespace Flugel {
   class FLUGEL_API App {
-    using Clock = std::chrono::steady_clock;
-    using Second = std::chrono::duration<double>;
-    using TimePoint = std::chrono::time_point<Clock>;
   public:
-    App();
+    App(const WindowProps& props = {});
     virtual ~App();
 
+    Time getTime() const { return time_; }
+
     void run();
+
+    void onStart();
+    void onTick();
+    void onUpdate();
+    void onRender();
   private:
+    std::unique_ptr<Window> window_;
+    bool shouldClose_{false};
+    
+    Time time_{};
+    Stopwatch fps_stopwatch_{};
   };
 
   // To be defined in project app

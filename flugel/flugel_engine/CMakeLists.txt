@@ -27,6 +27,46 @@ file(GLOB_RECURSE SHADER_FILES CONFIGURE_DEPENDS
      RELATIVE ${CMAKE_SOURCE_DIR} 
      ${RES_DIR}/*.glsl)
 
+# set(SOURCE_FILES
+# #flugel
+#      ${SRC_DIR}/flugel/app.cpp
+#      #flugel/events
+#      #flugel/logging
+#      ${SRC_DIR}/flugel/logging/log.cpp
+#      #flugel/time
+#      ${SRC_DIR}/flugel/time/time.cpp
+# #platform
+#      #platform/windows
+#      ${SRC_DIR}/platform/windows/windows_window.cpp
+# )
+
+# set(HEADER_FILES
+# ${SRC_DIR}/flugel.hpp
+# #${SRC_DIR}/flugel_pch.hpp #idk if necessary
+# #flugel
+#      ${SRC_DIR}/flugel/app.hpp
+#      ${SRC_DIR}/flugel/core.hpp
+#      ${SRC_DIR}/flugel/entry_point.hpp
+#      ${SRC_DIR}/flugel/window.hpp
+#      #flugel/events
+#      ${SRC_DIR}/flugel/events/app_event.hpp
+#      ${SRC_DIR}/flugel/events/event.hpp
+#      ${SRC_DIR}/flugel/events/keyboard_event.hpp
+#      ${SRC_DIR}/flugel/events/mouse_event.hpp
+#      #flugel/logging
+#      ${SRC_DIR}/flugel/logging/log.hpp
+#      #flugel/time
+#      ${SRC_DIR}/flugel/time/stopwatch.hpp
+#      ${SRC_DIR}/flugel/time/time.hpp
+# #platform
+#      #platform/windows
+#      ${SRC_DIR}/platform/windows/windows_window.hpp
+# )
+
+set(SHADER_FILES
+     ${RES_DIR}/shaders/simple_shader.glsl
+)
+
 # ===================================================
 # CONFIGURE ASSESTS HELPER FILE
 # ===================================================
@@ -46,9 +86,9 @@ message(DEBUG "Engine bin Dir: ${BIN_DIR}")
 
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME} PRIVATE 
-     $<$<CONFIG:debug>:DEBUG=1>
+     $<$<CONFIG:debug>:DEBUG=1 FLUGEL_ENABLE_ASSERTS=1>
      $<$<CONFIG:release>:RELEASE=1>
-     $<$<CONFIG:relwithdebinfo>:RELDEB=1>
+     $<$<CONFIG:relwithdebinfo>:RELDEB=1 FLUGEL_ENABLE_ASSERTS=1>
      $<$<CONFIG:minsizerel>:MINREL=1>
      FLUGEL_BUILD_DLL=1)
 
@@ -97,15 +137,12 @@ message(CHECK_PASS "spdlog included!")
 # ===================================================
 # INCLUDING & LINKING
 # ===================================================
-# Define the include DIRs
-include_directories("${SRC_DIR}" "${INCL_DIR}")
-
-# Define the link libraries
-link_directories(${LIB_DIR})
-
 # Export the library's public header path to dependent targets
 set(PUBLIC_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src")
+# Define the include DIRs
 target_include_directories(${TARGET_NAME}
+     PUBLIC
+          "${SRC_DIR}" "${INCL_DIR}"
      INTERFACE
           "${PUBLIC_HEADER_FILES}"
 )
@@ -115,6 +152,9 @@ target_precompile_headers(${TARGET_NAME}
      PUBLIC
           "${SRC_DIR}/flugel_pch.hpp"
 )
+
+# Define the link libraries
+link_directories(${LIB_DIR})
 
 # Put all libraries into a variable & link the libraries
 set(LIBS 

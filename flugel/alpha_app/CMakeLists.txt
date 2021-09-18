@@ -24,6 +24,14 @@ file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS
      ${SRC_DIR}/*.h
      ${SRC_DIR}/*.hpp)
 
+# set(SOURCE_FILES
+# ${SRC_DIR}/alpha.cpp
+# )
+
+# set(HEADER_FILES
+
+# )
+
 # ===================================================
 # CONFIGURE ASSESTS HELPER FILE
 # ===================================================
@@ -44,9 +52,9 @@ message(DEBUG "App bin Dir: ${BIN_DIR}")
 
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME} PRIVATE
-     $<$<CONFIG:debug>:DEBUG=1>
+     $<$<CONFIG:debug>:DEBUG=1 FLUGEL_ENABLE_ASSERTS=1>
      $<$<CONFIG:release>:RELEASE=1>
-     $<$<CONFIG:relwithdebinfo>:RELDEB=1>
+     $<$<CONFIG:relwithdebinfo>:RELDEB=1 FLUGEL_ENABLE_ASSERTS=1>
      $<$<CONFIG:minsizerel>:MINREL=1>)
 
 # ===================================================
@@ -55,9 +63,15 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
 # We need a CMAKE_DIR with some code to find external dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+# ===================================================
+# INCLUDING & LINKING
+# ===================================================
 # Define the include DIRs
 #set(LIB_INCL ${flugel_engine_INCLUDE_DIRS})
-include_directories("${SRC_DIR}" "${INCL_DIR}")
+target_include_directories(${TARGET_NAME}
+     PRIVATE
+          "${SRC_DIR}" "${INCL_DIR}"
+)
 
 # Define the link libraries
 link_directories("${LIB_DIR}")

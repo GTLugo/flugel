@@ -9,7 +9,7 @@ elseif is_mode("release") then
 end
 
 -- ENGINE --
-add_requires("glew", "glfw", "glm", "spdlog")
+add_requires("glad", "glew", "glfw", "glm", "spdlog")
 engine_name = "flugel_engine"
 target(engine_name)
   -- Info --
@@ -18,10 +18,12 @@ target(engine_name)
   set_basename("flugel")
   add_defines("FLUGEL_BUILD_DLL")
   -- Files & Headers --
+  set_pcxxheader(engine_name .. "/src/flugel_pch.hpp")
+  add_cxxflags("-include flugel_pch.hpp")
   add_includedirs(engine_name .. "/src", {interface = true})
   add_files(engine_name .. "/src/**.cpp")
   -- Dependencies --
-  add_packages("glew", "glfw", "glm", "spdlog", {public = true})
+  add_packages("glad", "glew", "glfw", "glm", "spdlog", {public = true})
 
 -- APP --
 app_name = "alpha_app"
