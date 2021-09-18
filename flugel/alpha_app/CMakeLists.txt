@@ -17,10 +17,10 @@ set(RES_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/res")
 # ===================================================
 # COLLECT FILES
 # ===================================================
-file(GLOB_RECURSE SOURCE_FILES
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
      ${SRC_DIR}/*.c
      ${SRC_DIR}/*.cpp)
-file(GLOB_RECURSE HEADER_FILES
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS
      ${SRC_DIR}/*.h
      ${SRC_DIR}/*.hpp)
 

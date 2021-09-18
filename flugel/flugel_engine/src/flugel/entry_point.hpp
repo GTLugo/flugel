@@ -1,14 +1,6 @@
 #pragma once
 
-// #include <cstdlib>
-// #include <iostream>
-// #include <stdexcept>
-#if defined(_WIN32) && defined(NDEBUG)
-#include <windows.h>
-#endif
-
-#include "app.hpp"
-#include "logging/log.hpp"
+#include "flugel/app.hpp"
 
 extern Flugel::App* Flugel::CreateApp();
 

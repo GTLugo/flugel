@@ -2,8 +2,6 @@
 
 #include "event.hpp"
 
-#include <sstream>
-
 namespace Flugel {
   class FLUGEL_API KeyboardEvent : public Event {
   public:

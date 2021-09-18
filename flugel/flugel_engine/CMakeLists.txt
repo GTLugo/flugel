@@ -17,13 +17,13 @@ set(RES_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/res")
 # ===================================================
 # COLLECT FILES
 # ===================================================
-file(GLOB_RECURSE SOURCE_FILES
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
      ${SRC_DIR}/*.c
      ${SRC_DIR}/*.cpp)
-file(GLOB_RECURSE HEADER_FILES
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS
      ${SRC_DIR}/*.h
      ${SRC_DIR}/*.hpp)
-file(GLOB_RECURSE SHADER_FILES 
+file(GLOB_RECURSE SHADER_FILES CONFIGURE_DEPENDS
      RELATIVE ${CMAKE_SOURCE_DIR} 
      ${RES_DIR}/*.glsl)
 
@@ -37,10 +37,11 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 # ADD SHARED LIBRARY TARGET
 # ===================================================
 add_library(${TARGET_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES})
-set_target_properties(${TARGET_NAME} PROPERTIES
-	OUTPUT_NAME "${TARGET_NAME}"
-     CXX_VISIBILITY_PRESET hidden
-	RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}")
+set_target_properties(${TARGET_NAME} 
+     PROPERTIES
+	     OUTPUT_NAME "${TARGET_NAME}"
+          CXX_VISIBILITY_PRESET hidden
+	     RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}")
 message(DEBUG "Engine bin Dir: ${BIN_DIR}")
 
 # Preprocessor Defines
@@ -104,8 +105,15 @@ link_directories(${LIB_DIR})
 
 # Export the library's public header path to dependent targets
 set(PUBLIC_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_include_directories(${TARGET_NAME} INTERFACE
-    "${PUBLIC_HEADER_FILES}"
+target_include_directories(${TARGET_NAME}
+     INTERFACE
+          "${PUBLIC_HEADER_FILES}"
+)
+
+# Precompiled Headers
+target_precompile_headers(${TARGET_NAME}
+     PUBLIC
+          "${SRC_DIR}/flugel_pch.hpp"
 )
 
 # Put all libraries into a variable & link the libraries

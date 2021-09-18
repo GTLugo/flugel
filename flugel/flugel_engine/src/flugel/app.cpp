@@ -1,8 +1,6 @@
 #include "app.hpp"
 
-#include "logging/log.hpp"
-
-#include <iostream>
+#include "events/app_event.hpp"
 
 namespace Flugel {
   App::App() {
@@ -14,13 +12,30 @@ namespace Flugel {
   }
 
   void App::run() {
+    FLUGEL_INFO("Running...");
+    TimePoint previousTime{}, currentTime{};
+    Second elapsedTime{};
+
     int x = 0;
     while (x < 1000) {
-      // std::cout << "Running!\n";
-      FLUGEL_DEBUG_ENGINE("Running...");
-      // ++x;
+      currentTime = Clock::now();
+      Second deltaTime = currentTime - previousTime;
+
+      std::stringstream ss;
+      ss << "FPS (" << 1.0 / deltaTime.count() << ")";
+      elapsedTime += deltaTime;
+      if (elapsedTime.count() >= 1) {
+        FLUGEL_DEBUG(ss.str());
+
+        WindowResizeEvent e(800, 450);
+        FLUGEL_TRACE(e);
+        
+        elapsedTime = Second::zero();
+      }
+      
+      previousTime = currentTime;
     }
-    FLUGEL_DEBUG_ENGINE("Finished running!");
+    FLUGEL_INFO("Finished running!");
 
     // #ifndef NDEBUG
     // FLUGEL_INFO_ENGINE("Press ENTER to continue...");

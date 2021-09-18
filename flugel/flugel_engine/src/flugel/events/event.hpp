@@ -2,11 +2,6 @@
 
 // REIMPLEMENTATION OF EVENT SYSTEM BY TheCherno
 
-#include "../core.hpp"
-
-#include <string>
-#include <functional>
-
 namespace Flugel {
   enum class EventType {
     None = 0,
@@ -46,6 +41,31 @@ namespace Flugel {
   };
 
   class EventDispatcher {
-    
+    /*
+     * EventFn's will be implemented elsewhere (such as in the class handling the event)
+     *
+     * The function should take in an event type (WindowClose, MouseButtonPressed, etc)
+     * and return a bool
+    */
+    template<typename T>
+    using EventFn = std::function<bool(T&)>;
+  public:
+    EventDispatcher(Event& event)
+      : event_{event} {}
+
+    template<typename T>
+    bool dispatch(EventFn<T> eventFunc) {
+      if (event_.getEventType() == T::getStaticType()) {
+        event_.handled_ = eventFunc(*(T*)&event_);
+        return true;
+      }
+      return false;
+    }
+  private:
+    Event& event_;
   };
+
+  inline std::ostream& operator<<(std::ostream& out, const Event& e) {
+    return out << e.toString();
+  }
 }

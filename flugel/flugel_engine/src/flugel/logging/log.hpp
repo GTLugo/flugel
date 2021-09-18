@@ -1,9 +1,7 @@
 #pragma once
 
-#include "../core.hpp"
 #include "spdlog/spdlog.h"
-
-#include <memory>
+#include "spdlog/fmt/ostr.h" // to allow logging custom types using ostream<<
 
 namespace Flugel {
   class FLUGEL_API Log {
