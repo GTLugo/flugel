@@ -5,12 +5,7 @@
 
 namespace Flugel {
   class FLUGEL_API Stopwatch {
-    using Clock = std::chrono::steady_clock;
-    using Seconds = std::chrono::duration<double>;
   public:
-    template<class Duration>
-    using TimePoint = std::chrono::time_point<Clock, Duration>;
-
     Stopwatch() {
       FLUGEL_DEBUG_ENGINE("STOPWATCH (Created!)");
       reset();
@@ -26,7 +21,7 @@ namespace Flugel {
       reset();
       start_ = time_point;
     }
-    void start() { start(Clock::now()); }
+    void start() { start(ClockSteady::now()); }
 
     // template<class Duration>
     // void stop(TimePoint<Duration> time_point) {
@@ -36,7 +31,7 @@ namespace Flugel {
 
     template<typename Duration>
     double getTimeElapsed() const {
-      return TimePoint<Duration>{Clock::now() - start_}.time_since_epoch().count();
+      return std::chrono::duration_cast<Duration>(ClockSteady::now() - start_).count();
     }
 
     // Friends

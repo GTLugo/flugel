@@ -33,6 +33,8 @@ file(GLOB_RECURSE SHADER_FILES CONFIGURE_DEPENDS
 #      #flugel/events
 #      #flugel/logging
 #      ${SRC_DIR}/flugel/logging/log.cpp
+#      #flugel/test
+#      ${SRC_DIR}/flugel/test/transform_component.cpp
 #      #flugel/time
 #      ${SRC_DIR}/flugel/time/time.cpp
 # #platform
@@ -42,7 +44,6 @@ file(GLOB_RECURSE SHADER_FILES CONFIGURE_DEPENDS
 
 # set(HEADER_FILES
 # ${SRC_DIR}/flugel.hpp
-# #${SRC_DIR}/flugel_pch.hpp #idk if necessary
 # #flugel
 #      ${SRC_DIR}/flugel/app.hpp
 #      ${SRC_DIR}/flugel/core.hpp
@@ -55,6 +56,8 @@ file(GLOB_RECURSE SHADER_FILES CONFIGURE_DEPENDS
 #      ${SRC_DIR}/flugel/events/mouse_event.hpp
 #      #flugel/logging
 #      ${SRC_DIR}/flugel/logging/log.hpp
+#      #flugel/test
+#      ${SRC_DIR}/flugel/test/transform_component.hpp
 #      #flugel/time
 #      ${SRC_DIR}/flugel/time/stopwatch.hpp
 #      ${SRC_DIR}/flugel/time/time.hpp
@@ -63,9 +66,9 @@ file(GLOB_RECURSE SHADER_FILES CONFIGURE_DEPENDS
 #      ${SRC_DIR}/platform/windows/windows_window.hpp
 # )
 
-set(SHADER_FILES
-     ${RES_DIR}/shaders/simple_shader.glsl
-)
+# set(SHADER_FILES
+#      ${RES_DIR}/shaders/simple_shader.glsl
+# )
 
 # ===================================================
 # CONFIGURE ASSESTS HELPER FILE
@@ -102,37 +105,37 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 message(CHECK_START "Finding glew...")
 find_package(glew CONFIG REQUIRED)
 set(GLEW_LIBRARY GLEW::GLEW)
-message(CHECK_PASS "glew included!")
+message(CHECK_PASS "found!")
 
 # glad
 message(CHECK_START "Finding glad...")
 find_package(glad CONFIG REQUIRED)
 set(GLAD_LIBRARY glad::glad)
-message(CHECK_PASS "glad included!")
+message(CHECK_PASS "found!")
 
 # glfw3
 message(CHECK_START "Finding glfw3...")
 find_package(glfw3 CONFIG REQUIRED)
 set(GLFW_LIBRARY glfw)
-message(CHECK_PASS "glfw3 included!")
+message(CHECK_PASS "found!")
 
 # glm
 message(CHECK_START "Finding glm...")
 find_package(glm CONFIG REQUIRED)
 set(GLM_LIBRARY glm::glm)
-message(CHECK_PASS "glm included!")
+message(CHECK_PASS "found!")
 
 # fmt
 message(CHECK_START "Finding fmt...")
 find_package(fmt CONFIG REQUIRED)
 set(FMT_LIBRARY fmt::fmt-header-only)
-message(CHECK_PASS "fmt included!")
+message(CHECK_PASS "found!")
 
 # spdlog
 message(CHECK_START "Finding spdlog...")
 find_package(spdlog CONFIG REQUIRED)
 set(SPDLOG_LIBRARY spdlog::spdlog_header_only) #spdlog::spdlog OR spdlog::spdlog_header_only
-message(CHECK_PASS "spdlog included!")
+message(CHECK_PASS "found!")
 
 # ===================================================
 # INCLUDING & LINKING

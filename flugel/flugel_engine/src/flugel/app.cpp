@@ -2,6 +2,8 @@
 
 #include "events/app_event.hpp"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace Flugel {
   App::App(const WindowProps& props) {
     window_ = std::unique_ptr<Window>(Window::create(props));

@@ -40,3 +40,24 @@
 
 #include "flugel/core.hpp"
 #include "flugel/logging/log.hpp"
+
+namespace Flugel {
+  // duration types
+  using NanoSeconds = std::chrono::duration<double, std::nano>;
+  using MicroSeconds = std::chrono::duration<double, std::micro>;
+  using MilliSeconds = std::chrono::duration<double, std::milli>;
+  using Seconds = std::chrono::duration<double>;
+  using Minutes = std::chrono::duration<double, std::ratio<60>>;
+  using Hours = std::chrono::duration<double, std::ratio<3600>>;
+  // clock types
+  using ClockSystem = std::chrono::system_clock;
+  using ClockSteady = std::chrono::steady_clock;
+  using ClockAccurate = std::chrono::high_resolution_clock;
+  // time point
+  template<typename Duration>
+  using TimePoint = std::chrono::time_point<ClockSteady, Duration>;
+  template<typename Duration>
+  using TimePointAccurate = std::chrono::time_point<ClockAccurate, Duration>;
+  template<typename Duration>
+  using TimePointSystem = std::chrono::time_point<ClockSystem, Duration>;
+}
