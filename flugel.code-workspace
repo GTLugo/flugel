@@ -1,8 +1,7 @@
 {
 	"folders": [
 		{
-			"name": "flugel",
-			"path": "flugel"
+			"path": "."
 		}
 	],
 	"settings": {

@@ -1,10 +1,10 @@
 #include "flugel.hpp"
 
-class AlphaApp : public Flugel::App {
+class SandboxApp : public Flugel::App {
   public:
-    AlphaApp(const Flugel::WindowProps& props = {})
+    SandboxApp(const Flugel::WindowProps& props = {})
       : App{props} {}
-    ~AlphaApp() {}
+    ~SandboxApp() {}
   private:
 };
 
@@ -15,5 +15,5 @@ Flugel::App* Flugel::CreateApp() {
     450,
     false
   };
-  return new AlphaApp{props};
+  return new SandboxApp{props};
 }
