@@ -10,7 +10,7 @@ end
 
 -- ENGINE --
 add_requires("glad", "glew", "glfw", "glm", "spdlog")
-engine_name = "flugel_engine"
+engine_name = "flugel"
 target(engine_name)
   -- Info --
   set_default(false)
@@ -26,7 +26,7 @@ target(engine_name)
   add_packages("glad", "glew", "glfw", "glm", "spdlog", {public = true})
 
 -- APP --
-app_name = "alpha_app"
+app_name = "sandbox"
 target(app_name)
   -- Info --
   set_default(true)
