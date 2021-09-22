@@ -5,12 +5,11 @@ class SandboxApp : public Flugel::App {
     SandboxApp(const Flugel::WindowProps& props = {})
       : App{props} {}
     ~SandboxApp() {}
-  private:
 };
 
 Flugel::App* Flugel::CreateApp() {
   Flugel::WindowProps props{
-    "ALPHA",
+    "SANDBOX",
     800,
     450,
     false

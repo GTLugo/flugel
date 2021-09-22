@@ -6,7 +6,7 @@
 namespace Flugel {
   class FLUGEL_API App {
   public:
-    App(const WindowProps& props = {});
+    App(const WindowProps& props = {}, bool shouldUseFlugelTagInTitle = true);
     virtual ~App();
 
     Time getTime() const { return time_; }
@@ -20,9 +20,9 @@ namespace Flugel {
   private:
     std::unique_ptr<Window> window_;
     bool shouldClose_{false};
-    
+
     Time time_{};
-    Stopwatch fps_stopwatch_{};
+    // Stopwatch fps_stopwatch_{};
   };
 
   // To be defined in project app

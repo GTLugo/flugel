@@ -13,7 +13,6 @@ namespace Flugel {
 
     void reset() {
       start_ = TimePoint<Seconds>{Seconds::zero()};
-      // end_ = TimePoint<Seconds>{Seconds::zero()};
     }
 
     template<class Duration>
@@ -22,12 +21,6 @@ namespace Flugel {
       start_ = time_point;
     }
     void start() { start(ClockSteady::now()); }
-
-    // template<class Duration>
-    // void stop(TimePoint<Duration> time_point) {
-    //   end_ = time_point;
-    // }
-    // void stop() { stop(Clock::now()); }
 
     template<typename Duration>
     double getTimeElapsed() const {
@@ -43,8 +36,6 @@ namespace Flugel {
 
   private:
     TimePoint<Seconds> start_{Seconds::zero()};
-    // TimePoint<Seconds> end_{Seconds::zero()};
-    // bool isStopped_;
 
     void display(std::ostream& output) const {
       output << getTimeElapsed<Seconds>();

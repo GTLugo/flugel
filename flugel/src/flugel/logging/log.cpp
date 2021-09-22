@@ -1,7 +1,8 @@
 #include "log.hpp"
 
-#include "spdlog/pattern_formatter.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
+#include <spdlog/pattern_formatter.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/rotating_file_sink.h>
 
 namespace Flugel {
   class level_formatter_flag : public spdlog::custom_flag_formatter {
@@ -31,12 +32,31 @@ namespace Flugel {
   void Log::init() {
     auto formatter = std::make_unique<spdlog::pattern_formatter>();
     formatter->add_flag<level_formatter_flag>('*').set_pattern("%T %^%7*%$ %n: %v");
-    spdlog::set_formatter(std::move(formatter));
     
-    engineLogger_ = spdlog::stdout_color_mt("FLUGEL");
+    auto commonSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("logs/common.log", 1048576 * 5, 3);
+
+    std::vector<spdlog::sink_ptr> flugelSinks;
+    flugelSinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+    flugelSinks.push_back(std::make_shared<spdlog::sinks::rotating_file_sink_mt>("logs/flugel.log", 1048576 * 5, 3));
+    flugelSinks.push_back(commonSink);
+    engineLogger_ = std::make_shared<spdlog::logger>("FLUGEL", flugelSinks.begin(), flugelSinks.end());
+    for (auto& sink : engineLogger_->sinks()) {
+      sink->set_formatter(formatter->clone());
+    }
+
+    std::vector<spdlog::sink_ptr> appSinks;
+    appSinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+    appSinks.push_back(std::make_shared<spdlog::sinks::rotating_file_sink_mt>("logs/app.log", 1048576 * 5, 3));
+    appSinks.push_back(commonSink);
+    appLogger_ = std::make_shared<spdlog::logger>("APP", appSinks.begin(), appSinks.end());
+    for (auto& sink : appLogger_->sinks()) {
+      sink->set_formatter(formatter->clone());
+    }
+
+    //engineLogger_ = spdlog::stdout_color_mt("FLUGEL");
+    //appLogger_ = spdlog::stdout_color_mt("APP");
+
     engineLogger_->set_level(spdlog::level::trace);
-    
-    appLogger_ = spdlog::stdout_color_mt("APP");
     appLogger_->set_level(spdlog::level::trace);
 
     FLUGEL_INFO_ENGINE("Initialized engine logger!");
