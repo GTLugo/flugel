@@ -1,7 +1,5 @@
 #pragma once
 
-#include "flugel/events/event.hpp"
-
 namespace Flugel {
   struct WindowProps {
     std::string title;
@@ -31,6 +29,6 @@ namespace Flugel {
     virtual void setVsync(bool enabled) = 0;
     virtual bool isVsync() const = 0;
 
-    static Window* create(const WindowProps& props = WindowProps{});
+    static Unique<Window> create(const WindowProps& props = WindowProps{});
   };
 }

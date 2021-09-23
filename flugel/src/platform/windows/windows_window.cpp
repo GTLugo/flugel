@@ -3,14 +3,6 @@
 namespace Flugel {
   static bool isGLFWinitialized = false;
 
-  // GENERIC WINDOW
-
-  Window* Window::create(const WindowProps& props) {
-    return new WindowsWindow{props};
-  }
-
-  // WINDOWS WINDOW
-
   WindowsWindow::WindowsWindow(const WindowProps& props) {
     init(props);
   }

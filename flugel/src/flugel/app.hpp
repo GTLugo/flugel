@@ -18,7 +18,7 @@ namespace Flugel {
     void onUpdate();
     void onRender();
   private:
-    std::unique_ptr<Window> window_;
+    Unique<Window> window_;
     bool shouldClose_{false};
 
     Time time_{};

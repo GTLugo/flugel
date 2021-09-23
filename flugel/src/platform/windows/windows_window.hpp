@@ -12,13 +12,11 @@ namespace Flugel {
     
     void onUpdate() override;
 
-    inline uint32_t getWidth() const override { return data_.width; }
-    inline uint32_t getHeight() const override { return data_.height; }
+    uint32_t getWidth() const override { return data_.width; }
+    uint32_t getHeight() const override { return data_.height; }
     
     // Window attributes
-    inline void setEventCallback(const EventCallbackFn& callback) override {
-      data_.eventCallback = callback;
-    }
+    void setEventCallback(const EventCallbackFn& callback) override { data_.eventCallback = callback; }
     void setVsync(bool enabled) override;
     bool isVsync() const override { return data_.vsync; }
 
@@ -31,7 +29,6 @@ namespace Flugel {
     };
 
     GLFWwindow* glfwWindow_;
-
     WindowData data_;
   private:
     virtual void init(const WindowProps& props);

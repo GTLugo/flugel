@@ -1,4 +1,3 @@
-
 /*----------------------
   STD LIBRARY
 ----------------------*/
@@ -40,6 +39,7 @@
 
 #include "flugel/core.hpp"
 #include "flugel/logging/log.hpp"
+#include "flugel/events/event.hpp"
 
 namespace Flugel {
   // duration types
@@ -60,4 +60,20 @@ namespace Flugel {
   using TimePointAccurate = std::chrono::time_point<ClockAccurate, Duration>;
   template<typename Duration>
   using TimePointSystem = std::chrono::time_point<ClockSystem, Duration>;
+
+  // Scope = std::unique_ptr
+  template<typename T>
+  using Unique = std::unique_ptr<T>;
+  template<typename T, typename... Args>
+  constexpr Unique<T> CreateUnique(Args&&... args) {
+    return std::make_unique<T>(std::forward<Args>(args)...);
+  }
+
+  // Ref = std::shared_ptr
+  template<typename T>
+  using Shared = std::shared_ptr<T>;
+  template<typename T, typename... Args>
+  constexpr Shared<T> CreateShared(Args&&... args) {
+    return std::make_shared<T>(std::forward<Args>(args)...);
+  }
 }

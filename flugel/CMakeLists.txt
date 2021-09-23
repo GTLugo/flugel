@@ -17,6 +17,7 @@ set(RES_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/res")
 # ===================================================
 # COLLECT FILES
 # ===================================================
+
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
   ${SRC_DIR}/*.c
   ${SRC_DIR}/*.cpp)
@@ -33,8 +34,6 @@ file(GLOB_RECURSE SHADER_FILES CONFIGURE_DEPENDS
 #      #flugel/events
 #      #flugel/logging
 #      ${SRC_DIR}/flugel/logging/log.cpp
-#      #flugel/test
-#      ${SRC_DIR}/flugel/test/transform_component.cpp
 #      #flugel/time
 #      ${SRC_DIR}/flugel/time/time.cpp
 # #platform
@@ -56,8 +55,6 @@ file(GLOB_RECURSE SHADER_FILES CONFIGURE_DEPENDS
 #      ${SRC_DIR}/flugel/events/mouse_event.hpp
 #      #flugel/logging
 #      ${SRC_DIR}/flugel/logging/log.hpp
-#      #flugel/test
-#      ${SRC_DIR}/flugel/test/transform_component.hpp
 #      #flugel/time
 #      ${SRC_DIR}/flugel/time/stopwatch.hpp
 #      ${SRC_DIR}/flugel/time/time.hpp

@@ -11,7 +11,7 @@ namespace Flugel {
       props.height,
       props.vsync
     };
-    window_ = std::unique_ptr<Window>(Window::create(newProps));
+    window_ = Window::create(newProps);
     time_.initialize();
   }
 
