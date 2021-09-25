@@ -35,12 +35,51 @@
   #define FLUGEL_ASSERT(x, ...) {\
     if(!(x)) {FLUGEL_ERROR("FAILED ASSERT: {0}", __VA_ARGS__); DEBUG_BREAK; }\
   }
-  #define FLUGEL_ASSERT_ENGINE(x, ...) {\
-    if(!(x)) {FLUGEL_ERROR_ENGINE("FAILED ASSERT: {0}", __VA_ARGS__); DEBUG_BREAK; }\
+  #define FLUGEL_ASSERT_E(x, ...) {\
+    if(!(x)) {FLUGEL_ERROR_E("FAILED ASSERT: {0}", __VA_ARGS__); DEBUG_BREAK; }\
   }
 #else
   #define FLUGEL_ASSERT(x, ...)
-  #define FLUGEL_ASSERT_ENGINE(x, ...)
+  #define FLUGEL_ASSERT_E(x, ...)
 #endif
 
 #define BIT(x) (1 << x)
+
+#define FLUGEL_BIND_EVENT(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); } 
+
+namespace Flugel {
+  // duration types
+  using NanoSeconds = std::chrono::duration<double, std::nano>;
+  using MicroSeconds = std::chrono::duration<double, std::micro>;
+  using MilliSeconds = std::chrono::duration<double, std::milli>;
+  using Seconds = std::chrono::duration<double>;
+  using Minutes = std::chrono::duration<double, std::ratio<60>>;
+  using Hours = std::chrono::duration<double, std::ratio<3600>>;
+  // clock types
+  using ClockSystem = std::chrono::system_clock;
+  using ClockSteady = std::chrono::steady_clock;
+  using ClockAccurate = std::chrono::high_resolution_clock;
+  // time point
+  template<typename Duration>
+  using TimePoint = std::chrono::time_point<ClockSteady, Duration>;
+  template<typename Duration>
+  using TimePointAccurate = std::chrono::time_point<ClockAccurate, Duration>;
+  template<typename Duration>
+  using TimePointSystem = std::chrono::time_point<ClockSystem, Duration>;
+
+  // Scope = std::unique_ptr
+  template<typename T>
+  using Unique = std::unique_ptr<T>;
+  template<typename T, typename... Args>
+  constexpr Unique<T> CreateUnique(Args&&... args) {
+    return std::make_unique<T>(std::forward<Args>(args)...);
+  }
+
+  // Ref = std::shared_ptr
+  template<typename T>
+  using Shared = std::shared_ptr<T>;
+  template<typename T, typename... Args>
+  constexpr Shared<T> CreateShared(Args&&... args) {
+    return std::make_shared<T>(std::forward<Args>(args)...);
+  }
+}

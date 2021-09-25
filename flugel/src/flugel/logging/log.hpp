@@ -17,13 +17,13 @@ namespace Flugel {
   };
 }
 
-// Engine Log macros
-#define FLUGEL_TRACE_ENGINE(...) Flugel::Log::getEngineLogger()->trace(__VA_ARGS__)
-#define FLUGEL_DEBUG_ENGINE(...) Flugel::Log::getEngineLogger()->debug(__VA_ARGS__)
-#define FLUGEL_INFO_ENGINE(...)  Flugel::Log::getEngineLogger()->info(__VA_ARGS__)
-#define FLUGEL_WARN_ENGINE(...)  Flugel::Log::getEngineLogger()->warn(__VA_ARGS__)
-#define FLUGEL_ERROR_ENGINE(...) Flugel::Log::getEngineLogger()->error(__VA_ARGS__)
-#define FLUGEL_CRIT_ENGINE(...)  Flugel::Log::getEngineLogger()->critical(__VA_ARGS__)
+// Engine Log macros - Rated E for Engine!
+#define FLUGEL_TRACE_E(...) Flugel::Log::getEngineLogger()->trace(__VA_ARGS__)
+#define FLUGEL_DEBUG_E(...) Flugel::Log::getEngineLogger()->debug(__VA_ARGS__)
+#define FLUGEL_INFO_E(...)  Flugel::Log::getEngineLogger()->info(__VA_ARGS__)
+#define FLUGEL_WARN_E(...)  Flugel::Log::getEngineLogger()->warn(__VA_ARGS__)
+#define FLUGEL_ERROR_E(...) Flugel::Log::getEngineLogger()->error(__VA_ARGS__)
+#define FLUGEL_CRIT_E(...)  Flugel::Log::getEngineLogger()->critical(__VA_ARGS__)
 // App Log macros
 #define FLUGEL_TRACE(...) Flugel::Log::getAppLogger()->trace(__VA_ARGS__)
 #define FLUGEL_DEBUG(...) Flugel::Log::getAppLogger()->debug(__VA_ARGS__)
@@ -35,12 +35,12 @@ namespace Flugel {
 // Disable logging macros on release builds
 #if defined(RELEASE) || defined(MINREL)
 // Engine Log macros
-#define FLUGEL_TRACE_ENGINE
-#define FLUGEL_DEBUG_ENGINE
-#define FLUGEL_INFO_ENGINE
-#define FLUGEL_WARN_ENGINE
-#define FLUGEL_ERROR_ENGINE
-#define FLUGEL_CRIT_ENGINE
+#define FLUGEL_TRACE_E
+#define FLUGEL_DEBUG_E
+#define FLUGEL_INFO_E
+#define FLUGEL_WARN_E
+#define FLUGEL_ERROR_E
+#define FLUGEL_CRIT_E
 // App Log macros
 #define FLUGEL_TRACE
 #define FLUGEL_DEBUG

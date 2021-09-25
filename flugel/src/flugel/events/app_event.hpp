@@ -3,37 +3,17 @@
 #include "event.hpp"
 
 namespace Flugel {
-  class FLUGEL_API WindowResizeEvent : public Event {
+  class FLUGEL_API AppStartEvent : public Event {
   public:
-    WindowResizeEvent(uint32_t width, uint32_t height)
-      : width_{width}, height_{height} {}
-
-    inline uint32_t getWidth() const { return width_; }
-    inline uint32_t getHeight() const { return height_; }
+    AppStartEvent() {}
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "EVENT <" << getName() << "> (" << width_ << ", " << height_ << ")";
+      ss << "Event <" << getName() << ">";
       return ss.str();
     }
 
-    EVENT_CLASS_TYPE(WindowResize)
-    EVENT_CLASS_CATEGORY(EventCategoryApp)
-  private:
-    uint32_t width_, height_;
-  };
-
-  class FLUGEL_API WindowCloseEvent : public Event {
-  public:
-    WindowCloseEvent() {}
-
-    std::string toString() const override {
-      std::stringstream ss;
-      ss << "EVENT <" << getName() << ">";
-      return ss.str();
-    }
-
-    EVENT_CLASS_TYPE(WindowClose)
+    EVENT_CLASS_TYPE(AppStart)
     EVENT_CLASS_CATEGORY(EventCategoryApp)
   };
 
@@ -43,7 +23,7 @@ namespace Flugel {
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "EVENT <" << getName() << ">";
+      ss << "Event <" << getName() << ">";
       return ss.str();
     }
 
@@ -57,7 +37,7 @@ namespace Flugel {
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "EVENT <" << getName() << ">";
+      ss << "Event <" << getName() << ">";
       return ss.str();
     }
 
@@ -71,11 +51,25 @@ namespace Flugel {
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "EVENT <" << getName() << ">";
+      ss << "Event <" << getName() << ">";
       return ss.str();
     }
 
     EVENT_CLASS_TYPE(AppRender)
+    EVENT_CLASS_CATEGORY(EventCategoryApp)
+  };
+
+  class FLUGEL_API AppEndEvent : public Event {
+  public:
+    AppEndEvent() {}
+
+    std::string toString() const override {
+      std::stringstream ss;
+      ss << "Event <" << getName() << ">";
+      return ss.str();
+    }
+
+    EVENT_CLASS_TYPE(AppEnd)
     EVENT_CLASS_CATEGORY(EventCategoryApp)
   };
 }

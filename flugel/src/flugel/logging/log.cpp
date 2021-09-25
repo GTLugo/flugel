@@ -25,7 +25,7 @@ namespace Flugel {
       return spdlog::details::make_unique<level_formatter_flag>();
     }
   };
-
+  
   std::shared_ptr<spdlog::logger> Log::engineLogger_;
   std::shared_ptr<spdlog::logger> Log::appLogger_;
 
@@ -59,7 +59,7 @@ namespace Flugel {
     engineLogger_->set_level(spdlog::level::trace);
     appLogger_->set_level(spdlog::level::trace);
 
-    FLUGEL_INFO_ENGINE("Initialized engine logger!");
+    FLUGEL_INFO_E("Initialized engine logger!");
     FLUGEL_INFO("Initialized app logger!");
   }
 }

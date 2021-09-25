@@ -5,11 +5,16 @@ class SandboxApp : public Flugel::App {
     SandboxApp(const Flugel::WindowProps& props = {})
       : App{props} {}
     ~SandboxApp() {}
+
+  private:
+    virtual bool onStart(Flugel::AppStartEvent& e) override {
+      return true;
+    }
 };
 
 Flugel::App* Flugel::CreateApp() {
   Flugel::WindowProps props{
-    "SANDBOX",
+    "SANDBOX | Flugel",
     800,
     450,
     false

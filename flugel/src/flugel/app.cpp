@@ -1,18 +1,14 @@
 #include "app.hpp"
 
+#include "events/window_event.hpp"
 #include "events/app_event.hpp"
-#include <glm/glm.hpp>
 
 namespace Flugel {
-  App::App(const WindowProps& props, bool shouldUseFlugelTagInTitle) {
-    WindowProps newProps = {
-      props.title + (shouldUseFlugelTagInTitle ? " | Flugel" : ""),
-      props.width,
-      props.height,
-      props.vsync
-    };
-    window_ = Window::create(newProps);
+  App::App(const WindowProps& props) {
+    window_ = Window::create(props);
     time_.initialize();
+
+    window_->setEventCallback(FLUGEL_BIND_EVENT(App::onEvent));
   }
 
   App::~App() {
@@ -22,21 +18,35 @@ namespace Flugel {
   void App::run() {
     FLUGEL_INFO("Running...");
 
-    onStart();
     while (!shouldClose_) {
-      onTick();
-      onUpdate();
-      onRender();
+      time_.tick();
+      
+      window_->update();
     }
     
     FLUGEL_INFO("Finished running!");
   }
 
-  void App::onStart() {
-    // fps_stopwatch_.start();
+  void App::onEvent(Event& e) {
+    #if defined(FLUGEL_LOG_ALL_EVENTS)
+      FLUGEL_TRACE_E("{0}", e);
+    #endif
+    
+    EventDispatcher dispatcher{e};
+    dispatcher.dispatch<WindowCloseEvent>(FLUGEL_BIND_EVENT(onWindowClosed));
+
+    dispatcher.dispatch<AppStartEvent>(FLUGEL_BIND_EVENT(onStart));
+    dispatcher.dispatch<AppTickEvent>(FLUGEL_BIND_EVENT(onTick));
+    dispatcher.dispatch<AppUpdateEvent>(FLUGEL_BIND_EVENT(onUpdate));
+    dispatcher.dispatch<AppRenderEvent>(FLUGEL_BIND_EVENT(onRender));
   }
 
-  void App::onTick() {
+  bool App::onStart(AppStartEvent& e) {
+    // fps_stopwatch_.start();
+    return true;
+  }
+
+  bool App::onTick(AppTickEvent& e) {
     time_.tick();
     
     // FLUGEL_ASSERT_ENGINE(fps_stopwatch_.getTimeElapsed<Seconds>() >= 0, "Time went negative?!");
@@ -44,13 +54,21 @@ namespace Flugel {
     //   FLUGEL_DEBUG("FPS ({0})", 1.0 / time_.deltaTime<Seconds>());
     //   fps_stopwatch_.start();
     // }
+    return true;
   }
 
-  void App::onUpdate() {
-    window_->onUpdate();
+  bool App::onUpdate(AppUpdateEvent& e) {
+    window_->update();
+    return true;
   }
 
-  void App::onRender() {
+  bool App::onRender(AppRenderEvent& e) {
     
+    return true;
+  }
+  
+  bool App::onWindowClosed(WindowCloseEvent& e) {
+
+    return true;
   }
 }

@@ -5,7 +5,7 @@
 namespace Flugel {
   class FLUGEL_API KeyboardEvent : public Event {
   public:
-    inline int getKeyCode() const { return keyCode_; }
+    int getKeyCode() const { return keyCode_; }
 
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryKeyboard)
   protected:
@@ -20,10 +20,10 @@ namespace Flugel {
     KeyPressedEvent(int keyCode, int repeatCount)
       : KeyboardEvent{keyCode}, repeatCount_{repeatCount} {}
     
-    inline int getRepeatCount() const { return repeatCount_; }
+    int getRepeatCount() const { return repeatCount_; }
     std::string toString() const override {
       std::stringstream ss;
-      ss << "EVENT <" << getName() << "> (" << keyCode_ << ", " << repeatCount_ << "repeats)";
+      ss << "Event <" << getName() << "> (" << keyCode_ << ", " << repeatCount_ << "repeats)";
       return ss.str();
     }
 
@@ -34,12 +34,12 @@ namespace Flugel {
 
   class FLUGEL_API KeyReleasedEvent : public KeyboardEvent {
   public:
-    KeyReleasedEvent(int keyCode, int repeatCount)
+    KeyReleasedEvent(int keyCode)
       : KeyboardEvent{keyCode} {}
     
     std::string toString() const override {
       std::stringstream ss;
-      ss << "EVENT <KeyPressed> (" << keyCode_ << ")";
+      ss << "Event <" << getName() << "> (" << keyCode_ << ")";
       return ss.str();
     }
 

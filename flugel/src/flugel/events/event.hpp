@@ -6,7 +6,7 @@ namespace Flugel {
   enum class EventType {
     None = 0,
     WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-    AppTick, AppUpdate, AppRender,
+    AppStart, AppTick, AppUpdate, AppRender, AppEnd,
     KeyPressed, KeyReleased,
     MousePressed, MouseReleased, MouseMoved, MouseScrolled,
   };
@@ -40,6 +40,10 @@ namespace Flugel {
     bool handled_ = false;
   };
 
+  inline std::ostream& operator<<(std::ostream& out, const Event& e) {
+    return out << e.toString();
+  }
+
   class EventDispatcher {
     /*
      * EventFn's will be implemented elsewhere (such as in the class handling the event)
@@ -64,8 +68,4 @@ namespace Flugel {
   private:
     Event& event_;
   };
-
-  inline std::ostream& operator<<(std::ostream& out, const Event& e) {
-    return out << e.toString();
-  }
 }

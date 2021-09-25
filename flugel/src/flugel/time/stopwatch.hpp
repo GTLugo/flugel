@@ -7,7 +7,7 @@ namespace Flugel {
   class FLUGEL_API Stopwatch {
   public:
     Stopwatch() {
-      FLUGEL_DEBUG_ENGINE("STOPWATCH (Created!)");
+      FLUGEL_DEBUG_E("STOPWATCH (Created!)");
       reset();
     }
 

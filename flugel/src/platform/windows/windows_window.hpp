@@ -10,28 +10,15 @@ namespace Flugel {
     WindowsWindow(const WindowProps& props);
     virtual ~WindowsWindow();
     
-    void onUpdate() override;
-
-    uint32_t getWidth() const override { return data_.width; }
-    uint32_t getHeight() const override { return data_.height; }
+    void update() override;
     
     // Window attributes
-    void setEventCallback(const EventCallbackFn& callback) override { data_.eventCallback = callback; }
     void setVsync(bool enabled) override;
-    bool isVsync() const override { return data_.vsync; }
-
   private:
-    struct WindowData {
-      std::string title;
-      uint32_t width, height;
-      bool vsync;
-      EventCallbackFn eventCallback;
-    };
-
     GLFWwindow* glfwWindow_;
-    WindowData data_;
   private:
     virtual void init(const WindowProps& props);
     virtual void shut();
+    virtual void setGlfwCallbacks();
   };
 }

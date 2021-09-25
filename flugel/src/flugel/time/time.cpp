@@ -7,12 +7,12 @@
 
 namespace Flugel {
   void Time::initialize() {
-    FLUGEL_INFO_ENGINE("Initialized time!");
+    FLUGEL_INFO_E("Initialized time!");
     gameCurrent_ = TimePoint<Seconds>{Seconds{glfwGetTime()}};
   }
 
   void Time::tick() {
-    // FLUGEL_TRACE_ENGINE("Tick!");
+    // FLUGEL_ENGINE_TRACE("Tick!");
     gameCurrent_ = TimePoint<Seconds>{Seconds{glfwGetTime()}};
     delta_ = TimePoint<Seconds>{gameCurrent_ - gameLast_};
     gameLast_ = gameCurrent_;
