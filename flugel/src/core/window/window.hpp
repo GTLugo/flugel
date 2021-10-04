@@ -2,35 +2,64 @@
 
 #include "core/events/notifier.hpp"
 #include "core/events/window_event.hpp"
+#include "core/color/color.hpp"
 
-#define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
+#include <GLFW/glfw3.h>
 
 namespace Flugel {
+  struct WindowProperties {
+    std::string title;
+    uint32_t width, height;
+    bool vSync;
+
+    WindowProperties(const std::string& title = "FLUGEL ENGINE",
+                     uint32_t width = 800,
+                     uint32_t height = 450,
+                     bool vSync = true)
+      : title{title}, width{width}, height{height}, vSync{vSync} {}
+  };
+
   class FLUGEL_API Window {
-    struct SDLWindowDelete {
-      void operator()(SDL_Window* w) const {
-        SDL_DestroyWindow(w);
+  public:
+    struct GLFWwindowDelete {
+      void operator()(GLFWwindow* ptr) {
+        glfwDestroyWindow(ptr);
       }
     };
 
-  public:
-    const std::string title{"SANDBOX"};
-    const uint32_t width{800}, height{450};
+    using UniqueGlfwWindow = Unique<GLFWwindow, GLFWwindowDelete>;
 
-    Notifier<WindowCloseEvent> closeNotifier{};
   public:
-    Window();
+    Window(const WindowProperties& props = {});
     virtual ~Window();
 
     void processInput();
-    void swapBuffer();
+    void swapBuffers();
 
-    const Unique<SDL_Window, SDLWindowDelete>& sdlWindow() const { return sdlWindow_; }
+    uint32_t width() const { return data_.width; }
+    uint32_t height() const { return data_.height; }
+    bool isVSync() const { return data_.vSync; }
+    void setVSync(bool enabled);
+    Notifier<WindowCloseEvent>& closeNotifier() { return data_.closeNotifier; }
+    
   private:
-    Unique<SDL_Window, SDLWindowDelete> sdlWindow_{nullptr};
-    Unique<SDL_GLContext> sdlGlContext_{nullptr};
+    struct WindowData {
+      std::string title;
+      uint32_t width, height;
+      bool vSync;
+
+      Notifier<WindowCloseEvent> closeNotifier{};
+      WindowData(const WindowProperties& props) 
+        : title{props.title}, width{props.width}, height{props.height}, vSync{props.vSync} {}
+    };
+
+    static bool isGlfwInitialized_;
+    WindowData data_;
+    UniqueGlfwWindow glfwWindow_;
+
+    Color clearColor_{0x2E3440FF};
   private:
     void init();
+    void shutdown();
   };
 }

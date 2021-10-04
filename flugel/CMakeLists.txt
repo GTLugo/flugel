@@ -33,6 +33,8 @@ set(SOURCE_FILES
   src/core/uuid.cpp
   src/core/logging/log.cpp
   src/core/time/time.cpp
+  src/core/color/color.cpp
+  src/core/color/srgb_transform/srgb_transform.cpp
   src/core/events/notifier.cpp
   src/core/window/window.cpp)
 
@@ -44,6 +46,8 @@ set(HEADER_FILES
   src/core/uuid.hpp
   src/core/logging/log.hpp
   src/core/time/time.hpp
+  src/core/color/color.hpp
+  src/core/color/srgb_transform/srgb_transform.hpp
   src/core/events/notifier.hpp
   #src/core/events/event.hpp
   src/core/events/keyboard_event.hpp
@@ -88,28 +92,28 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
 # We need a CMAKE_DIR with some code to find external dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-## glew
-#message(CHECK_START "Finding glew...")
-#find_package(glew CONFIG REQUIRED)
-#set(GLEW_LIBRARY GLEW::GLEW)
-#message(CHECK_PASS "found!")
-#
-## glad
-#message(CHECK_START "Finding glad...")
-#find_package(glad CONFIG REQUIRED)
-#set(GLAD_LIBRARY glad::glad)
-#message(CHECK_PASS "found!")
-#
-## glfw3
-#message(CHECK_START "Finding glfw3...")
-#find_package(glfw3 CONFIG REQUIRED)
-#set(GLFW_LIBRARY glfw)
-#message(CHECK_PASS "found!")
-
-message(CHECK_START "Finding sdl2...")
-find_package(SDL2 CONFIG REQUIRED)
-set(SDL2_LIBRARY SDL2::SDL2) # SDL2::SDL2main
+# glew
+message(CHECK_START "Finding glew...")
+find_package(glew CONFIG REQUIRED)
+set(GLEW_LIBRARY GLEW::GLEW)
 message(CHECK_PASS "found!")
+
+# glad
+message(CHECK_START "Finding glad...")
+find_package(glad CONFIG REQUIRED)
+set(GLAD_LIBRARY glad::glad)
+message(CHECK_PASS "found!")
+
+# glfw3
+message(CHECK_START "Finding glfw3...")
+find_package(glfw3 CONFIG REQUIRED)
+set(GLFW_LIBRARY glfw)
+message(CHECK_PASS "found!")
+
+# message(CHECK_START "Finding sdl2...")
+# find_package(SDL2 CONFIG REQUIRED)
+# set(SDL2_LIBRARY SDL2::SDL2) # SDL2::SDL2main
+# message(CHECK_PASS "found!")
 
 # glm
 message(CHECK_START "Finding glm...")
@@ -154,10 +158,10 @@ link_directories("lib")
 
 # Put all libraries into a variable & link the libraries
 set(LIBS
-#  ${GLEW_LIBRARY}
-#  ${GLAD_LIBRARY}
-#  ${GLFW_LIBRARY}
-  ${SDL2_LIBRARY}
+  ${GLEW_LIBRARY}
+  ${GLAD_LIBRARY}
+  ${GLFW_LIBRARY}
+  #${SDL2_LIBRARY}
   ${GLM_LIBRARY}
   ${FMT_LIBRARY}
   ${SPDLOG_LIBRARY})

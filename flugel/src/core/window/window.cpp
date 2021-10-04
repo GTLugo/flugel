@@ -1,71 +1,65 @@
 #include "window.hpp"
 
 namespace Flugel {
-  Window::Window() {
+  bool Window::isGlfwInitialized_{false};
+
+  Window::Window(const WindowProperties& props)
+    : data_{props} {
     init();
   }
 
   Window::~Window() {
-    
-  }
-
-  void Window::init() {
-    SDL_SetMainReady();
-
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-      FLUGEL_CRIT_E("SDL ERROR: Failed to initialize SDL! {0}", SDL_GetError());
-    }
-
-    uint32_t WindowFlags{SDL_WINDOW_OPENGL};
-    sdlWindow_ = Unique<SDL_Window, SDLWindowDelete>(
-      SDL_CreateWindow(
-        title.c_str(), 
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
-        width,
-        height,
-        WindowFlags
-      )
-    );
-
-    if (sdlWindow_ == nullptr) {
-      FLUGEL_CRIT_E("SDL ERROR: Failed to create window! {0}", SDL_GetError());
-    }
-
-    sdlGlContext_ = makeUnique<SDL_GLContext>(
-      SDL_GL_CreateContext(sdlWindow_.get())
-    );
+    shutdown();
   }
 
   void Window::processInput() {
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-      // FLUGEL_TRACE_E("EVENT!");
-      switch (event.type) {
-        case SDL_KEYDOWN: {
-          switch (event.key.keysym.sym) {
-            case SDLK_ESCAPE: {
-              WindowCloseEvent e{};
-              closeNotifier.notify(e);
-            }
-            default: {
-              break;
-            }
-          }
-        }
-        case SDL_QUIT: {
-          WindowCloseEvent e{};
-          closeNotifier.notify(e);
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-    }
+    glfwPollEvents();
   }
   
-  void Window::swapBuffer() {
-    SDL_GL_SwapWindow(sdlWindow_.get());
+  void Window::swapBuffers() {
+    glfwSwapBuffers(glfwWindow_.get());
+    glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
+    glClear(GL_COLOR_BUFFER_BIT);
+  }
+
+  void Window::setVSync(bool enabled) {
+    if (enabled) {
+      glfwSwapInterval(1);
+    } else {
+      glfwSwapInterval(0);
+    }
+    data_.vSync = enabled;
+  }
+
+  void Window::init() {
+    FLUGEL_INFO_E("Creating window: {0} ({1}, {2})", data_.title, data_.width, data_.height);
+
+    if (!isGlfwInitialized_) {
+      int success = glfwInit();
+      FLUGEL_ASSERT_E(success, "Failed to initialize GLFW!");
+      isGlfwInitialized_ = true;
+    }
+
+    glfwWindow_ = UniqueGlfwWindow{glfwCreateWindow(
+      (int)data_.width,
+      (int)data_.height,
+      data_.title.c_str(),
+      nullptr,
+      nullptr
+    )};
+    glfwMakeContextCurrent(glfwWindow_.get());
+    glfwSetWindowUserPointer(glfwWindow_.get(), &data_);
+
+    setVSync(data_.vSync);
+
+    glfwSetWindowCloseCallback(glfwWindow_.get(), [](GLFWwindow* window) {
+      WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
+      WindowCloseEvent e;
+      data.closeNotifier.notify(e);
+    });
+  }
+
+  void Window::shutdown() {
+    
   }
 }

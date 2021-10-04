@@ -1,13 +1,14 @@
 #include "app.hpp"
 
 namespace Flugel {
-  App::App() {
+  App::App(const WindowProperties& props) 
+    : window_{props} {
     FLUGEL_TRACE("Constructing App...");
     appUpdateFixedId_ = updateFixedNotifier.subscribe(FLUGEL_BIND_FN(App::onAppUpdateFixed));
     appUpdateId_ = updateNotifier.subscribe(FLUGEL_BIND_FN(App::onAppUpdate));
     appRenderId_ = renderNotifier.subscribe(FLUGEL_BIND_FN(App::onAppRender));
 
-    windowCloseId_ = window_.closeNotifier.subscribe(FLUGEL_BIND_FN(App::onWindowClose));
+    windowCloseId_ = window_.closeNotifier().subscribe(FLUGEL_BIND_FN(App::onWindowClose));
   }
 
   App::~App() {
@@ -16,7 +17,7 @@ namespace Flugel {
     updateNotifier.unsubscribe(appUpdateId_);
     renderNotifier.unsubscribe(appRenderId_);
 
-    window_.closeNotifier.unsubscribe(windowCloseId_);
+    window_.closeNotifier().unsubscribe(windowCloseId_);
   }
 
   void App::run() {
@@ -59,7 +60,7 @@ namespace Flugel {
   }
 
   bool App::onAppUpdateFixed(AppUpdateFixedEvent& e) {
-    FLUGEL_TRACE("FixedUpdate!");
+    //FLUGEL_TRACE("FixedUpdate!");
     return false;
   }
 
@@ -71,16 +72,8 @@ namespace Flugel {
   bool App::onAppRender(AppRenderEvent& e) {
     //FLUGEL_TRACE("Render!");
     //glViewport(0, 0, window_.width, window_.height);
-    //glClearColor(1.f, 0.f, 1.f, 1.f);
-    //glClear(GL_COLOR_BUFFER_BIT);
 
-    window_.swapBuffer();
-
-    return false;
-  }
-
-  bool App::onAppTick(AppTickEvent& e) {
-    //FLUGEL_TRACE("Tick!");
+    window_.swapBuffers();
     return false;
   }
   

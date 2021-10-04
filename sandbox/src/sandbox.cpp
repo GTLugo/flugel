@@ -2,7 +2,13 @@
 
 class SandboxApp : public Flugel::App {
   public:
-    SandboxApp() = default;
+    SandboxApp()
+      : Flugel::App{Flugel::WindowProperties{
+        "SANDBOX",
+        800,
+        450,
+        false
+      }} {}
     virtual ~SandboxApp() override = default;
 };
 

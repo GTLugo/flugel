@@ -8,7 +8,7 @@
 namespace Flugel {
   class FLUGEL_API App {
   public:
-    App();
+    App(const WindowProperties& props = {});
     virtual ~App();
 
     Time getTime() const { return time_; }
@@ -17,7 +17,7 @@ namespace Flugel {
   private:
     bool shouldClose_{false};
     Time time_{};
-    Window window_{};
+    Window window_;
 
     // App Events
     Notifier<AppUpdateEvent> updateNotifier{};
@@ -26,8 +26,6 @@ namespace Flugel {
     UUID appUpdateFixedId_{};
     Notifier<AppRenderEvent> renderNotifier{};
     UUID appRenderId_{};
-    Notifier<AppTickEvent> tickNotifier{}; // unused dummy
-    UUID appTickId_{};
 
     // Window Events
     UUID windowCloseId_{};
@@ -36,7 +34,6 @@ namespace Flugel {
     bool onAppUpdateFixed(AppUpdateFixedEvent& e);
     bool onAppUpdate(AppUpdateEvent& e);
     bool onAppRender(AppRenderEvent& e);
-    bool onAppTick(AppTickEvent& e);
     bool onWindowClose(WindowCloseEvent& e);
   };
 
