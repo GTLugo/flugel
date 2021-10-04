@@ -45,33 +45,14 @@
 
 #define BIT(x) (1 << x)
 
-#define FLUGEL_BIND_EVENT(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); } 
+#define FLUGEL_BIND_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); } 
 
 namespace Flugel {
-  // duration types
-  using NanoSeconds = std::chrono::duration<double, std::nano>;
-  using MicroSeconds = std::chrono::duration<double, std::micro>;
-  using MilliSeconds = std::chrono::duration<double, std::milli>;
-  using Seconds = std::chrono::duration<double>;
-  using Minutes = std::chrono::duration<double, std::ratio<60>>;
-  using Hours = std::chrono::duration<double, std::ratio<3600>>;
-  // clock types
-  using ClockSystem = std::chrono::system_clock;
-  using ClockSteady = std::chrono::steady_clock;
-  using ClockAccurate = std::chrono::high_resolution_clock;
-  // time point
-  template<typename Duration>
-  using TimePoint = std::chrono::time_point<ClockSteady, Duration>;
-  template<typename Duration>
-  using TimePointAccurate = std::chrono::time_point<ClockAccurate, Duration>;
-  template<typename Duration>
-  using TimePointSystem = std::chrono::time_point<ClockSystem, Duration>;
-
   // Scope = std::unique_ptr
-  template<typename T>
-  using Unique = std::unique_ptr<T>;
+  template<typename T, typename D = std::default_delete<T>>
+  using Unique = std::unique_ptr<T, D>;
   template<typename T, typename... Args>
-  constexpr Unique<T> CreateUnique(Args&&... args) {
+  constexpr Unique<T> makeUnique(Args&&... args) {
     return std::make_unique<T>(std::forward<Args>(args)...);
   }
 
@@ -79,7 +60,7 @@ namespace Flugel {
   template<typename T>
   using Shared = std::shared_ptr<T>;
   template<typename T, typename... Args>
-  constexpr Shared<T> CreateShared(Args&&... args) {
+  constexpr Shared<T> makeShared(Args&&... args) {
     return std::make_shared<T>(std::forward<Args>(args)...);
   }
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "event.hpp"
+#include "notifier.hpp"
 
 namespace Flugel {
   class FLUGEL_API KeyboardEvent : public Event {

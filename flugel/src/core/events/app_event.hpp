@@ -1,6 +1,6 @@
 #pragma once
 
-#include "event.hpp"
+#include "notifier.hpp"
 
 namespace Flugel {
   class FLUGEL_API AppStartEvent : public Event {
@@ -28,6 +28,20 @@ namespace Flugel {
     }
 
     EVENT_CLASS_TYPE(AppTick)
+    EVENT_CLASS_CATEGORY(EventCategoryApp)
+  };
+
+  class FLUGEL_API AppUpdateFixedEvent : public Event {
+  public:
+    AppUpdateFixedEvent() {}
+
+    std::string toString() const override {
+      std::stringstream ss;
+      ss << "Event <" << getName() << ">";
+      return ss.str();
+    }
+
+    EVENT_CLASS_TYPE(AppUpdateFixed)
     EVENT_CLASS_CATEGORY(EventCategoryApp)
   };
 
