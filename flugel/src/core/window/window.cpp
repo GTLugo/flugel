@@ -54,7 +54,7 @@ namespace Flugel {
 
     glfwSetWindowCloseCallback(glfwWindow_.get(), [](GLFWwindow* window) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
-      WindowCloseEvent e;
+      WindowCloseEvent e{};
       data.closeNotifier.notify(e);
     });
   }
