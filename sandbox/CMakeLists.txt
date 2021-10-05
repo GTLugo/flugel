@@ -60,5 +60,8 @@ target_link_directories(${TARGET_NAME}
 # Put all libraries into a variable & link the libraries with the executable
 message(CHECK_START "Linking against Flugel Engine...")
 set(LIBS "flugel")
-target_link_libraries(${TARGET_NAME} ${LIBS})
+target_link_libraries(${TARGET_NAME}
+  PRIVATE
+    ${LIBS}
+)
 message(CHECK_PASS "linked!")

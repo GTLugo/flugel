@@ -57,50 +57,49 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 # glew
 message(CHECK_START "Finding glew...")
 find_package(glew CONFIG REQUIRED)
-set(GLEW_LIBRARY GLEW::GLEW)
+set(GLEW_LIBRARY PUBLIC GLEW::GLEW)
 message(CHECK_PASS "found!")
 
 # glad
 message(CHECK_START "Finding glad...")
 find_package(glad CONFIG REQUIRED)
-set(GLAD_LIBRARY glad::glad)
+set(GLAD_LIBRARY PUBLIC glad::glad)
 message(CHECK_PASS "found!")
 
 # glfw3
 message(CHECK_START "Finding glfw3...")
 find_package(glfw3 CONFIG REQUIRED)
-set(GLFW_LIBRARY glfw)
+set(GLFW_LIBRARY PUBLIC glfw)
 message(CHECK_PASS "found!")
 
 # glm
 message(CHECK_START "Finding glm...")
 find_package(glm CONFIG REQUIRED)
-set(GLM_LIBRARY glm::glm)
+set(GLM_LIBRARY PUBLIC glm::glm)
 message(CHECK_PASS "found!")
 
 # fmt
 message(CHECK_START "Finding fmt...")
 find_package(fmt CONFIG REQUIRED)
-set(FMT_LIBRARY fmt::fmt-header-only)
+set(FMT_LIBRARY PUBLIC fmt::fmt-header-only)
 message(CHECK_PASS "found!")
 
 # spdlog
 message(CHECK_START "Finding spdlog...")
 find_package(spdlog CONFIG REQUIRED)
-set(SPDLOG_LIBRARY spdlog::spdlog_header_only) #spdlog::spdlog OR spdlog::spdlog_header_only
+set(SPDLOG_LIBRARY PUBLIC spdlog::spdlog_header_only) #spdlog::spdlog OR spdlog::spdlog_header_only
 message(CHECK_PASS "found!")
 
 # ===================================================
 # INCLUDING & LINKING
 # ===================================================
 # Export the library's public header path to dependent targets
-set(PUBLIC_HEADER_FILES "src")
 # Define the include DIRs
 target_include_directories(${TARGET_NAME}
-  PUBLIC
+  PRIVATE
     "src" "include"
   INTERFACE
-    "${PUBLIC_HEADER_FILES}"
+    "src"
 )
 
 
@@ -112,7 +111,7 @@ target_precompile_headers(${TARGET_NAME}
 
 # Define the link libraries
 target_link_directories(${TARGET_NAME}
-  PUBLIC
+  PRIVATE
     "lib"
 )
 
@@ -126,4 +125,6 @@ set(LIBS
   ${SPDLOG_LIBRARY}
 )
 
-target_link_libraries(${TARGET_NAME} ${LIBS})
+target_link_libraries(${TARGET_NAME}
+  ${LIBS}
+)
