@@ -1,17 +1,21 @@
 #include <flugel.hpp>
 
-class SandboxApp : public Flugel::App {
-  public:
-    SandboxApp()
-      : Flugel::App{Flugel::WindowProperties{
-        "SANDBOX",
-        800,
-        450,
-        false
-      }} {}
-    virtual ~SandboxApp() override = default;
-};
+namespace Sandbox {
+  class App : public Flugel::App {
+    public:
+      App()
+        : Flugel::App{Flugel::WindowProperties{
+          "SANDBOX",
+          800,
+          450,
+          false
+        }} {}
+      virtual ~App() override = default;
+  };
+}
 
-Flugel::Unique<Flugel::App> Flugel::createApp() {
-  return Flugel::makeUnique<SandboxApp>();
+namespace Flugel {
+  Unique<App> createApp() {
+    return makeUnique<Sandbox::App>();
+  }
 }
