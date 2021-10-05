@@ -3,7 +3,7 @@
 namespace Flugel {
   App::App(const WindowProperties& props) 
     : window_{props} {
-    FLUGEL_TRACE("Constructing App...");
+    FLUGEL_TRACE_E("Constructing App...");
     appUpdateFixedId_ = updateFixedNotifier.subscribe(FLUGEL_BIND_FN(App::onAppUpdateFixed));
     appUpdateId_ = updateNotifier.subscribe(FLUGEL_BIND_FN(App::onAppUpdate));
     appRenderId_ = renderNotifier.subscribe(FLUGEL_BIND_FN(App::onAppRender));
@@ -12,7 +12,7 @@ namespace Flugel {
   }
 
   App::~App() {
-    FLUGEL_TRACE("Destructing App...");
+    FLUGEL_TRACE_E("Destructing App...");
     updateFixedNotifier.unsubscribe(appUpdateFixedId_);
     updateNotifier.unsubscribe(appUpdateId_);
     renderNotifier.unsubscribe(appRenderId_);
@@ -21,7 +21,7 @@ namespace Flugel {
   }
 
   void App::run() {
-    FLUGEL_TRACE("Running...");
+    FLUGEL_TRACE_E("Entering game loop...");
 
     while (!shouldClose_) {
       // Start outer, unfixed loop with regular tick
@@ -51,27 +51,27 @@ namespace Flugel {
       renderNotifier.notify(renderEvent);
     }
 
-    FLUGEL_TRACE("Finished running!");
+    FLUGEL_TRACE_E("Exiting game loop...");
   }
 
   void App::processInput() {
-    //FLUGEL_TRACE("FPS: {0}", 1. / time_.deltaTime<Seconds>());
+    //FLUGEL_TRACE_E("FPS: {0}", 1. / time_.deltaTime<Seconds>());
     window_.processInput();
   }
 
   bool App::onAppUpdateFixed(AppUpdateFixedEvent& e) {
-    //FLUGEL_TRACE("FixedUpdate!");
+    //FLUGEL_TRACE_E("FixedUpdate!");
     return false;
   }
 
   bool App::onAppUpdate(AppUpdateEvent& e) {
-    //FLUGEL_TRACE("Update!");
+    //FLUGEL_TRACE_E("Update!");
 
     return false;
   }
 
   bool App::onAppRender(AppRenderEvent& e) {
-    //FLUGEL_TRACE("Render!");
+    //FLUGEL_TRACE_E("Render!");
     //glViewport(0, 0, window_.width, window_.height);
 
     window_.swapBuffers();

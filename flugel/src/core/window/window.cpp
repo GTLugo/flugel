@@ -32,7 +32,7 @@ namespace Flugel {
   }
 
   void Window::init() {
-    FLUGEL_INFO_E("Creating window: {0} ({1}, {2})", data_.title, data_.width, data_.height);
+    FLUGEL_DEBUG_E("Creating window: {0} ({1}, {2})", data_.title, data_.width, data_.height);
 
     if (!isGlfwInitialized_) {
       int success = glfwInit();
