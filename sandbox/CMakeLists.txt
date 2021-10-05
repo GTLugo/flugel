@@ -43,7 +43,8 @@ set(HEADER_FILES
 # ===================================================
 add_executable(${TARGET_NAME} 
   ${HEADER_FILES} 
-  ${SOURCE_FILES})
+  ${SOURCE_FILES}
+)
 set_target_properties(${TARGET_NAME}
   PROPERTIES
     #VERSION "${PROJECT_VERSION}"
@@ -53,11 +54,13 @@ set_target_properties(${TARGET_NAME}
 message(DEBUG "App bin Dir: ${BIN_DIR}")
 
 # Preprocessor Defines
-target_compile_definitions(${TARGET_NAME} PRIVATE
-  $<$<CONFIG:debug>:DEBUG=1 FLUGEL_ENABLE_ASSERTS=1>
-  $<$<CONFIG:release>:RELEASE=1>
-  $<$<CONFIG:relwithdebinfo>:RELDEB=1 FLUGEL_ENABLE_ASSERTS=1>
-  $<$<CONFIG:minsizerel>:MINREL=1>)
+target_compile_definitions(${TARGET_NAME}
+  PRIVATE
+    $<$<CONFIG:debug>:DEBUG=1 FLUGEL_ENABLE_ASSERTS=1>
+    $<$<CONFIG:release>:RELEASE=1>
+    $<$<CONFIG:relwithdebinfo>:RELDEB=1 FLUGEL_ENABLE_ASSERTS=1>
+    $<$<CONFIG:minsizerel>:MINREL=1>
+)
 
 # ===================================================
 # DEPENDENCIES - VCPKG SUGGESTED

@@ -69,7 +69,11 @@ set(SHADER_FILES
 # ===================================================
 # ADD SHARED LIBRARY TARGET
 # ===================================================
-add_library(${TARGET_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES})
+add_library(${TARGET_NAME}
+  SHARED
+    #${HEADER_FILES}
+    ${SOURCE_FILES}
+)
 set_target_properties(${TARGET_NAME}
   PROPERTIES
     OUTPUT_NAME "${TARGET_NAME}"
@@ -79,12 +83,14 @@ set_target_properties(${TARGET_NAME}
 message(DEBUG "Engine bin Dir: ${BIN_DIR}")
 
 # Preprocessor Defines
-target_compile_definitions(${TARGET_NAME} PRIVATE 
-  $<$<CONFIG:debug>:DEBUG=1 FLUGEL_ENABLE_ASSERTS=1>
-  $<$<CONFIG:release>:RELEASE=1>
-  $<$<CONFIG:relwithdebinfo>:RELDEB=1 FLUGEL_ENABLE_ASSERTS=1>
-  $<$<CONFIG:minsizerel>:MINREL=1>
-  FLUGEL_BUILD_DLL=1)
+target_compile_definitions(${TARGET_NAME}
+  PRIVATE 
+    $<$<CONFIG:debug>:DEBUG=1 FLUGEL_ENABLE_ASSERTS=1>
+    $<$<CONFIG:release>:RELEASE=1>
+    $<$<CONFIG:relwithdebinfo>:RELDEB=1 FLUGEL_ENABLE_ASSERTS=1>
+    $<$<CONFIG:minsizerel>:MINREL=1>
+    FLUGEL_BUILD_DLL=1
+)
 
 # ===================================================
 # DEPENDENCIES - VCPKG SUGGESTED
@@ -164,6 +170,7 @@ set(LIBS
   #${SDL2_LIBRARY}
   ${GLM_LIBRARY}
   ${FMT_LIBRARY}
-  ${SPDLOG_LIBRARY})
+  ${SPDLOG_LIBRARY}
+)
 
 target_link_libraries(${TARGET_NAME} ${LIBS})
