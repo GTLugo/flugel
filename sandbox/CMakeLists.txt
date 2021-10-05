@@ -7,49 +7,23 @@ set(CMAKE_CXX_STANDARD 20)
 set(TARGET_NAME "SANDBOX")
 message(STATUS "Configuring: ${PROJECT_NAME}")
 
-# BIN_DIR uses highest level cmake source dir
-#set(BIN_DIR  "${CMAKE_SOURCE_DIR}/build/${CMAKE_SYSTEM_NAME}")
-# set(SRC_DIR  "src")
-# set(LIB_DIR  "lib")
-# set(INCL_DIR "include")
-# set(RES_DIR  "res")
-
 # ===================================================
 # COLLECT FILES
 # ===================================================
-# file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
-#   ${SRC_DIR}/*.c
-#   ${SRC_DIR}/*.cpp)
-# file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS
-#   ${SRC_DIR}/*.h
-#   ${SRC_DIR}/*.hpp)
 
 set(SOURCE_FILES
   src/sandbox.cpp
 )
 
-set(HEADER_FILES
-
-)
-
-# ===================================================
-# CONFIGURE ASSESTS HELPER FILE
-# ===================================================
-# configure_file(src/helpers/RootDir.hpp.in src/helpers/RootDir.hpp)
-# include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
-
 # ===================================================
 # ADD EXECUTABLE TARGET
 # ===================================================
-add_executable(${TARGET_NAME} 
-  ${HEADER_FILES} 
+add_executable(${TARGET_NAME}
   ${SOURCE_FILES}
 )
 set_target_properties(${TARGET_NAME}
   PROPERTIES
-    #VERSION "${PROJECT_VERSION}"
     OUTPUT_NAME "${TARGET_NAME}"
-    #RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}"
 )
 message(DEBUG "App bin Dir: ${BIN_DIR}")
 
@@ -72,14 +46,16 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 # INCLUDING & LINKING
 # ===================================================
 # Define the include DIRs
-#set(LIB_INCL ${flugel_engine_INCLUDE_DIRS})
 target_include_directories(${TARGET_NAME}
   PRIVATE
     "src" "include"
 )
 
 # Define the link libraries
-link_directories("lib")
+target_link_directories(${TARGET_NAME}
+  PRIVATE
+    "lib"
+)
 
 # Put all libraries into a variable & link the libraries with the executable
 message(CHECK_START "Linking against Flugel Engine...")
