@@ -2,7 +2,7 @@
 
 #include "core/app.hpp"
 
-int main(int argCount, char* args[]) {
+int main(int argCount = 0, char* args[] = nullptr) {
   Flugel::Log::init();
 
   Flugel::Unique<Flugel::App> app{Flugel::createApp()};
@@ -17,6 +17,6 @@ int main(int argCount, char* args[]) {
       HINSTANCE h_prev_instance, 
       LPSTR lp_cmd_line,
       int n_cmd_show) {
-    return main(0, "");
+    return main();
   }
 #endif

@@ -66,6 +66,7 @@ namespace Flugel {
 
   bool App::onAppUpdate(AppUpdateEvent& e) {
     //FLUGEL_TRACE("Update!");
+
     return false;
   }
 
