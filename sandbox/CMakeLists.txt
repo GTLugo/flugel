@@ -35,8 +35,8 @@ set(HEADER_FILES
 # ===================================================
 # CONFIGURE ASSESTS HELPER FILE
 # ===================================================
-configure_file(src/helpers/RootDir.hpp.in src/helpers/RootDir.hpp)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
+# configure_file(src/helpers/RootDir.hpp.in src/helpers/RootDir.hpp)
+# include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 
 # ===================================================
 # ADD EXECUTABLE TARGET
