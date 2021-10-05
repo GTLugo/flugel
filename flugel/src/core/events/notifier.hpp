@@ -9,6 +9,8 @@
 // https://stackoverflow.com/questions/12988320/store-function-pointers-to-any-member-function
 // https://en.cppreference.com/w/cpp/utility/functional/function
 //
+// Notifier alerts its subscribers to an event occuring
+//
 
 #pragma once
 
