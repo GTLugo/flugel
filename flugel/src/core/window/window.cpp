@@ -77,24 +77,19 @@ namespace Flugel {
   void Window::setCallbacks() {
     glfwSetWindowCloseCallback(glfwWindow_.get(), [](GLFWwindow* window) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
-      WindowCloseEvent e{};
-      data.windowCloseNotifier.notify(e);
+      data.windowCloseNotifier.notify({});
     });
     glfwSetWindowSizeCallback(glfwWindow_.get(), [](GLFWwindow* window, int32_t width, int32_t height) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       data.width = width;
       data.height = height;
-
-      WindowResizeEvent e{data.width, data.height};
-      data.windowResizeNotifier.notify(e);
+      data.windowResizeNotifier.notify({data.width, data.height});
     });
     glfwSetWindowPosCallback(glfwWindow_.get(), [](GLFWwindow* window, int32_t xPos, int32_t yPos) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       data.xPos = xPos;
       data.yPos = yPos;
-
-      WindowMovedEvent e{data.xPos, data.yPos};
-      data.windowMovedNotifier.notify(e);
+      data.windowMovedNotifier.notify({data.xPos, data.yPos});
     });
 
     // KEYBOARD
@@ -102,18 +97,16 @@ namespace Flugel {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
-          KeyPressedEvent e{key, 0};
-          data.keyPressedNotifier.notify(e);
+          data.keyPressedNotifier.notify({key, 0});
           break;
         }
         case GLFW_REPEAT: {
-          KeyPressedEvent e{key, 1}; // GLFW doesn't provide a repeat count, so 1 will do for most use cases
-          data.keyPressedNotifier.notify(e);
+          // GLFW doesn't provide a repeat count, so 1 will do for most use cases
+          data.keyPressedNotifier.notify({key, 1});
         }
           break;
         case GLFW_RELEASE:{
-          KeyReleasedEvent e{key};
-          data.keyReleasedNotifier.notify(e);
+          data.keyReleasedNotifier.notify({key});
           break;
         }
         default:
@@ -126,13 +119,11 @@ namespace Flugel {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
-          MousePressedEvent e{button};
-          data.mousePressedNotifier.notify(e);
+          data.mousePressedNotifier.notify({button});
           break;
         }
         case GLFW_RELEASE:{
-          MouseReleasedEvent e{button};
-          data.mouseReleasedNotifier.notify(e);
+          data.mouseReleasedNotifier.notify({button});
           break;
         }
         default:
@@ -141,13 +132,11 @@ namespace Flugel {
     });
     glfwSetCursorPosCallback(glfwWindow_.get(), [](GLFWwindow* window, double xPos, double yPos) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
-      MouseMovedEvent e{xPos, yPos};
-      data.mouseMovedNotifier.notify(e);
+      data.mouseMovedNotifier.notify({xPos, yPos});
     });
     glfwSetScrollCallback(glfwWindow_.get(), [](GLFWwindow* window, double xOffset, double yOffset) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
-      MouseScrolledEvent e{xOffset, yOffset};
-      data.mouseScrolledNotifier.notify(e);
+      data.mouseScrolledNotifier.notify({xOffset, yOffset});
     });
   }
 

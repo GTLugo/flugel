@@ -78,8 +78,7 @@ namespace Flugel {
     
     // RENDER LOOP
     while (!shouldClose_) {
-      AppRenderEvent renderEvent{};
-      renderNotifier_.notify(renderEvent);
+      renderNotifier_.notify({});
     }
 
     FLUGEL_TRACE_E("Ending render thread...");
@@ -90,8 +89,6 @@ namespace Flugel {
     
     // GAME LOOP
     while (!shouldClose_) {
-      // Start outer, unfixed loop with regular tick
-
       // This loop will only occur once every fixedTimeStep, being skipped for every
       // frame which happens between each timestep. If the deltaTime per frame is too
       // long, then for each frame, this loop will occur more than once in order to
@@ -99,18 +96,16 @@ namespace Flugel {
       // Source: https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
       while (time_.shouldDoFixedStep()) {
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
-        AppUpdateFixedEvent updateFixedEvent{};
-        updateFixedNotifier_.notify(updateFixedEvent);
+        updateFixedNotifier_.notify({});
 
         // End inner, fixed loop with lag tick
         time_.tickLag();
       }
 
-      // Rendering & timestep INSENSITIVE stuff happens out here,
-      // where pacing goes as fast as possible
-      AppUpdateEvent updateEvent{};
-      updateNotifier_.notify(updateEvent);
+      // Timestep INSENSITIVE stuff happens out here, where pacing goes as fast as possible
+      updateNotifier_.notify({});
 
+      // End outer, unfixed loop with regular tick
       time_.tick();
     }
 
@@ -198,12 +193,12 @@ namespace Flugel {
   // Key Events
 
   bool App::onKeyPressed(KeyPressedEvent& e) {
-    //FLUGEL_TRACE_E("KEY_PRESSED: ({0}, {1})", e.getKeyCode(), e.getRepeatCount());
+    FLUGEL_TRACE_E("KEY_PRESSED: ({0}, {1})", e.getKeyCode(), e.getRepeatCount());
     return false;
   }
 
   bool App::onKeyReleased(KeyReleasedEvent& e) {
-    //FLUGEL_TRACE_E("KEY_RELEASED: {0}", e.getKeyCode());
+    FLUGEL_TRACE_E("KEY_RELEASED: {0}", e.getKeyCode());
     return false;
   }
 }

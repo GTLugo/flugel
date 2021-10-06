@@ -84,7 +84,11 @@ namespace Flugel {
 
     // Notify should be called from within the class. It should never be called from
     // outside the class as that would introduce coupling and risk runaway events
-    void notify(Event_T& event) {
+    // void notify(Event_T& event) {
+    //   callSubscribers(event);
+    // }
+
+    void notify(Event_T event) {
       callSubscribers(event);
     }
   private:
