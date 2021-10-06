@@ -98,7 +98,7 @@ namespace Flugel {
   // App Events
 
   bool App::onAppUpdateFixed(AppUpdateFixedEvent& e) {
-    FLUGEL_TRACE_E("FixedUpdate!");
+    //FLUGEL_TRACE_E("FixedUpdate!");
     return false;
   }
 
