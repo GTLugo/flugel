@@ -78,8 +78,6 @@ namespace Flugel {
     
     // RENDER LOOP
     while (!shouldClose_) {
-      /// TODO: Move input processing off main thread
-
       AppRenderEvent renderEvent{};
       renderNotifier_.notify(renderEvent);
     }
@@ -158,18 +156,18 @@ namespace Flugel {
   // Window Events
 
   bool App::onWindowClose(WindowCloseEvent& e) {
-    FLUGEL_TRACE_E("WINDOW_CLOSE");
+    //FLUGEL_TRACE_E("WINDOW_CLOSE");
     shouldClose_ = true;
     return false;
   }
   
   bool App::onWindowResize(WindowResizeEvent& e) {
-    //FLUGEL_TRACE_E("WINDOW_RESIZE: ({0; {1})", e.getWidth(), e.getHeight());
+    //FLUGEL_TRACE_E("WINDOW_RESIZE: ({0}, {1})", e.getWidth(), e.getHeight());
     return false;
   }
   
   bool App::onWindowMoved(WindowMovedEvent& e) {
-    //FLUGEL_TRACE_E("WINDOW_MOVED: ({0; {1})", e.getX(), e.getY());
+    //FLUGEL_TRACE_E("WINDOW_MOVED: ({0}, {1})", e.getX(), e.getY());
     
 
     return false;
@@ -178,34 +176,34 @@ namespace Flugel {
   // Mouse Events
 
   bool App::onMousePressed(MousePressedEvent& e) {
-    FLUGEL_TRACE_E("MOUSE_PRESSED: {0}", e.getMouseButton());
+    //FLUGEL_TRACE_E("MOUSE_PRESSED: {0}", e.getMouseButton());
     return false;
   }
 
   bool App::onMouseReleased(MouseReleasedEvent& e) {
-    FLUGEL_TRACE_E("MOUSE_RELEASED: {0}", e.getMouseButton());
+    //FLUGEL_TRACE_E("MOUSE_RELEASED: {0}", e.getMouseButton());
     return false;
   }
 
   bool App::onMouseMoved(MouseMovedEvent& e) {
-    //FLUGEL_TRACE_E("MOUSE_MOVED: ({0; {1})", e.getX(), e.getY());
+    //FLUGEL_TRACE_E("MOUSE_MOVED: ({0}, {1})", e.getX(), e.getY());
     return false;
   }
 
   bool App::onMouseScrolled(MouseScrolledEvent& e) {
-    //FLUGEL_TRACE_E("MOUSE_SCROLLED: ({0; {1})", e.getXOffset(), e.getYOffset());
+    //FLUGEL_TRACE_E("MOUSE_SCROLLED: ({0}, {1})", e.getXOffset(), e.getYOffset());
     return false;
   }
 
   // Key Events
 
   bool App::onKeyPressed(KeyPressedEvent& e) {
-    FLUGEL_TRACE_E("KEY_PRESSED: ({0} {1})", e.getKeyCode(), e.getRepeatCount());
+    //FLUGEL_TRACE_E("KEY_PRESSED: ({0}, {1})", e.getKeyCode(), e.getRepeatCount());
     return false;
   }
 
   bool App::onKeyReleased(KeyReleasedEvent& e) {
-    FLUGEL_TRACE_E("KEY_RELEASED: {0}", e.getKeyCode());
+    //FLUGEL_TRACE_E("KEY_RELEASED: {0}", e.getKeyCode());
     return false;
   }
 }
