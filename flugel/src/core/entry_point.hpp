@@ -6,9 +6,7 @@ int main(int argCount = 0, char* args[] = nullptr) {
   Flugel::Log::init();
 
   Flugel::Unique<Flugel::App> app{Flugel::createApp()};
-  FLUGEL_TRACE_E("Running app...");
   app->run();
-  FLUGEL_TRACE_E("App finished running!");
 
   return EXIT_SUCCESS;
 }

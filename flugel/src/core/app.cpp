@@ -43,12 +43,28 @@ namespace Flugel {
   }
 
   void App::run() {
-    FLUGEL_TRACE_E("Entering game loop...");
+    FLUGEL_TRACE_E("Running app...");
+    std::thread gamethread{FLUGEL_BIND_FN(App::gameLoop)};
+    
+    // MAIN THREAD
+    while (!shouldClose_) {
+      /// TODO: Move input processing off main thread
+      processInput();
 
+      AppRenderEvent renderEvent{};
+      renderNotifier_.notify(renderEvent);
+    }
+
+    gamethread.join();
+    FLUGEL_TRACE_E("Exiting app...");
+  }
+  
+  void App::gameLoop() {
+    FLUGEL_TRACE_E("Entering game loop...");
+    
+    // GAME THREAD
     while (!shouldClose_) {
       // Start outer, unfixed loop with regular tick
-      time_.tick();
-      processInput();
 
       // This loop will only occur once every fixedTimeStep, being skipped for every
       // frame which happens between each timestep. If the deltaTime per frame is too
@@ -69,10 +85,8 @@ namespace Flugel {
       AppUpdateEvent updateEvent{};
       updateNotifier_.notify(updateEvent);
 
-      AppRenderEvent renderEvent{};
-      renderNotifier_.notify(renderEvent);
+      time_.tick();
     }
-
     FLUGEL_TRACE_E("Exiting game loop...");
   }
 
@@ -84,7 +98,7 @@ namespace Flugel {
   // App Events
 
   bool App::onAppUpdateFixed(AppUpdateFixedEvent& e) {
-    //FLUGEL_TRACE_E("FixedUpdate!");
+    FLUGEL_TRACE_E("FixedUpdate!");
     return false;
   }
 
@@ -111,12 +125,12 @@ namespace Flugel {
   }
   
   bool App::onWindowResize(WindowResizeEvent& e) {
-    FLUGEL_TRACE_E("WINDOW_RESIZE: ({0}, {1})", e.getWidth(), e.getHeight());
+    //FLUGEL_TRACE_E("WINDOW_RESIZE: ({0}, {1})", e.getWidth(), e.getHeight());
     return false;
   }
   
   bool App::onWindowMoved(WindowMovedEvent& e) {
-    FLUGEL_TRACE_E("WINDOW_MOVED: ({0}, {1})", e.getX(), e.getY());
+    //FLUGEL_TRACE_E("WINDOW_MOVED: ({0}, {1})", e.getX(), e.getY());
     return false;
   }
 
@@ -133,12 +147,12 @@ namespace Flugel {
   }
 
   bool App::onMouseMoved(MouseMovedEvent& e) {
-    FLUGEL_TRACE_E("MOUSE_MOVED: ({0}, {1})", e.getX(), e.getY());
+    //FLUGEL_TRACE_E("MOUSE_MOVED: ({0}, {1})", e.getX(), e.getY());
     return false;
   }
 
   bool App::onMouseScrolled(MouseScrolledEvent& e) {
-    FLUGEL_TRACE_E("MOUSE_SCROLLED: ({0}, {1})", e.getXOffset(), e.getYOffset());
+    //FLUGEL_TRACE_E("MOUSE_SCROLLED: ({0}, {1})", e.getXOffset(), e.getYOffset());
     return false;
   }
 

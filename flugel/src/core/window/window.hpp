@@ -35,6 +35,7 @@ namespace Flugel {
     Window(const WindowProperties& props = {});
     virtual ~Window();
 
+    void makeContextCurrent();
     void processInput();
     void swapBuffers();
 

@@ -12,6 +12,10 @@ namespace Flugel {
     shutdown();
   }
 
+  void Window::makeContextCurrent() {
+    glfwMakeContextCurrent(glfwWindow_.get());
+  }
+
   void Window::processInput() {
     glfwPollEvents();
   }

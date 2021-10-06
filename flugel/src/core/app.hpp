@@ -41,7 +41,10 @@ namespace Flugel {
     UUID keyPressedId_{};
     UUID keyReleasedId_{};
   private:
+    void gameLoop();
+
     void processInput();
+
     // App Events
     bool onAppUpdateFixed(AppUpdateFixedEvent& e);
     bool onAppUpdate(AppUpdateEvent& e);

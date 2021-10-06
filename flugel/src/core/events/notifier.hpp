@@ -33,6 +33,7 @@ namespace Flugel {
 
   #define EVENT_CLASS_TYPE(type) static EventType getStaticType() { return EventType::##type; }\
                                  virtual EventType getEventType() const override { return getStaticType(); }\
+                                 static const char* getStaticName() { return #type; }\
                                  virtual const char* getName() const override { return #type; } 
   #define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags() const override { return category; }
 
@@ -72,13 +73,13 @@ namespace Flugel {
     UUID subscribe(EventFn eventFn) {
       UUID id{};
       subscribers_.insert(std::pair<UUID, EventFn>(id, eventFn));
-      FLUGEL_DEBUG_E("Subscribed: <{0}> {1}", Event_T::getStaticType(), id);
+      FLUGEL_DEBUG_E("Subscribed: <{0}> {1}", Event_T::getStaticName(), id);
       return id;
     }
 
     void unsubscribe(const UUID& id) {
       subscribers_.erase(id);
-      FLUGEL_DEBUG_E("Unsubscribed: <{0}> {1}", Event_T::getStaticType(), id);
+      FLUGEL_DEBUG_E("Unsubscribed: <{0}> {1}", Event_T::getStaticName(), id);
     }
 
     // Notify should be called from within the class. It should never be called from
