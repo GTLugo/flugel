@@ -4,6 +4,26 @@ namespace Flugel {
   App::App(const WindowProperties& props) 
     : window_{props} {
     FLUGEL_TRACE_E("Constructing App...");
+    subscribeMethods();
+  }
+
+  App::~App() {
+    FLUGEL_TRACE_E("Destructing App...");
+    killThreads();
+    unsubscribeMethods();
+  }
+
+  void App::spawnThreads() {
+    renderThread_ = std::thread{FLUGEL_BIND_FN(App::renderThreadMain)};
+    gameThread_ = std::thread{FLUGEL_BIND_FN(App::gameThreadMain)};
+  }
+
+  void App::killThreads() {
+    gameThread_.join();
+    renderThread_.join();
+  }
+
+  void App::subscribeMethods() {
     // App Events
     appUpdateFixedId_ = updateFixedNotifier_.subscribe(FLUGEL_BIND_FN(App::onAppUpdateFixed));
     appUpdateId_ = updateNotifier_.subscribe(FLUGEL_BIND_FN(App::onAppUpdate));
@@ -22,8 +42,7 @@ namespace Flugel {
     keyReleasedId_ = window_.keyReleasedNotifier().subscribe(FLUGEL_BIND_FN(App::onKeyReleased));
   }
 
-  App::~App() {
-    FLUGEL_TRACE_E("Destructing App...");
+  void App::unsubscribeMethods() {
     // App Events
     updateFixedNotifier_.unsubscribe(appUpdateFixedId_);
     updateNotifier_.unsubscribe(appUpdateId_);
@@ -43,26 +62,35 @@ namespace Flugel {
   }
 
   void App::run() {
-    FLUGEL_TRACE_E("Running app...");
-    std::thread gamethread{FLUGEL_BIND_FN(App::gameLoop)};
+    FLUGEL_TRACE_E("Running app... Main Thread ID: {0}", std::this_thread::get_id());
+
+    spawnThreads();
+    while (!shouldClose_) {
+      processInput();
+    }
+
+    FLUGEL_TRACE_E("Exiting app...");
+  }
+  
+  void App::renderThreadMain() {
+    FLUGEL_TRACE_E("Starting render thread... Thread ID: {0}", std::this_thread::get_id());
+    window_.makeContextCurrent();
     
-    // MAIN THREAD
+    // RENDER LOOP
     while (!shouldClose_) {
       /// TODO: Move input processing off main thread
-      processInput();
 
       AppRenderEvent renderEvent{};
       renderNotifier_.notify(renderEvent);
     }
 
-    gamethread.join();
-    FLUGEL_TRACE_E("Exiting app...");
+    FLUGEL_TRACE_E("Ending render thread...");
   }
   
-  void App::gameLoop() {
-    FLUGEL_TRACE_E("Entering game loop...");
+  void App::gameThreadMain() {
+    FLUGEL_TRACE_E("Starting game thread... Thread ID: {0}", std::this_thread::get_id());
     
-    // GAME THREAD
+    // GAME LOOP
     while (!shouldClose_) {
       // Start outer, unfixed loop with regular tick
 
@@ -87,12 +115,16 @@ namespace Flugel {
 
       time_.tick();
     }
-    FLUGEL_TRACE_E("Exiting game loop...");
+
+    FLUGEL_TRACE_E("Ending game thread...");
   }
 
   void App::processInput() {
-    //FLUGEL_TRACE_E("FPS: {0}", 1. / time_.deltaTime<Seconds>());
     window_.processInput();
+  }
+
+  void App::render() {
+    window_.swapBuffers();
   }
 
   // App Events
@@ -103,16 +135,23 @@ namespace Flugel {
   }
 
   bool App::onAppUpdate(AppUpdateEvent& e) {
+    
+    //
     //FLUGEL_TRACE_E("Update!");
 
+    //FLUGEL_TRACE_E("FPS: {0}", 1. / time_.deltaTime<Seconds>());
     return false;
   }
 
   bool App::onAppRender(AppRenderEvent& e) {
+    // static bool shown = false;
+    // if (!shown) {
+    //   FLUGEL_DEBUG_E("Thread ID: {0}", std::this_thread::get_id());
+    //   shown = true;
+    // }
     //FLUGEL_TRACE_E("Render!");
     //glViewport(0, 0, window_.width, window_.height);
-
-    window_.swapBuffers();
+    render();
     return false;
   }
   
@@ -125,12 +164,14 @@ namespace Flugel {
   }
   
   bool App::onWindowResize(WindowResizeEvent& e) {
-    //FLUGEL_TRACE_E("WINDOW_RESIZE: ({0}, {1})", e.getWidth(), e.getHeight());
+    //FLUGEL_TRACE_E("WINDOW_RESIZE: ({0; {1})", e.getWidth(), e.getHeight());
     return false;
   }
   
   bool App::onWindowMoved(WindowMovedEvent& e) {
-    //FLUGEL_TRACE_E("WINDOW_MOVED: ({0}, {1})", e.getX(), e.getY());
+    //FLUGEL_TRACE_E("WINDOW_MOVED: ({0; {1})", e.getX(), e.getY());
+    
+
     return false;
   }
 
@@ -147,19 +188,19 @@ namespace Flugel {
   }
 
   bool App::onMouseMoved(MouseMovedEvent& e) {
-    //FLUGEL_TRACE_E("MOUSE_MOVED: ({0}, {1})", e.getX(), e.getY());
+    //FLUGEL_TRACE_E("MOUSE_MOVED: ({0; {1})", e.getX(), e.getY());
     return false;
   }
 
   bool App::onMouseScrolled(MouseScrolledEvent& e) {
-    //FLUGEL_TRACE_E("MOUSE_SCROLLED: ({0}, {1})", e.getXOffset(), e.getYOffset());
+    //FLUGEL_TRACE_E("MOUSE_SCROLLED: ({0; {1})", e.getXOffset(), e.getYOffset());
     return false;
   }
 
   // Key Events
 
   bool App::onKeyPressed(KeyPressedEvent& e) {
-    FLUGEL_TRACE_E("KEY_PRESSED: ({0}, {1})", e.getKeyCode(), e.getRepeatCount());
+    FLUGEL_TRACE_E("KEY_PRESSED: ({0} {1})", e.getKeyCode(), e.getRepeatCount());
     return false;
   }
 

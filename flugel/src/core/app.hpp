@@ -20,6 +20,10 @@ namespace Flugel {
     Time time_{};
     Window window_;
 
+    // Threads
+    std::thread gameThread_;
+    std::thread renderThread_;
+
     // App Events
     Notifier<AppUpdateFixedEvent> updateFixedNotifier_{};
     Notifier<AppUpdateEvent> updateNotifier_{};
@@ -41,9 +45,16 @@ namespace Flugel {
     UUID keyPressedId_{};
     UUID keyReleasedId_{};
   private:
-    void gameLoop();
+    void spawnThreads();
+    void killThreads();
+    void subscribeMethods();
+    void unsubscribeMethods();
+
+    void gameThreadMain();
+    void renderThreadMain();
 
     void processInput();
+    void render();
 
     // App Events
     bool onAppUpdateFixed(AppUpdateFixedEvent& e);

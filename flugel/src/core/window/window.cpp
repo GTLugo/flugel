@@ -14,6 +14,12 @@ namespace Flugel {
 
   void Window::makeContextCurrent() {
     glfwMakeContextCurrent(glfwWindow_.get());
+    FLUGEL_INFO_E("Making GL context current!");
+  }
+
+  void Window::makeContextNonCurrent() {
+    glfwMakeContextCurrent(nullptr);
+    FLUGEL_INFO_E("Making GL context non-current!");
   }
 
   void Window::processInput() {
@@ -47,6 +53,7 @@ namespace Flugel {
       FLUGEL_ASSERT_E(success, "Failed to initialize GLFW!");
       isGlfwInitialized_ = true;
     }
+    FLUGEL_INFO_E("Initialized GLFW!");
 
     glfwWindow_ = UniqueGlfwWindow{glfwCreateWindow(
       (int32_t)data_.width,
@@ -55,11 +62,19 @@ namespace Flugel {
       nullptr,
       nullptr
     )};
-    glfwMakeContextCurrent(glfwWindow_.get());
+
+    FLUGEL_TRACE_E("Setting up GLFW window data!");
+    makeContextCurrent(); // Set up glfw
+
     glfwSetWindowUserPointer(glfwWindow_.get(), &data_);
-
     setVSync(data_.vSync);
+    setCallbacks();
 
+    makeContextNonCurrent(); // Prepare for context transfer to render thread
+    FLUGEL_TRACE_E("GLFW window data setup complete!");
+  }
+
+  void Window::setCallbacks() {
     glfwSetWindowCloseCallback(glfwWindow_.get(), [](GLFWwindow* window) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       WindowCloseEvent e{};

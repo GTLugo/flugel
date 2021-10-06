@@ -36,6 +36,7 @@ namespace Flugel {
     virtual ~Window();
 
     void makeContextCurrent();
+    void makeContextNonCurrent();
     void processInput();
     void swapBuffers();
 
@@ -92,6 +93,7 @@ namespace Flugel {
     Color clearColor_{0x2E3440FF};
   private:
     void init();
+    void setCallbacks();
     void shutdown();
   };
 }
