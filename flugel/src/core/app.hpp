@@ -24,14 +24,14 @@ namespace Flugel {
     std::thread gameThread_;
     std::thread renderThread_;
 
+    std::map<std::thread::id, std::string> threadNames_{};
+
   private:
     void spawnThreads();
     void killThreads();
 
     void gameThreadMain();
     void renderThreadMain();
-
-    std::map<std::thread::id, std::string> threadNames_{};
 
     void processInput();
 

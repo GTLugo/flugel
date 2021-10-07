@@ -12,14 +12,14 @@ namespace Flugel {
     shutdown();
   }
 
-  void Window::makeContextCurrent() {
-    glfwMakeContextCurrent(glfwWindow_.get());
-    FLUGEL_DEBUG_E("Making GL context current to thread ID {0}", std::this_thread::get_id());
-  }
-
-  void Window::makeContextNonCurrent() {
-    glfwMakeContextCurrent(nullptr);
-    FLUGEL_DEBUG_E("Making GL context non-current!");
+  void Window::setContextCurrent(bool current) {
+    if (current) {
+      FLUGEL_DEBUG_E("Making GL context current to thread ID {0}", std::this_thread::get_id());
+      glfwMakeContextCurrent(glfwWindow_.get());
+    } else {
+      FLUGEL_DEBUG_E("Making GL context non-current!");
+      glfwMakeContextCurrent(nullptr);
+    }
   }
 
   void Window::processInput() {
@@ -78,37 +78,32 @@ namespace Flugel {
       FLUGEL_ASSERT_E(success, "Failed to initialize GLFW!");
       isGlfwInitialized_ = true;
     }
-    FLUGEL_INFO_E("Initialized GLFW!");
+    int major, minor, revision;
+    glfwGetVersion(&major, &minor, &revision);
+    FLUGEL_INFO_E("Initialized GLFW {0}.{1}.{2}!", major, minor, revision);
 
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
     glfwWindowHint(GLFW_DECORATED, shouldUseDefaultDecor);
-    if (data_.fullScreen) {
-      glfwWindow_ = UniqueGlfwWindow{glfwCreateWindow(
-        vidMode_->width,
-        vidMode_->height,
-        data_.title.c_str(),
-        glfwGetPrimaryMonitor(),
-        nullptr
-      )};
-    } else {
-      glfwWindow_ = UniqueGlfwWindow{glfwCreateWindow(
-        (int32_t)data_.width,
-        (int32_t)data_.height,
-        data_.title.c_str(),
-        nullptr,
-        nullptr
-      )};
-    }
+    glfwWindow_ = UniqueGlfwWindow{glfwCreateWindow(
+      (int32_t)data_.width,
+      (int32_t)data_.height,
+      data_.title.c_str(),
+      nullptr,
+      nullptr
+    )};
 
     FLUGEL_TRACE_E("Setting up GLFW window data!");
-    makeContextCurrent(); // Set up glfw
+    setContextCurrent(true); // Set up glfw
 
     glfwSetWindowUserPointer(glfwWindow_.get(), &data_);
     setVSync(data_.vSync);
-    //setFullscreen(data_.fullScreen);
+    // ONLY run this if screen needs to start as fullscreen (otherwise errors!)
+    if (data_.fullScreen) {
+      setFullscreen(true);
+    }
     setCallbacks();
 
-    makeContextNonCurrent(); // Prepare for context transfer to render thread
+    setContextCurrent(false); // Prepare for context transfer to render thread
     FLUGEL_TRACE_E("GLFW window data setup complete!");
   }
 

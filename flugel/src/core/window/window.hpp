@@ -48,8 +48,7 @@ namespace Flugel {
     Window(const WindowProperties& props = {});
     virtual ~Window();
 
-    void makeContextCurrent();
-    void makeContextNonCurrent();
+    inline void setContextCurrent(bool current);
     void processInput();
     void swapBuffers();
 
@@ -79,7 +78,9 @@ namespace Flugel {
       EventCallbackFn eventCallback;
 
       WindowData(const WindowProperties& props) 
-        : title{props.title}, 
+        : title{props.title},
+          xPos{50},
+          yPos{50},
           width{props.width}, 
           height{props.height}, 
           vSync{props.vSync},

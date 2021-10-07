@@ -39,7 +39,7 @@ namespace Flugel {
   void App::renderThreadMain() {
     FLUGEL_TRACE_E("Starting render thread (ID: {0})", std::this_thread::get_id());
     threadNames_.insert(std::pair{std::this_thread::get_id(), "RENDER"});
-    window_.makeContextCurrent();
+    window_.setContextCurrent(true);
     
     // RENDER LOOP
     while (!shouldClose_) {
@@ -148,10 +148,7 @@ namespace Flugel {
 
   bool App::onKeyboardEvent(KeyboardEvent& e) {
     FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    if (e.keyState() == ButtonState::Pressed && e.key() == GLFW_KEY_ESCAPE) {
-      close();
-    }
-    if (e.keyState() == ButtonState::Pressed && e.key() == GLFW_KEY_F) {
+    if (e.keyState() == ButtonState::Pressed && e.key() == GLFW_KEY_ENTER && (e.mods() & GLFW_MOD_ALT)) {
       window_.setFullscreen(!window_.isFullscreen());
     }
     return true;
