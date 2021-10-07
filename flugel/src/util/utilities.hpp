@@ -33,10 +33,10 @@
 
 #ifdef FLUGEL_ENABLE_ASSERTS
   #define FLUGEL_ASSERT(x, ...) {\
-    if(!(x)) {FLUGEL_ERROR("FAILED ASSERT: {0}", __VA_ARGS__); DEBUG_BREAK; }\
+    if(!(x)) {FLUGEL_CRIT("FAILED ASSERT: {0}", __VA_ARGS__); DEBUG_BREAK; }\
   }
   #define FLUGEL_ASSERT_E(x, ...) {\
-    if(!(x)) {FLUGEL_ERROR_E("FAILED ASSERT: {0}", __VA_ARGS__); DEBUG_BREAK; }\
+    if(!(x)) {FLUGEL_CRIT_E("FAILED ASSERT: {0}", __VA_ARGS__); DEBUG_BREAK; }\
   }
 #else
   #define FLUGEL_ASSERT(x, ...)

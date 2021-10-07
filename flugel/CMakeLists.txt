@@ -12,12 +12,12 @@ message(STATUS "Configuring: ${PROJECT_NAME}")
 # ===================================================
 
 set(SOURCE_FILES
+  src/util/uuid.cpp
+  src/util/logging/log.cpp
+  src/util/time/time.cpp
+  src/util/color/color.cpp
+  src/util/color/srgb_transform/srgb_transform.cpp
   src/core/app.cpp
-  src/core/uuid.cpp
-  src/core/logging/log.cpp
-  src/core/time/time.cpp
-  src/core/color/color.cpp
-  src/core/color/srgb_transform/srgb_transform.cpp
   src/core/events/notifier.cpp
   src/core/window/window.cpp)
 

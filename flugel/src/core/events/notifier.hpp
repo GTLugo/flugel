@@ -14,45 +14,9 @@
 
 #pragma once
 
+#include "core/events/event.hpp"
+
 namespace Flugel {
-  enum class EventType {
-    None = 0,
-    WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-    AppStart, AppTick, AppUpdateFixed, AppUpdate, AppRender, AppEnd,
-    KeyPressed, KeyReleased,
-    MousePressed, MouseReleased, MouseMoved, MouseScrolled,
-  };
-
-  enum EventCategory {
-    None = 0,
-    EventCategoryApp           = BIT(0),
-    EventCategoryInput         = BIT(1),
-    EventCategoryKeyboard      = BIT(2),
-    EventCategoryMouse         = BIT(3),
-  };
-
-  #define EVENT_CLASS_TYPE(type) static EventType getStaticType() { return EventType::##type; }\
-                                 virtual EventType getEventType() const override { return getStaticType(); }\
-                                 static const char* getStaticName() { return #type; }\
-                                 virtual const char* getName() const override { return #type; } 
-  #define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags() const override { return category; }
-
-  class FLUGEL_API Event {
-  public:
-    virtual EventType getEventType() const = 0;
-    virtual const char* getName() const = 0;
-    virtual int getCategoryFlags() const = 0;
-    virtual std::string toString() const { return getName(); }
-
-    inline bool isInCategory(const EventCategory& category) {
-      return getCategoryFlags() & category;
-    }
-  };
-
-  inline std::ostream& operator<<(std::ostream& out, const Event& e) {
-    return out << e.toString();
-  }
-
   // Notifier sends notifications for a single type of event
   // Usage: Create a member variable of this class in whatever class should be
   //        sending out notifications.

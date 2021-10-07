@@ -112,7 +112,7 @@ namespace Flugel {
     static constexpr Seconds fixedTimeStep_{1. / fixedTickRate_};
     // bail out of the fixed updates if iterations exceeds this amount to prevent lockups
     // on extremely slow systems where updateFixed may be longer than fixedTimeStep_
-    static constexpr uint32_t bailCount_{128U};
+    static constexpr uint32_t bailCount_{1024U};
 
     const Stopwatch stopwatch_;
     TimePoint gameLast_{}; // when last frame started

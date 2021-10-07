@@ -4,7 +4,7 @@
 
 // hallow
 #include "color.hpp"
-#include "core/color/srgb_transform/srgb_transform.hpp"
+#include "util/color/srgb_transform/srgb_transform.hpp"
 
 namespace Flugel {
   bool Color::using_srgb_color_space = false;

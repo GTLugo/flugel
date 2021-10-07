@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/color/color.hpp"
-#include "core/events/notifier.hpp"
+#include "util/color/color.hpp"
+#include "core/events/event.hpp"
 #include "core/events/window_event.hpp"
 #include "core/events/mouse_event.hpp"
 #include "core/events/keyboard_event.hpp"
@@ -22,6 +22,7 @@ namespace Flugel {
   };
 
   class FLUGEL_API Window {
+    using EventCallbackFn = std::function<void(Event&)>;
   public:
     struct GLFWwindowDelete {
       void operator()(GLFWwindow* ptr) {
@@ -40,28 +41,16 @@ namespace Flugel {
     void processInput();
     void swapBuffers();
 
+    UniqueGlfwWindow& window() { return glfwWindow_; }
     int32_t xPos() const { return data_.xPos; }
     int32_t yPos() const { return data_.yPos; }
-    void setPos(int32_t xPos, int32_t yPos);
-
     uint32_t width() const { return data_.width; }
     uint32_t height() const { return data_.height; }
-
     bool isVSync() const { return data_.vSync; }
-    void setVSync(bool enabled);
 
-    // Window Events
-    Notifier<WindowCloseEvent>& windowCloseNotifier() { return data_.windowCloseNotifier; }
-    Notifier<WindowResizeEvent>& windowResizeNotifier() { return data_.windowResizeNotifier; }
-    Notifier<WindowMovedEvent>& windowMovedNotifier() { return data_.windowMovedNotifier; }
-    // Mouse Events
-    Notifier<MousePressedEvent>& mousePressedNotifier() { return data_.mousePressedNotifier; }
-    Notifier<MouseReleasedEvent>& mouseReleasedNotifier() { return data_.mouseReleasedNotifier; }
-    Notifier<MouseMovedEvent>& mouseMovedNotifier() { return data_.mouseMovedNotifier; }
-    Notifier<MouseScrolledEvent>& mouseScrolledNotifier() { return data_.mouseScrolledNotifier; }
-    // Mouse Events
-    Notifier<KeyPressedEvent>& keyPressedNotifier() { return data_.keyPressedNotifier; }
-    Notifier<KeyReleasedEvent>& keyReleasedNotifier() { return data_.keyReleasedNotifier; }
+    void setPos(int32_t xPos, int32_t yPos);
+    void setVSync(bool enabled);
+    void setEventCallback(const EventCallbackFn& callback) { data_.eventCallback = callback; }
     
   private:
     struct WindowData {
@@ -69,19 +58,8 @@ namespace Flugel {
       int32_t xPos, yPos;
       uint32_t width, height;
       bool vSync;
+      EventCallbackFn eventCallback;
 
-      // Window Events
-      Notifier<WindowCloseEvent> windowCloseNotifier{};
-      Notifier<WindowResizeEvent> windowResizeNotifier{};
-      Notifier<WindowMovedEvent> windowMovedNotifier{};
-      // Mouse Events
-      Notifier<MousePressedEvent> mousePressedNotifier{};
-      Notifier<MouseReleasedEvent> mouseReleasedNotifier{};
-      Notifier<MouseMovedEvent> mouseMovedNotifier{};
-      Notifier<MouseScrolledEvent> mouseScrolledNotifier{};
-      // Mouse Events
-      Notifier<KeyPressedEvent> keyPressedNotifier{};
-      Notifier<KeyReleasedEvent> keyReleasedNotifier{};
       WindowData(const WindowProperties& props) 
         : title{props.title}, width{props.width}, height{props.height}, vSync{props.vSync} {}
     };

@@ -14,12 +14,12 @@ namespace Flugel {
 
   void Window::makeContextCurrent() {
     glfwMakeContextCurrent(glfwWindow_.get());
-    FLUGEL_INFO_E("Making GL context current!");
+    FLUGEL_DEBUG_E("Making GL context current to thread ID {0}", std::this_thread::get_id());
   }
 
   void Window::makeContextNonCurrent() {
     glfwMakeContextCurrent(nullptr);
-    FLUGEL_INFO_E("Making GL context non-current!");
+    FLUGEL_DEBUG_E("Making GL context non-current!");
   }
 
   void Window::processInput() {
@@ -77,36 +77,51 @@ namespace Flugel {
   void Window::setCallbacks() {
     glfwSetWindowCloseCallback(glfwWindow_.get(), [](GLFWwindow* window) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
-      data.windowCloseNotifier.notify({});
+      WindowEvent e{WindowEventType::Close, {
+        data.width, data.height,
+        data.xPos, data.yPos
+      }};
+      data.eventCallback(e);
     });
     glfwSetWindowSizeCallback(glfwWindow_.get(), [](GLFWwindow* window, int32_t width, int32_t height) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       data.width = width;
       data.height = height;
-      data.windowResizeNotifier.notify({data.width, data.height});
+      WindowEvent e{WindowEventType::Resize, {
+        data.width, data.height,
+        data.xPos, data.yPos
+      }};
+      data.eventCallback(e);
     });
     glfwSetWindowPosCallback(glfwWindow_.get(), [](GLFWwindow* window, int32_t xPos, int32_t yPos) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       data.xPos = xPos;
       data.yPos = yPos;
-      data.windowMovedNotifier.notify({data.xPos, data.yPos});
+      WindowEvent e{WindowEventType::Moved, {
+        data.width, data.height,
+        data.xPos, data.yPos
+      }};
+      data.eventCallback(e);
     });
 
     // KEYBOARD
-    glfwSetKeyCallback(glfwWindow_.get(), [](GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int mods) {
+    glfwSetKeyCallback(glfwWindow_.get(), [](GLFWwindow* window, int32_t key, int32_t scanCode, int32_t action, int32_t mods) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
-          data.keyPressedNotifier.notify({key, 0});
+          KeyboardEvent e{ButtonState::Pressed, key, 0, (KeyModifiers)mods};
+          data.eventCallback(e);
           break;
         }
         case GLFW_REPEAT: {
           // GLFW doesn't provide a repeat count, so 1 will do for most use cases
-          data.keyPressedNotifier.notify({key, 1});
+          KeyboardEvent e{ButtonState::Pressed, key, 1, (KeyModifiers)mods};
+          data.eventCallback(e);
         }
           break;
         case GLFW_RELEASE:{
-          data.keyReleasedNotifier.notify({key});
+          KeyboardEvent e{ButtonState::Released, key, 0, (KeyModifiers)mods};
+          data.eventCallback(e);
           break;
         }
         default:
@@ -119,11 +134,13 @@ namespace Flugel {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
-          data.mousePressedNotifier.notify({button});
+          MouseEvent e{ButtonState::Pressed, button};
+          data.eventCallback(e);
           break;
         }
         case GLFW_RELEASE:{
-          data.mouseReleasedNotifier.notify({button});
+          MouseEvent e{ButtonState::Released, button};
+          data.eventCallback(e);
           break;
         }
         default:
@@ -132,11 +149,14 @@ namespace Flugel {
     });
     glfwSetCursorPosCallback(glfwWindow_.get(), [](GLFWwindow* window, double xPos, double yPos) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
-      data.mouseMovedNotifier.notify({xPos, yPos});
+
+      CursorEvent e{xPos, yPos};
+      data.eventCallback(e);
     });
     glfwSetScrollCallback(glfwWindow_.get(), [](GLFWwindow* window, double xOffset, double yOffset) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
-      data.mouseScrolledNotifier.notify({xOffset, yOffset});
+      ScrollEvent e{xOffset, yOffset};
+      data.eventCallback(e);
     });
   }
 

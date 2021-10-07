@@ -5,44 +5,25 @@
 namespace Flugel {
   class FLUGEL_API KeyboardEvent : public Event {
   public:
-    int getKeyCode() const { return keyCode_; }
+    EVENT_CATEGORY(Keyboard)
 
-    EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryKeyboard)
+    KeyboardEvent(ButtonState keyState, int32_t key, int32_t repeatCount, KeyModifiers mods)
+      : keyState_{keyState}, key_{key}, repeatCount_{repeatCount}, mods_{mods} {}
+
+    ButtonState keyState() const { return keyState_; }
+    int32_t key() const { return key_; }
+    int32_t repeatCount() const { return repeatCount_; }
+    KeyModifiers mods() const { return mods_; }
+    
+    std::string toString() const override {
+      std::stringstream ss;
+      ss << "Event <Keyboard> (" << key_ << " + " << mods_ << ", " << keyState_ << ", " << repeatCount_ << " repeats)";
+      return ss.str();
+    }
   protected:
-    KeyboardEvent(int keyCode)
-      : keyCode_{keyCode} {}
-
-    int keyCode_;
-  };
-
-  class FLUGEL_API KeyPressedEvent : public KeyboardEvent {
-  public:
-    KeyPressedEvent(int keyCode, int repeatCount)
-      : KeyboardEvent{keyCode}, repeatCount_{repeatCount} {}
-    
-    int getRepeatCount() const { return repeatCount_; }
-    std::string toString() const override {
-      std::stringstream ss;
-      ss << "Event <" << getName() << "> (" << keyCode_ << ", " << repeatCount_ << "repeats)";
-      return ss.str();
-    }
-
-    EVENT_CLASS_TYPE(KeyPressed)
-  private:
-    int repeatCount_;
-  };
-
-  class FLUGEL_API KeyReleasedEvent : public KeyboardEvent {
-  public:
-    KeyReleasedEvent(int keyCode)
-      : KeyboardEvent{keyCode} {}
-    
-    std::string toString() const override {
-      std::stringstream ss;
-      ss << "Event <" << getName() << "> (" << keyCode_ << ")";
-      return ss.str();
-    }
-
-    EVENT_CLASS_TYPE(KeyReleased)
+    ButtonState keyState_;
+    int32_t key_;
+    int32_t repeatCount_;
+    KeyModifiers mods_;
   };
 }

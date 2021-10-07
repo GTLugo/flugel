@@ -1,86 +1,63 @@
 #pragma once
 
-#include "notifier.hpp"
+#include "event.hpp"
 
 namespace Flugel {
-  class FLUGEL_API MouseButtonEvent : public Event {
+  class FLUGEL_API MouseEvent : public Event {
   public:
+    EVENT_CATEGORY(Mouse)
+
+    MouseEvent(ButtonState buttonState, int32_t button)
+      : buttonState_{buttonState}, button_{button} {}
+
+    ButtonState buttonState() const { return buttonState_; }
+    int32_t button() const { return button_; }
     
-    float getMouseButton() const { return button_; }
-    
-    EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouse)
+    std::string toString() const override {
+      std::stringstream ss;
+      ss << "Event <Mouse> (" << button_ << ", " << buttonState_ << ")";
+      return ss.str();
+    }
   protected:
-    MouseButtonEvent(int button)
-      : button_{button} {}
-
-    int button_;
+    ButtonState buttonState_;
+    int32_t button_;
   };
 
-  class FLUGEL_API MousePressedEvent : public MouseButtonEvent {
+  class FLUGEL_API CursorEvent : public Event {
   public:
-    MousePressedEvent(int button)
-      : MouseButtonEvent{button} {}
+    EVENT_CATEGORY(Cursor)
+
+    CursorEvent(double xPos, double yPos)
+      : xPos_{xPos}, yPos_{yPos} {}
+
+    double xPos() const { return xPos_; }
+    double yPos() const { return yPos_; }
     
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <" << getName() << "> (" << getMouseButton() << ")";
+      ss << "Event <Cursor> (" << xPos_ << ", " << yPos_ << ")";
       return ss.str();
     }
-    
-    EVENT_CLASS_TYPE(MousePressed)
-  };
-
-  class FLUGEL_API MouseReleasedEvent : public MouseButtonEvent {
-  public:
-    MouseReleasedEvent(int button)
-      : MouseButtonEvent{button} {}
-    
-    std::string toString() const override {
-      std::stringstream ss;
-      ss << "Event <" << getName() << "> (" << getMouseButton() << ")";
-      return ss.str();
-    }
-    
-    EVENT_CLASS_TYPE(MouseReleased)
-  };
-  
-  class FLUGEL_API MouseMovedEvent : public Event {
-  public:
-    MouseMovedEvent(double x, double y)
-      : xPos_{x}, yPos_{y} {}
-    
-    double getX() const { return xPos_; }
-    double getY() const { return yPos_; }
-  
-    std::string toString() const override {
-      std::stringstream ss;
-      ss << "Event <" << getName() << "> (" << xPos_ << ", " << yPos_ << ")";
-      return ss.str();
-    }
-    
-    EVENT_CLASS_TYPE(MouseMoved)
-    EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouse)
-  private:
+  protected:
     double xPos_, yPos_;
   };
 
-  class FLUGEL_API MouseScrolledEvent : public Event {
+  class FLUGEL_API ScrollEvent : public Event {
   public:
-    MouseScrolledEvent(double xOffset, double yOffset)
+    EVENT_CATEGORY(Scroll)
+
+    ScrollEvent(double xOffset, double yOffset)
       : xOffset_{xOffset}, yOffset_{yOffset} {}
-    
-    double getXOffset() const { return xOffset_; }
-    double getYOffset() const { return yOffset_; }
+
+    double xOffset() const { return xOffset_; }
+    double yOffset() const { return yOffset_; }
     
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <" << getName() << "> (" << xOffset_ << ", " << yOffset_ << ")";
+      ss << "Event <Scroll> (" << xOffset_ << ", " << yOffset_ << ")";
       return ss.str();
     }
-    
-    EVENT_CLASS_TYPE(MouseScrolled)
-    EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouse)
-  private:
+  protected:
     double xOffset_, yOffset_;
   };
 }

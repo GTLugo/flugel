@@ -40,7 +40,7 @@
   FLUGEL LIBRARY
 ----------------------*/
 
-#include "core/utilities.hpp"
-#include "core/logging/log.hpp"
-#include "core/time/time.hpp"
-#include "core/uuid.hpp"
+#include "util/utilities.hpp"
+#include "util/logging/log.hpp"
+#include "util/time/time.hpp"
+#include "util/uuid.hpp"
