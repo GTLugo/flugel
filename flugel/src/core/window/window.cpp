@@ -5,7 +5,7 @@ namespace Flugel {
 
   Window::Window(const WindowProperties& props)
     : data_{props} {
-    init();
+    init(props.shouldUseDefaultDecor);
   }
 
   Window::~Window() {
@@ -45,7 +45,32 @@ namespace Flugel {
     data_.vSync = enabled;
   }
 
-  void Window::init() {
+  void Window::setFullscreen(bool enabled) {
+    if (enabled) {
+      data_.xPosBeforeFullscreen = data_.xPos;
+      data_.yPosBeforeFullscreen = data_.yPos;
+      data_.widthBeforeFullscreen = data_.width;
+      data_.heightBeforeFullscreen = data_.height;
+      glfwSetWindowMonitor(glfwWindow_.get(), 
+                           glfwGetPrimaryMonitor(),
+                           0,
+                           0,
+                           vidMode_->width,
+                           vidMode_->height,
+                           vidMode_->refreshRate);
+    } else {
+      glfwSetWindowMonitor(glfwWindow_.get(), 
+                           nullptr,
+                           data_.xPosBeforeFullscreen,
+                           data_.yPosBeforeFullscreen,
+                           data_.widthBeforeFullscreen,
+                           data_.heightBeforeFullscreen,
+                           0);
+    }
+    data_.fullScreen = enabled;
+  }
+
+  void Window::init(bool shouldUseDefaultDecor) {
     FLUGEL_DEBUG_E("Creating window: {0} ({1}, {2})", data_.title, data_.width, data_.height);
 
     if (!isGlfwInitialized_) {
@@ -55,19 +80,32 @@ namespace Flugel {
     }
     FLUGEL_INFO_E("Initialized GLFW!");
 
-    glfwWindow_ = UniqueGlfwWindow{glfwCreateWindow(
-      (int32_t)data_.width,
-      (int32_t)data_.height,
-      data_.title.c_str(),
-      nullptr,
-      nullptr
-    )};
+    vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    glfwWindowHint(GLFW_DECORATED, shouldUseDefaultDecor);
+    if (data_.fullScreen) {
+      glfwWindow_ = UniqueGlfwWindow{glfwCreateWindow(
+        vidMode_->width,
+        vidMode_->height,
+        data_.title.c_str(),
+        glfwGetPrimaryMonitor(),
+        nullptr
+      )};
+    } else {
+      glfwWindow_ = UniqueGlfwWindow{glfwCreateWindow(
+        (int32_t)data_.width,
+        (int32_t)data_.height,
+        data_.title.c_str(),
+        nullptr,
+        nullptr
+      )};
+    }
 
     FLUGEL_TRACE_E("Setting up GLFW window data!");
     makeContextCurrent(); // Set up glfw
 
     glfwSetWindowUserPointer(glfwWindow_.get(), &data_);
     setVSync(data_.vSync);
+    //setFullscreen(data_.fullScreen);
     setCallbacks();
 
     makeContextNonCurrent(); // Prepare for context transfer to render thread

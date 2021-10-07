@@ -148,13 +148,20 @@ namespace Flugel {
 
   bool App::onKeyboardEvent(KeyboardEvent& e) {
     FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    
+    if (e.keyState() == ButtonState::Pressed && e.key() == GLFW_KEY_ESCAPE) {
+      close();
+    }
+    if (e.keyState() == ButtonState::Pressed && e.key() == GLFW_KEY_F) {
+      window_.setFullscreen(!window_.isFullscreen());
+    }
     return true;
   }
 
   bool App::onMouseEvent(MouseEvent& e) {
     FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    
+    if (e.buttonState() == ButtonState::Pressed && e.button() == GLFW_MOUSE_BUTTON_LEFT) {
+      // drag window by adding cursor delta to current window position
+    }
     return true;
   }
 

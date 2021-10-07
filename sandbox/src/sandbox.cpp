@@ -5,10 +5,13 @@ namespace Sandbox {
     public:
       App()
         : Flugel::App{Flugel::WindowProperties{
-          "SANDBOX",
-          800,
-          450,
-          false
+          "SANDBOX", // title
+          800, // width
+          450, // height
+          false, // vsync
+          false, // fullscreen
+          false, // borderless
+          true // default window decorations
         }} {}
       virtual ~App() override = default;
   };
