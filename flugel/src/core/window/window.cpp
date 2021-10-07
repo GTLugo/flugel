@@ -77,30 +77,21 @@ namespace Flugel {
   void Window::setCallbacks() {
     glfwSetWindowCloseCallback(glfwWindow_.get(), [](GLFWwindow* window) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
-      WindowEvent e{WindowEventType::Close, {
-        data.width, data.height,
-        data.xPos, data.yPos
-      }};
+      WindowCloseEvent e{};
       data.eventCallback(e);
     });
     glfwSetWindowSizeCallback(glfwWindow_.get(), [](GLFWwindow* window, int32_t width, int32_t height) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       data.width = width;
       data.height = height;
-      WindowEvent e{WindowEventType::Resize, {
-        data.width, data.height,
-        data.xPos, data.yPos
-      }};
+      WindowResizeEvent e{data.width, data.height};
       data.eventCallback(e);
     });
     glfwSetWindowPosCallback(glfwWindow_.get(), [](GLFWwindow* window, int32_t xPos, int32_t yPos) {
       WindowData& data = *(WindowData*)(glfwGetWindowUserPointer(window));
       data.xPos = xPos;
       data.yPos = yPos;
-      WindowEvent e{WindowEventType::Moved, {
-        data.width, data.height,
-        data.xPos, data.yPos
-      }};
+      WindowMovedEvent e{data.xPos, data.yPos};
       data.eventCallback(e);
     });
 

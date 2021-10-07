@@ -3,6 +3,16 @@
 #include "notifier.hpp"
 
 namespace Flugel {
+  enum KeyModifiers {
+    None = 0,
+    Shift   = BIT(1),
+    Control = BIT(2),
+    Alt     = BIT(3),
+    Super   = BIT(4),
+    Caps    = BIT(5),
+    Num     = BIT(6),
+  };
+
   class FLUGEL_API KeyboardEvent : public Event {
   public:
     EVENT_CATEGORY(Keyboard)
@@ -17,7 +27,7 @@ namespace Flugel {
     
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <Keyboard> (" << key_ << " + " << mods_ << ", " << keyState_ << ", " << repeatCount_ << " repeats)";
+      ss << "Event <Keyboard> (" << keyState_ << ": " << key_ << " + " << mods_ << ", REP: " << repeatCount_ << ")";
       return ss.str();
     }
   protected:

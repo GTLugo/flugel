@@ -91,14 +91,12 @@ namespace Flugel {
   }
 
   void App::render() {
-    static int32_t count = 0;
-    if (leftMouseHeld) {
-      FLUGEL_INFO_E("Yeet {0}", count++);
-    } else {
-      count = 0;
-    }
 
     window_.swapBuffers();
+  }
+
+  void App::close() {
+    shouldClose_ = true;
   }
   
   void App::onEvent(Event& e) {
@@ -130,7 +128,7 @@ namespace Flugel {
         switch (windowEvent.type()) {
           case WindowEventType::Close: {
             FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
-            shouldClose_ = true;
+            close();
             break;
           }
           default: {
@@ -140,38 +138,31 @@ namespace Flugel {
         break;
       }
       case EventCategory::Keyboard: {
-        FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
         auto& keyboardEvent = dynamic_cast<KeyboardEvent&>(e);
+        FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
 
         if (keyboardEvent.keyState() == ButtonState::Pressed 
             && keyboardEvent.key() == GLFW_KEY_ESCAPE) {
-          WindowEvent e{WindowEventType::Close, {
-            window_.width(), window_.height(),
-            window_.xPos(), window_.yPos()
-          }};
-          onEvent(e);
+          close();
         }
 
         break;
       }
       case EventCategory::Mouse: {
-        FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
         auto& mouseEvent = dynamic_cast<MouseEvent&>(e);
-
-        if (mouseEvent.button() == GLFW_MOUSE_BUTTON_LEFT) {
-          leftMouseHeld = mouseEvent.buttonState() == ButtonState::Pressed;
-        }
+        FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
+        
         break;
       }
       case EventCategory::Cursor: {
-        //FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
         auto& cursorEvent = dynamic_cast<CursorEvent&>(e);
+        //FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
 
         break;
       }
       case EventCategory::Scroll: {
-        //FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
         auto& scrollEvent = dynamic_cast<ScrollEvent&>(e);
+        //FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
 
         break;
       }

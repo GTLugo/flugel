@@ -15,7 +15,7 @@ namespace Flugel {
     
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <Mouse> (" << button_ << ", " << buttonState_ << ")";
+      ss << "Event <Mouse> (" << buttonState_ << ": " << button_ << ")";
       return ss.str();
     }
   protected:

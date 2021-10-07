@@ -23,8 +23,6 @@ namespace Flugel {
     // Threads
     std::thread gameThread_;
     std::thread renderThread_;
-    // App Data
-    bool leftMouseHeld{false};
 
   private:
     void spawnThreads();
@@ -37,6 +35,7 @@ namespace Flugel {
     void updateFixed();
     void update();
     void render();
+    void close();
     
     void onEvent(Event& e);
   };

@@ -3,6 +3,11 @@
 #include "notifier.hpp"
 
 namespace Flugel {
+  enum class AppEventType {
+    None = 0,
+    Start, Tick, UpdateFixed, Update, Render, End,
+  };
+
   class FLUGEL_API AppEvent : public Event {
   public:
     EVENT_CATEGORY(App)
