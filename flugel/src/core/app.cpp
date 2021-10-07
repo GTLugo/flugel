@@ -103,12 +103,12 @@ namespace Flugel {
   
   void App::eventDispatch(Event& e) {
     EventDispatcher dispatcher{e};
-    if (dispatcher.tryDispatch<AppEvent>(FLUGEL_BIND_FN(App::onAppEvent))) return;
-    if (dispatcher.tryDispatch<WindowEvent>(FLUGEL_BIND_FN(App::onWindowEvent))) return;
+    if (dispatcher.tryDispatch<AppEvent>(FLUGEL_BIND_FN(App::onAppEvent)))           return;
+    if (dispatcher.tryDispatch<WindowEvent>(FLUGEL_BIND_FN(App::onWindowEvent)))     return;
     if (dispatcher.tryDispatch<KeyboardEvent>(FLUGEL_BIND_FN(App::onKeyboardEvent))) return;
-    if (dispatcher.tryDispatch<MouseEvent>(FLUGEL_BIND_FN(App::onMouseEvent))) return;
-    if (dispatcher.tryDispatch<CursorEvent>(FLUGEL_BIND_FN(App::onCursorEvent))) return;
-    if (dispatcher.tryDispatch<ScrollEvent>(FLUGEL_BIND_FN(App::onScrollEvent))) return;
+    if (dispatcher.tryDispatch<MouseEvent>(FLUGEL_BIND_FN(App::onMouseEvent)))       return;
+    if (dispatcher.tryDispatch<CursorEvent>(FLUGEL_BIND_FN(App::onCursorEvent)))     return;
+    if (dispatcher.tryDispatch<ScrollEvent>(FLUGEL_BIND_FN(App::onScrollEvent)))     return;
   }
 
   bool App::onAppEvent(AppEvent& e) {
@@ -116,21 +116,20 @@ namespace Flugel {
     switch (e.type()) {
       case AppEventType::UpdateFixed: {
         updateFixed();
-        break;
+        return true;
       }
       case AppEventType::Update: {
         update();
-        break;
+        return true;
       }
       case AppEventType::Render: {
         render();
-        break;
+        return true;
       }
       default: {
-        break;
+        return true;
       }
     }
-    return true;
   }
 
   bool App::onWindowEvent(WindowEvent& e) {
@@ -139,13 +138,12 @@ namespace Flugel {
       case WindowEventType::Close: {
         FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
         close();
-        break;
+        return true;
       }
       default: {
-        break;
+        return false;
       }
     }
-    return true;
   }
 
   bool App::onKeyboardEvent(KeyboardEvent& e) {
