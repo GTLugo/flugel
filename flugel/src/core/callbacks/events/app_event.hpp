@@ -1,6 +1,6 @@
 #pragma once
 
-#include "notifier.hpp"
+#include "event.hpp"
 
 namespace Flugel {
   enum class AppEventType {

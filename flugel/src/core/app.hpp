@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core/events/event.hpp"
-#include "core/events/app_event.hpp"
-#include "core/events/window_event.hpp"
-#include "core/events/mouse_event.hpp"
 #include "core/window/window.hpp"
+#include "core/callbacks/events/event.hpp"
+#include "core/callbacks/events/app_event.hpp"
+#include "core/callbacks/events/window_event.hpp"
+#include "core/callbacks/events/mouse_event.hpp"
 
 namespace Flugel {
   class FLUGEL_API App {

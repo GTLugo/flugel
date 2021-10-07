@@ -18,7 +18,7 @@ set(SOURCE_FILES
   src/util/color/color.cpp
   src/util/color/srgb_transform/srgb_transform.cpp
   src/core/app.cpp
-  src/core/events/notifier.cpp
+  src/core/callbacks/notifier/notifier.cpp
   src/core/window/window.cpp)
 
 set(SHADER_FILES

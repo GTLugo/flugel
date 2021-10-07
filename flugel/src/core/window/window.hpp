@@ -1,10 +1,10 @@
 #pragma once
 
 #include "util/color/color.hpp"
-#include "core/events/event.hpp"
-#include "core/events/window_event.hpp"
-#include "core/events/mouse_event.hpp"
-#include "core/events/keyboard_event.hpp"
+#include "core/callbacks/events/event.hpp"
+#include "core/callbacks/events/window_event.hpp"
+#include "core/callbacks/events/mouse_event.hpp"
+#include "core/callbacks/events/keyboard_event.hpp"
 
 #include <GLFW/glfw3.h>
 

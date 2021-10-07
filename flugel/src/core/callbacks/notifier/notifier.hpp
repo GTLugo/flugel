@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "core/events/event.hpp"
+#include "core/callbacks/events/event.hpp"
 
 namespace Flugel {
   // Notifier sends notifications for a single type of event
