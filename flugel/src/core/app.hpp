@@ -31,6 +31,8 @@ namespace Flugel {
     void gameThreadMain();
     void renderThreadMain();
 
+    std::map<std::thread::id, std::string> threadNames_{};
+
     void processInput();
     void updateFixed();
     void update();

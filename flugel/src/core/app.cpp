@@ -26,6 +26,7 @@ namespace Flugel {
 
   void App::run() {
     FLUGEL_TRACE_E("Running app on main thread (ID: {0})", std::this_thread::get_id());
+    threadNames_.insert(std::pair{std::this_thread::get_id(), "MAIN"});
 
     spawnThreads();
     while (!shouldClose_) {
@@ -37,6 +38,7 @@ namespace Flugel {
   
   void App::renderThreadMain() {
     FLUGEL_TRACE_E("Starting render thread (ID: {0})", std::this_thread::get_id());
+    threadNames_.insert(std::pair{std::this_thread::get_id(), "RENDER"});
     window_.makeContextCurrent();
     
     // RENDER LOOP
@@ -50,6 +52,7 @@ namespace Flugel {
   
   void App::gameThreadMain() {
     FLUGEL_TRACE_E("Starting game thread (ID: {0})", std::this_thread::get_id());
+    threadNames_.insert(std::pair{std::this_thread::get_id(), "GAME"});
     
     // GAME LOOP
     while (!shouldClose_) {
@@ -102,7 +105,7 @@ namespace Flugel {
   void App::onEvent(Event& e) {
     switch (e.category()) {
       case EventCategory::App: {
-        //FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
+        //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
         auto& appEvent = dynamic_cast<AppEvent&>(e);
         switch (appEvent.type()) {
           case AppEventType::UpdateFixed: {
@@ -127,7 +130,7 @@ namespace Flugel {
         auto& windowEvent = dynamic_cast<WindowEvent&>(e);
         switch (windowEvent.type()) {
           case WindowEventType::Close: {
-            FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
+            FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
             close();
             break;
           }
@@ -139,7 +142,7 @@ namespace Flugel {
       }
       case EventCategory::Keyboard: {
         auto& keyboardEvent = dynamic_cast<KeyboardEvent&>(e);
-        FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
+        FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
 
         if (keyboardEvent.keyState() == ButtonState::Pressed 
             && keyboardEvent.key() == GLFW_KEY_ESCAPE) {
@@ -150,19 +153,19 @@ namespace Flugel {
       }
       case EventCategory::Mouse: {
         auto& mouseEvent = dynamic_cast<MouseEvent&>(e);
-        FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
+        FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
         
         break;
       }
       case EventCategory::Cursor: {
         auto& cursorEvent = dynamic_cast<CursorEvent&>(e);
-        //FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
+        //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
 
         break;
       }
       case EventCategory::Scroll: {
         auto& scrollEvent = dynamic_cast<ScrollEvent&>(e);
-        //FLUGEL_DEBUG_E("{0} [Thread ID: {1}]", e, std::this_thread::get_id());
+        //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
 
         break;
       }
