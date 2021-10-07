@@ -34,12 +34,19 @@ namespace Flugel {
     std::map<std::thread::id, std::string> threadNames_{};
 
     void processInput();
+
     void updateFixed();
     void update();
     void render();
     void close();
     
-    void onEvent(Event& e);
+    void eventDispatch(Event& e);
+    bool onAppEvent(AppEvent& e);
+    bool onWindowEvent(WindowEvent& e);
+    bool onKeyboardEvent(KeyboardEvent& e);
+    bool onMouseEvent(MouseEvent& e);
+    bool onCursorEvent(CursorEvent& e);
+    bool onScrollEvent(ScrollEvent& e);
   };
 
   // To be defined in project app

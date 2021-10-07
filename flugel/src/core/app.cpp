@@ -5,7 +5,7 @@ namespace Flugel {
     : window_{props} {
     FLUGEL_TRACE_E("Constructing App...");
 
-    window_.setEventCallback(FLUGEL_BIND_FN(App::onEvent));
+    window_.setEventCallback(FLUGEL_BIND_FN(App::eventDispatch));
   }
 
   App::~App() {
@@ -44,7 +44,7 @@ namespace Flugel {
     // RENDER LOOP
     while (!shouldClose_) {
       AppEvent renderEvent{AppEventType::Render};
-      onEvent(renderEvent);
+      eventDispatch(renderEvent);
     }
 
     FLUGEL_TRACE_E("Ending render thread");
@@ -64,7 +64,7 @@ namespace Flugel {
       while (time_.shouldDoFixedStep()) {
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
         AppEvent updateFixedEvent{AppEventType::UpdateFixed};
-        onEvent(updateFixedEvent);
+        eventDispatch(updateFixedEvent);
 
         // End inner, fixed loop with lag tick
         time_.tickLag();
@@ -72,7 +72,7 @@ namespace Flugel {
 
       // Timestep INSENSITIVE stuff happens out here, where pacing goes as fast as possible
       AppEvent updateEvent{AppEventType::Update};
-      onEvent(updateEvent);
+      eventDispatch(updateEvent);
 
       // End outer, unfixed loop with regular tick
       time_.tick();
@@ -94,7 +94,6 @@ namespace Flugel {
   }
 
   void App::render() {
-
     window_.swapBuffers();
   }
 
@@ -102,76 +101,74 @@ namespace Flugel {
     shouldClose_ = true;
   }
   
-  void App::onEvent(Event& e) {
-    switch (e.category()) {
-      case EventCategory::App: {
-        //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-        auto& appEvent = dynamic_cast<AppEvent&>(e);
-        switch (appEvent.type()) {
-          case AppEventType::UpdateFixed: {
-            updateFixed();
-            break;
-          }
-          case AppEventType::Update: {
-            update();
-            break;
-          }
-          case AppEventType::Render: {
-            render();
-            break;
-          }
-          default: {
-            break;
-          }
-        }
-        break;
-      }
-      case EventCategory::Window: {
-        auto& windowEvent = dynamic_cast<WindowEvent&>(e);
-        switch (windowEvent.type()) {
-          case WindowEventType::Close: {
-            FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-            close();
-            break;
-          }
-          default: {
-            break;
-          }
-        }
-        break;
-      }
-      case EventCategory::Keyboard: {
-        auto& keyboardEvent = dynamic_cast<KeyboardEvent&>(e);
-        FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+  void App::eventDispatch(Event& e) {
+    EventDispatcher dispatcher{e};
+    if (dispatcher.tryDispatch<AppEvent>(FLUGEL_BIND_FN(App::onAppEvent))) return;
+    if (dispatcher.tryDispatch<WindowEvent>(FLUGEL_BIND_FN(App::onWindowEvent))) return;
+    if (dispatcher.tryDispatch<KeyboardEvent>(FLUGEL_BIND_FN(App::onKeyboardEvent))) return;
+    if (dispatcher.tryDispatch<MouseEvent>(FLUGEL_BIND_FN(App::onMouseEvent))) return;
+    if (dispatcher.tryDispatch<CursorEvent>(FLUGEL_BIND_FN(App::onCursorEvent))) return;
+    if (dispatcher.tryDispatch<ScrollEvent>(FLUGEL_BIND_FN(App::onScrollEvent))) return;
+  }
 
-        if (keyboardEvent.keyState() == ButtonState::Pressed 
-            && keyboardEvent.key() == GLFW_KEY_ESCAPE) {
-          close();
-        }
-
+  bool App::onAppEvent(AppEvent& e) {
+    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    switch (e.type()) {
+      case AppEventType::UpdateFixed: {
+        updateFixed();
         break;
       }
-      case EventCategory::Mouse: {
-        auto& mouseEvent = dynamic_cast<MouseEvent&>(e);
-        FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-        
+      case AppEventType::Update: {
+        update();
         break;
       }
-      case EventCategory::Cursor: {
-        auto& cursorEvent = dynamic_cast<CursorEvent&>(e);
-        //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-
-        break;
-      }
-      case EventCategory::Scroll: {
-        auto& scrollEvent = dynamic_cast<ScrollEvent&>(e);
-        //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-
+      case AppEventType::Render: {
+        render();
         break;
       }
       default: {
         break;
       }
     }
+    return true;
+  }
+
+  bool App::onWindowEvent(WindowEvent& e) {
+    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    switch (e.type()) {
+      case WindowEventType::Close: {
+        FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+        close();
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return true;
+  }
+
+  bool App::onKeyboardEvent(KeyboardEvent& e) {
+    FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    
+    return true;
+  }
+
+  bool App::onMouseEvent(MouseEvent& e) {
+    FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    
+    return true;
+  }
+
+  bool App::onCursorEvent(CursorEvent& e) {
+    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    
+    return true;
+  }
+
+  bool App::onScrollEvent(ScrollEvent& e) {
+    FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    
+    return true;
   }
 }
