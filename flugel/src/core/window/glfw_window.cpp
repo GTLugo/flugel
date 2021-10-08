@@ -162,9 +162,6 @@ namespace Flugel {
   }
   
   void GlfwWindow::dragWindow(double cursorOffsetX, double cursorOffsetY) {
-    if (data_.fullScreen) {
-      return;
-    }
     int32_t x, y;
     glfwGetWindowPos(glfwWindow_, &x, &y);
     setPos(x + glm::floor(Input::cursorPosX()) - cursorOffsetX, 

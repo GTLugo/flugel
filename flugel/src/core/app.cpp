@@ -99,9 +99,6 @@ namespace Flugel {
   }
 
   void App::update() {
-    if (draggingWindowDecor_) {
-      window_->dragWindow(windowDragOffset_.x, windowDragOffset_.y);
-    }
 
     for (Layer* layer : layerStack_) {
       layer->update();
@@ -204,6 +201,9 @@ namespace Flugel {
 
   bool App::onCursorEvent(CursorEvent& e) {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    if (draggingWindowDecor_) {
+      window_->dragWindow(windowDragOffset_.x, windowDragOffset_.y);
+    }
     
     return false; // return false so event isn't marked handled from base app
   }
@@ -215,6 +215,11 @@ namespace Flugel {
   }
 
   void App::pollCustomDecor(MouseEvent& e) {
+    if (window_->isFullscreen()) {
+      draggingWindowDecor_ = false;
+      closingWindowDecor_ = false;
+      return;
+    }
     if (e.button() == GLFW_MOUSE_BUTTON_LEFT) {
       if (e.buttonState() == ButtonState::Pressed
         && Input::cursorPosY() < 50 && Input::cursorPosX() < (window_->width() - 50)) {

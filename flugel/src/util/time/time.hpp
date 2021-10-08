@@ -108,7 +108,7 @@ namespace Flugel {
     }
   private:
     // fixed update pace. this will be used for physics and anything else in fixed update
-    static constexpr double fixedTickRate_{1.};
+    static constexpr double fixedTickRate_{128.};
     static constexpr Seconds fixedTimeStep_{1. / fixedTickRate_};
     // bail out of the fixed updates if iterations exceeds this amount to prevent lockups
     // on extremely slow systems where updateFixed may be longer than fixedTimeStep_
