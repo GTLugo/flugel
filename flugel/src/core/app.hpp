@@ -28,8 +28,8 @@ namespace Flugel {
     // Window
     Unique<Window> window_;
     bool shouldClose_{false};
-    bool draggingWindow_{false};
-    bool closingWindow_{false};
+    bool draggingWindowDecor_{false};
+    bool closingWindowDecor_{false};
     glm::vec2 windowDragOffset_; // cursor position at time of clicking to drag window
     // Threads
     std::thread gameThread_;
@@ -49,6 +49,8 @@ namespace Flugel {
     void update();
     void render();
     void close();
+
+    void pollCustomDecor(MouseEvent& e);
     
     void eventDispatch(Event& e);
     bool onAppEvent(AppEvent& e);

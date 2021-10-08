@@ -99,7 +99,7 @@ namespace Flugel {
   }
 
   void App::update() {
-    if (draggingWindow_) {
+    if (draggingWindowDecor_) {
       window_->dragWindow(windowDragOffset_.x, windowDragOffset_.y);
     }
 
@@ -195,25 +195,9 @@ namespace Flugel {
 
   bool App::onMouseEvent(MouseEvent& e) {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    // dragging and close button
-    if (e.button() == GLFW_MOUSE_BUTTON_LEFT) {
-      if (e.buttonState() == ButtonState::Pressed
-        && Input::cursorPosY() < 50 && Input::cursorPosX() < (window_->width() - 50)) {
-        draggingWindow_ = true;
-        windowDragOffset_ = {glm::floor(Input::cursorPosX()), glm::floor(Input::cursorPosY())};
-      } else {
-        draggingWindow_ = false;
-      }
-      if (closingWindow_ && e.buttonState() == ButtonState::Released
-        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (window_->width() - 50)) {
-        shouldClose_ = true;
-      }
-      if (e.buttonState() == ButtonState::Pressed
-        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (window_->width() - 50)) {
-        closingWindow_ = true;
-      } else {
-        closingWindow_ = false;
-      }
+    // custom dragging and close button
+    if (window_->isUsingCustomDecor()) {
+      pollCustomDecor(e);
     }
     return false; // return false so event isn't marked handled from base app
   }
@@ -228,5 +212,27 @@ namespace Flugel {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     
     return false; // return false so event isn't marked handled from base app
+  }
+
+  void App::pollCustomDecor(MouseEvent& e) {
+    if (e.button() == GLFW_MOUSE_BUTTON_LEFT) {
+      if (e.buttonState() == ButtonState::Pressed
+        && Input::cursorPosY() < 50 && Input::cursorPosX() < (window_->width() - 50)) {
+        draggingWindowDecor_ = true;
+        windowDragOffset_ = {glm::floor(Input::cursorPosX()), glm::floor(Input::cursorPosY())};
+      } else {
+        draggingWindowDecor_ = false;
+      }
+      if (closingWindowDecor_ && e.buttonState() == ButtonState::Released
+        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (window_->width() - 50)) {
+        shouldClose_ = true;
+      }
+      if (e.buttonState() == ButtonState::Pressed
+        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (window_->width() - 50)) {
+        closingWindowDecor_ = true;
+      } else {
+        closingWindowDecor_ = false;
+      }
+    }
   }
 }

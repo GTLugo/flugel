@@ -9,7 +9,7 @@ namespace Flugel {
     bool vSync;
     bool fullScreen;
     bool borderless;
-    bool shouldUseDefaultDecor;
+    bool customDecor;
 
     WindowProperties(const std::string& title = "FLUGEL ENGINE",
                      uint32_t width = 800,
@@ -17,14 +17,14 @@ namespace Flugel {
                      bool vSync = true,
                      bool fullScreen = false,
                      bool borderless = false,
-                     bool shouldUseDefaultDecor = true)
+                     bool customDecor = false)
       : title{title}, 
         width{width}, 
         height{height}, 
         vSync{vSync}, 
         fullScreen{fullScreen}, 
         borderless{borderless}, 
-        shouldUseDefaultDecor{shouldUseDefaultDecor} {}
+        customDecor{customDecor} {}
   };
 
   class FLUGEL_API Window {
@@ -49,6 +49,7 @@ namespace Flugel {
     uint32_t height() const { return data_.height; }
     bool isVSync() const { return data_.vSync; }
     bool isFullscreen() const { return data_.fullScreen; }
+    bool isUsingCustomDecor() const { return data_.customDecor; }
     void setEventCallback(const EventCallbackFn& callback) { data_.eventCallback = callback; }
     
     static Unique<Window> create(const WindowProperties& props = {});
@@ -66,6 +67,7 @@ namespace Flugel {
       bool vSync;
       bool fullScreen;
       bool borderless;
+      bool customDecor;
       EventCallbackFn eventCallback;
 
       WindowState(const WindowProperties& props) 
@@ -76,7 +78,8 @@ namespace Flugel {
           height{props.height}, 
           vSync{props.vSync},
           fullScreen{props.fullScreen},
-          borderless{props.borderless} {}
+          borderless{props.borderless},
+          customDecor{props.customDecor} {}
     };
 
     WindowState data_;

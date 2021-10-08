@@ -28,7 +28,7 @@ namespace Flugel {
 
     Color clearColor_{0x2E3440FF};
     
-    void init(bool shouldUseDefaultDecor);
+    void init();
     void setCallbacks();
     void shutdown();
   };

@@ -13,7 +13,7 @@ namespace Sandbox {
           false, // vsync
           false, // fullscreen
           false, // borderless
-          false // default window decorations
+          false // custom window decorations
         }} {
         pushLayer(new SandboxLayer{&time()});
       }

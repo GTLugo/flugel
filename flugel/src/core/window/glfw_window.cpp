@@ -15,14 +15,14 @@ namespace Flugel {
 
   GlfwWindow::GlfwWindow(const WindowProperties& props)
     : Window{props} {
-    init(props.shouldUseDefaultDecor);
+    init();
   }
 
   GlfwWindow::~GlfwWindow() {
     shutdown();
   }
 
-  void GlfwWindow::init(bool shouldUseDefaultDecor) {
+  void GlfwWindow::init() {
     FLUGEL_DEBUG_E("Creating window: {0} ({1}, {2})", data_.title, data_.width, data_.height);
     if (glfwWindowCount_s == 0) {
       int32_t glfwInitSuccess = glfwInit();
@@ -34,7 +34,7 @@ namespace Flugel {
     FLUGEL_INFO_E("Initialized GLFW {0}.{1}.{2}!", major, minor, revision);
 
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    glfwWindowHint(GLFW_DECORATED, shouldUseDefaultDecor);
+    glfwWindowHint(GLFW_DECORATED, !data_.customDecor);
     glfwWindow_ = glfwCreateWindow(
       (int32_t)data_.width,
       (int32_t)data_.height,
