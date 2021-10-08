@@ -204,15 +204,15 @@ namespace Flugel {
       } else {
         draggingWindow_ = false;
       }
-      if (customCloseButton_ && e.buttonState() == ButtonState::Released
+      if (closingWindow_ && e.buttonState() == ButtonState::Released
         && Input::cursorPosY() < 50 && Input::cursorPosX() >= (window_->width() - 50)) {
         shouldClose_ = true;
       }
       if (e.buttonState() == ButtonState::Pressed
         && Input::cursorPosY() < 50 && Input::cursorPosX() >= (window_->width() - 50)) {
-        customCloseButton_ = true;
+        closingWindow_ = true;
       } else {
-        customCloseButton_ = false;
+        closingWindow_ = false;
       }
     }
     return false; // return false so event isn't marked handled from base app

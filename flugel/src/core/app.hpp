@@ -29,7 +29,7 @@ namespace Flugel {
     Unique<Window> window_;
     bool shouldClose_{false};
     bool draggingWindow_{false};
-    bool customCloseButton_{false};
+    bool closingWindow_{false};
     glm::vec2 windowDragOffset_; // cursor position at time of clicking to drag window
     // Threads
     std::thread gameThread_;
