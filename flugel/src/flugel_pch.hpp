@@ -14,6 +14,8 @@
 #include <functional>
 #include <memory>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 #include <future>
 #include <ctime>
 #include <chrono>
@@ -44,3 +46,9 @@
 #include "util/logging/log.hpp"
 #include "util/time/time.hpp"
 #include "util/uuid.hpp"
+
+/*----------------------
+  VENDOR LIBRARIES
+----------------------*/
+#include <glm/glm.hpp>
+#include <glm/matrix.hpp>

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.21)
 project(flugel_engine)
 
 foreach(OUTPUT_CONFIG ${CMAKE_CONFIGURATION_TYPES})
@@ -11,7 +11,7 @@ endforeach(OUTPUT_CONFIG ${CMAKE_CONFIGURATION_TYPES})
 
 if(WIN32)
   set(CMAKE_WIN32_EXECUTABLE $<$<OR:$<CONFIG:release>,$<CONFIG:minsizerel>>:TRUE>)
-  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<OR:$<CONFIG:debug>,$<CONFIG:relwithdebinfo>>:Debug>")
+  #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<OR:$<CONFIG:debug>,$<CONFIG:relwithdebinfo>>:Debug>")
 endif()
 
 

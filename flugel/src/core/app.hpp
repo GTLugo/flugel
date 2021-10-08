@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/window/window.hpp"
+#include "core/layers/layer_stack.hpp"
 #include "core/callbacks/events/event.hpp"
 #include "core/callbacks/events/app_event.hpp"
 #include "core/callbacks/events/window_event.hpp"
@@ -12,29 +13,38 @@ namespace Flugel {
     App(const WindowProperties& props = {});
     virtual ~App();
 
-    Time getTime() const { return time_; }
+    static App& instance() { return *instance_; }
+    const Time& time() const { return time_; }
+    Window& window() { return *window_; }
+
+    void pushLayer(Layer* layer);
+    void pushOverlay(Layer* overlay);
 
     void run();
   private:
+    static Unique<App> instance_;
+    // Util
     Time time_{};
     // Window
+    Unique<Window> window_;
     bool shouldClose_{false};
-    Window window_;
+    bool draggingWindow_{false};
+    bool customCloseButton_{false};
+    glm::vec2 windowDragOffset_; // cursor position at time of clicking to drag window
     // Threads
     std::thread gameThread_;
     std::thread renderThread_;
-
     std::map<std::thread::id, std::string> threadNames_{};
-
-  private:
+    // Layers
+    LayerStack layerStack_;
+    
     void spawnThreads();
     void killThreads();
 
     void gameThreadMain();
     void renderThreadMain();
 
-    void processInput();
-
+    void pollEvents();
     void updateFixed();
     void update();
     void render();

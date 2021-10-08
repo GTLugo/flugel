@@ -58,6 +58,6 @@ namespace Flugel {
       return ss.str();
     }
   protected:
-    double xOffset_, yOffset_;
+    const double xOffset_, yOffset_;
   };
 }

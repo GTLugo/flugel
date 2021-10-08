@@ -1,12 +1,6 @@
 #pragma once
 
-#include "util/color/color.hpp"
 #include "core/callbacks/events/event.hpp"
-#include "core/callbacks/events/window_event.hpp"
-#include "core/callbacks/events/mouse_event.hpp"
-#include "core/callbacks/events/keyboard_event.hpp"
-
-#include <GLFW/glfw3.h>
 
 namespace Flugel {
   struct WindowProperties {
@@ -34,53 +28,50 @@ namespace Flugel {
   };
 
   class FLUGEL_API Window {
+  protected:
     using EventCallbackFn = std::function<void(Event&)>;
   public:
-    struct GLFWwindowDelete {
-      void operator()(GLFWwindow* ptr) {
-        glfwDestroyWindow(ptr);
-      }
-    };
+    virtual ~Window() = default;
+    
+    virtual void pollEvents() = 0;
+    virtual void render() = 0;
+    
+    virtual void* nativeWindow() = 0;
+    virtual void dragWindow(double cursorOffsetX, double cursorOffsetY) = 0;
+    virtual void setPos(double xPos, double yPos) = 0;
+    virtual void setVSync(bool enabled) = 0;
+    virtual void setFullscreen(bool enabled) = 0;
+    virtual void setContextCurrent(bool current) = 0;
 
-    using UniqueGlfwWindow = Unique<GLFWwindow, GLFWwindowDelete>;
-
-  public:
-    Window(const WindowProperties& props = {});
-    virtual ~Window();
-
-    inline void setContextCurrent(bool current);
-    void processInput();
-    void swapBuffers();
-
-    UniqueGlfwWindow& window() { return glfwWindow_; }
     int32_t xPos() const { return data_.xPos; }
     int32_t yPos() const { return data_.yPos; }
     uint32_t width() const { return data_.width; }
     uint32_t height() const { return data_.height; }
     bool isVSync() const { return data_.vSync; }
     bool isFullscreen() const { return data_.fullScreen; }
-
-    void setPos(int32_t xPos, int32_t yPos);
-    void setVSync(bool enabled);
-    void setFullscreen(bool enabled);
     void setEventCallback(const EventCallbackFn& callback) { data_.eventCallback = callback; }
     
-  private:
-    struct WindowData {
+    static Unique<Window> create(const WindowProperties& props = {});
+  protected:
+    Window(const WindowProperties& props)
+      : data_{props} {}
+
+    struct WindowState {
       std::string title;
       int32_t xPos, yPos;
       int32_t xPosBeforeFullscreen, yPosBeforeFullscreen;
       uint32_t width, height;
       uint32_t widthBeforeFullscreen, heightBeforeFullscreen;
+      glm::vec2 cursorPos, cursorPosOld, cursorDelta;
       bool vSync;
       bool fullScreen;
       bool borderless;
       EventCallbackFn eventCallback;
 
-      WindowData(const WindowProperties& props) 
+      WindowState(const WindowProperties& props) 
         : title{props.title},
-          xPos{50},
-          yPos{50},
+          xPos{69},
+          yPos{69},
           width{props.width}, 
           height{props.height}, 
           vSync{props.vSync},
@@ -88,15 +79,6 @@ namespace Flugel {
           borderless{props.borderless} {}
     };
 
-    static bool isGlfwInitialized_;
-    WindowData data_;
-    UniqueGlfwWindow glfwWindow_;
-    const GLFWvidmode* vidMode_;
-
-    Color clearColor_{0x2E3440FF};
-  private:
-    void init(bool shouldUseDefaultDecor);
-    void setCallbacks();
-    void shutdown();
+    WindowState data_;
   };
 }

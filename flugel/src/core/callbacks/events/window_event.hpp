@@ -14,10 +14,10 @@ namespace Flugel {
 
     WindowEventType type() const { return type_; }
   protected:
+    const WindowEventType type_;
+
     WindowEvent(WindowEventType type)
       : type_{type} {}
-
-    WindowEventType type_;
   };
 
   class FLUGEL_API WindowCloseEvent : public WindowEvent {
@@ -46,12 +46,12 @@ namespace Flugel {
       return ss.str();
     }
   private:
-    uint32_t width_, height_;
+    const uint32_t width_, height_;
   };
 
   class FLUGEL_API WindowMovedEvent : public WindowEvent {
   public:
-    WindowMovedEvent(int xPos, int yPos)
+    WindowMovedEvent(int32_t xPos, int32_t yPos)
       : WindowEvent{WindowEventType::Resize}, xPos_{xPos}, yPos_{yPos} {}
 
     uint32_t xPos() const { return xPos_; }
@@ -63,6 +63,6 @@ namespace Flugel {
       return ss.str();
     }
   private:
-    int xPos_, yPos_;
+    const int32_t xPos_, yPos_;
   };
 }

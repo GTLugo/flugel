@@ -31,9 +31,9 @@ namespace Flugel {
       return ss.str();
     }
   protected:
-    ButtonState keyState_;
-    int32_t key_;
-    int32_t repeatCount_;
-    KeyModifiers mods_;
+    const ButtonState keyState_;
+    const int32_t key_;
+    const int32_t repeatCount_;
+    const KeyModifiers mods_;
   };
 }

@@ -8,8 +8,8 @@ namespace Flugel {
   public:
       static void init();
 
-      inline static std::shared_ptr<spdlog::logger>& getEngineLogger() { return engineLogger_; }
-      inline static std::shared_ptr<spdlog::logger>& getAppLogger() { return appLogger_; }
+      static std::shared_ptr<spdlog::logger>& getEngineLogger() { return engineLogger_; }
+      static std::shared_ptr<spdlog::logger>& getAppLogger() { return appLogger_; }
 
   private:
     static std::shared_ptr<spdlog::logger> engineLogger_;

@@ -1,4 +1,6 @@
-#include <flugel.hpp>
+#include "sandbox_layer.hpp"
+
+#include "flugel.hpp"
 
 namespace Sandbox {
   class App : public Flugel::App {
@@ -11,8 +13,11 @@ namespace Sandbox {
           false, // vsync
           false, // fullscreen
           false, // borderless
-          true // default window decorations
-        }} {}
+          false // default window decorations
+        }} {
+        pushLayer(new SandboxLayer{&time()});
+      }
+
       virtual ~App() override = default;
   };
 }
