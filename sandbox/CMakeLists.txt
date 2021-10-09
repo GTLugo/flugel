@@ -29,11 +29,11 @@ set_target_properties(${TARGET_NAME}
 
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E remove_directory
-  "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/${CMAKE_SYSTEM_NAME}/res")
+  "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/${CMAKE_SYSTEM_NAME}/res/${PROJECT_NAME}")
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
-  ${CMAKE_CURRENT_SOURCE_DIR}/res
-  "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/${CMAKE_SYSTEM_NAME}/res")
+  ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}
+  "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/${CMAKE_SYSTEM_NAME}/res/${PROJECT_NAME}")
 
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME}
