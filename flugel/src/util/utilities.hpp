@@ -39,8 +39,8 @@
     if(!(x)) {FGE_CRIT_ENG("FAILED ASSERT: {0}", __VA_ARGS__); FGE_DEBUG_BREAK; }\
   }
 #else
-  #define FLUGEL_ASSERT(x, ...)
-  #define FLUGEL_ASSERT_E(x, ...)
+  #define FGE_ASSERT(x, ...)
+  #define FGE_ASSERT_ENG(x, ...)
 #endif
 
 #define BIT(x) (1 << x)
