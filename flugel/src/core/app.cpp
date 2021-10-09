@@ -18,7 +18,7 @@ namespace Flugel {
     window_->setEventCallback(FLUGEL_BIND_FN(eventDispatch));
     
     int32_t width, height;
-    uint8_t* icon = stbi_load("res/icon.png", &width, &height, 0, 4);
+    uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
     window_->setIcon(icon, width, height);
     stbi_image_free(icon);
 

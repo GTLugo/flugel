@@ -30,6 +30,13 @@ set(SOURCE_FILES
 
 set(SHADER_FILES
   res/shaders/simple_shader.glsl)
+# file(GLOB_RECURSE RES_FILES CONFIGURE_DEPENDS
+#   RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/res
+#   res/*.*)
+
+# foreach(RES_FILE ${RES_FILES})
+#   configure_file(res/${RES_FILE} ${WORKING_DIRECTORY}/res/${RES_FILE} COPYONLY)
+# endforeach()
 
 # ===================================================
 # ADD SHARED LIBRARY TARGET
@@ -43,11 +50,18 @@ set_target_properties(${TARGET_NAME}
     OUTPUT_NAME "${TARGET_NAME}"
     CXX_VISIBILITY_PRESET hidden
 )
-message(DEBUG "Engine bin Dir: ${BIN_DIR}")
+
+add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E remove_directory
+  "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/${CMAKE_SYSTEM_NAME}/res")
+add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  ${CMAKE_CURRENT_SOURCE_DIR}/res
+  "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/${CMAKE_SYSTEM_NAME}/res")
 
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME}
-  PRIVATE 
+  PRIVATE
     $<$<CONFIG:debug>:DEBUG=1 FLUGEL_ENABLE_ASSERTS=1>
     $<$<CONFIG:release>:RELEASE=1>
     $<$<CONFIG:relwithdebinfo>:RELDEB=1 FLUGEL_ENABLE_ASSERTS=1>
