@@ -66,4 +66,19 @@ namespace Flugel {
   
   template<typename T>
   using Weak = std::weak_ptr<T>;
+
+  // Floating point
+  using vector2_t = glm::dvec2;
+  using vector3_t = glm::dvec3;
+  using vector4_t = glm::dvec4;
+  using matrix3_t = glm::dmat3;
+  using matrix4_t = glm::dmat4;
+  // Integer
+  using ivector2_t = glm::ivec2;
+  using ivector3_t = glm::ivec3;
+  using ivector4_t = glm::ivec4;
+  // Unsigned integer
+  using uvector2_t = glm::uvec2;
+  using uvector3_t = glm::uvec3;
+  using uvector4_t = glm::uvec4;
 }

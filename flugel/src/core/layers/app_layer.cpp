@@ -64,18 +64,18 @@ namespace Flugel {
     }
     if (e.button() == GLFW_MOUSE_BUTTON_LEFT) {
       if (e.buttonState() == ButtonState::Pressed
-        && Input::cursorPosY() < 50 && Input::cursorPosX() < (App::instance().window().width() - 50)) {
+        && Input::cursorPosY() < 50 && Input::cursorPosX() < (App::instance().window().dims().x - 50)) {
         draggingWindowDecor_ = true;
         windowDragOffset_ = {glm::floor(Input::cursorPosX()), glm::floor(Input::cursorPosY())};
       } else {
         draggingWindowDecor_ = false;
       }
       if (closingWindowDecor_ && e.buttonState() == ButtonState::Released
-        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (App::instance().window().width() - 50)) {
+        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (App::instance().window().dims().x - 50)) {
         App::instance().close();
       }
       if (e.buttonState() == ButtonState::Pressed
-        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (App::instance().window().width() - 50)) {
+        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (App::instance().window().dims().x - 50)) {
         closingWindowDecor_ = true;
       } else {
         closingWindowDecor_ = false;

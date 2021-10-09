@@ -26,7 +26,7 @@ namespace Flugel {
   }
 
   void GlfwWindow::init() {
-    FLUGEL_DEBUG_E("Creating window: {0} ({1}, {2})", data_.title, data_.width, data_.height);
+    FLUGEL_DEBUG_E("Creating window: {0} ({1}, {2})", data_.title, data_.windowDims.x, data_.windowDims.y);
     if (glfwWindowCount_s == 0) {
       int32_t glfwInitSuccess = glfwInit();
       FLUGEL_ASSERT_E(glfwInitSuccess, "Failed to initialize GLFW!");
@@ -39,8 +39,8 @@ namespace Flugel {
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
     glfwWindowHint(GLFW_DECORATED, !data_.customDecor);
     glfwWindow_ = glfwCreateWindow(
-      (int32_t)data_.width,
-      (int32_t)data_.height,
+      (int32_t)data_.windowDims.x,
+      (int32_t)data_.windowDims.y,
       data_.title.c_str(),
       nullptr,
       nullptr
@@ -56,9 +56,9 @@ namespace Flugel {
     glfwSetWindowUserPointer(glfwWindow_, &data_);
     setVSync(data_.vSync);
     // ONLY run this if screen needs to start as fullscreen (otherwise errors!)
-    if (data_.fullScreen) {
-      setFullscreen(true);
-    }
+    //if (data_.fullScreen) {
+      setFullscreen(data_.fullScreen);
+    //}
     setCallbacks();
 
     setContextCurrent(false); // Prepare for context transfer to render thread
@@ -73,16 +73,14 @@ namespace Flugel {
     });
     glfwSetWindowSizeCallback(glfwWindow_, [](GLFWwindow* window, int32_t width, int32_t height) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
-      data.width = width;
-      data.height = height;
-      WindowResizeEvent e{data.width, data.height};
+      data.windowDims = {width, height};
+      WindowResizeEvent e{data.windowDims.x, data.windowDims.y};
       data.eventCallback(e);
     });
     glfwSetWindowPosCallback(glfwWindow_, [](GLFWwindow* window, int32_t xPos, int32_t yPos) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
-      data.xPos = xPos;
-      data.yPos = yPos;
-      WindowMovedEvent e{data.xPos, data.yPos};
+      data.windowPos = {xPos, yPos};
+      WindowMovedEvent e{data.windowPos.x, data.windowPos.y};
       data.eventCallback(e);
     });
 
@@ -191,10 +189,8 @@ namespace Flugel {
 
   void GlfwWindow::setFullscreen(bool enabled) {
     if (enabled) {
-      data_.xPosBeforeFullscreen = data_.xPos;
-      data_.yPosBeforeFullscreen = data_.yPos;
-      data_.widthBeforeFullscreen = data_.width;
-      data_.heightBeforeFullscreen = data_.height;
+      data_.posBeforeFullscreen = data_.windowPos;
+      data_.dimsBeforeFullscreen = data_.windowDims;
       glfwSetWindowMonitor(glfwWindow_, 
                            glfwGetPrimaryMonitor(),
                            0,
@@ -203,12 +199,12 @@ namespace Flugel {
                            vidMode_->height,
                            vidMode_->refreshRate);
     } else {
-      glfwSetWindowMonitor(glfwWindow_, 
+      glfwSetWindowMonitor(glfwWindow_,
                            nullptr,
-                           data_.xPosBeforeFullscreen,
-                           data_.yPosBeforeFullscreen,
-                           data_.widthBeforeFullscreen,
-                           data_.heightBeforeFullscreen,
+                           data_.posBeforeFullscreen.x,
+                           data_.posBeforeFullscreen.y,
+                           data_.dimsBeforeFullscreen.x,
+                           data_.dimsBeforeFullscreen.y,
                            0);
     }
     data_.fullScreen = enabled;

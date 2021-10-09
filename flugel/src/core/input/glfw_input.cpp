@@ -17,17 +17,18 @@ namespace Flugel {
     return state == GLFW_PRESS;
   }
 
-  double GlfwInput::cursorPosXImpl() {
+  vector2_t GlfwInput::cursorPosImpl() {
     auto window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
-    double xPos, _;
-    glfwGetCursorPos(window, &xPos, &_);
-    return xPos;
+    vector2_t pos;
+    glfwGetCursorPos(window, &pos.x, &pos.y);
+    return pos;
+  }
+
+  double GlfwInput::cursorPosXImpl() {
+    return cursorPosImpl().x;
   }
 
   double GlfwInput::cursorPosYImpl() {
-    auto window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
-    double _, yPos;
-    glfwGetCursorPos(window, &_, &yPos);
-    return yPos;
+    return cursorPosImpl().y;
   }
 }

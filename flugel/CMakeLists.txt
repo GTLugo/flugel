@@ -83,7 +83,6 @@ find_package(Boost REQUIRED
   COMPONENTS
     container
     coroutine
-    #interprocess
     log
     system
     thread
@@ -93,7 +92,6 @@ set(BOOST_LIBRARIES
     Boost::headers
     Boost::container
     Boost::coroutine
-    #Boost::interprocess
     Boost::log
     Boost::system
     Boost::thread

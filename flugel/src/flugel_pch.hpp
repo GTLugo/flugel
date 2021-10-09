@@ -40,6 +40,12 @@
 #endif
 
 /*----------------------
+  VENDOR LIBRARIES
+----------------------*/
+#include <glm/glm.hpp>
+#include <glm/matrix.hpp>
+
+/*----------------------
   FLUGEL LIBRARY
 ----------------------*/
 
@@ -47,9 +53,3 @@
 #include "util/logging/log.hpp"
 #include "util/time/time.hpp"
 #include "util/uuid.hpp"
-
-/*----------------------
-  VENDOR LIBRARIES
-----------------------*/
-#include <glm/glm.hpp>
-#include <glm/matrix.hpp>

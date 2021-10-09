@@ -45,10 +45,8 @@ namespace Flugel {
     virtual void setFullscreen(bool enabled) = 0;
     virtual void setContextCurrent(bool current) = 0;
 
-    int32_t xPos() const { return data_.xPos; }
-    int32_t yPos() const { return data_.yPos; }
-    uint32_t width() const { return data_.width; }
-    uint32_t height() const { return data_.height; }
+    ivector2_t pos() const { return data_.windowPos; }
+    uvector2_t dims() const { return data_.windowDims; }
     bool isVSync() const { return data_.vSync; }
     bool isFullscreen() const { return data_.fullScreen; }
     bool isUsingCustomDecor() const { return data_.customDecor; }
@@ -61,11 +59,9 @@ namespace Flugel {
 
     struct WindowState {
       std::string title;
-      int32_t xPos, yPos;
-      int32_t xPosBeforeFullscreen, yPosBeforeFullscreen;
-      uint32_t width, height;
-      uint32_t widthBeforeFullscreen, heightBeforeFullscreen;
-      glm::vec2 cursorPos, cursorPosOld, cursorDelta;
+      ivector2_t windowPos, posBeforeFullscreen;
+      uvector2_t windowDims, dimsBeforeFullscreen;
+      vector2_t cursorPos, cursorPosOld, cursorDelta;
       bool vSync;
       bool fullScreen;
       bool borderless;
@@ -74,10 +70,8 @@ namespace Flugel {
 
       WindowState(const WindowProperties& props) 
         : title{props.title},
-          xPos{69},
-          yPos{69},
-          width{props.width}, 
-          height{props.height}, 
+          windowPos{69, 69}, posBeforeFullscreen{windowPos},
+          windowDims{props.width, props.height}, dimsBeforeFullscreen{windowDims}, 
           vSync{props.vSync},
           fullScreen{props.fullScreen},
           borderless{props.borderless},
