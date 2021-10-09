@@ -1,4 +1,4 @@
-#include "sandbox_layer.hpp"
+#include "test_layer.hpp"
 
 #include "flugel.hpp"
 
@@ -15,12 +15,11 @@ namespace Sandbox {
           false, // borderless
           false // custom window decorations
         }} {
-        pushLayer(new SandboxLayer{time()});
+        pushLayer(new TestLayer{time()});
       }
 
       virtual ~App() override {
         FLUGEL_TRACE("Destructing sandbox...");
-        FLUGEL_TRACE("Destructed sandbox!");
       };
   };
 }

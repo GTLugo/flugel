@@ -3,10 +3,10 @@
 #include "layer.hpp"
 
 namespace Flugel {
-  class AppLayer : public Layer {
+  class EngineLayer : public Layer {
   public:
-    AppLayer()
-      : Layer{"Flugel Layer"} {}
+    EngineLayer()
+      : Layer{"FlugelEngine"} {}
   private:
     glm::vec2 windowDragOffset_; // cursor position at time of clicking to drag window
     bool draggingWindowDecor_{false};

@@ -3,10 +3,10 @@
 #include "flugel.hpp"
 
 namespace Sandbox {
-  class SandboxLayer : public Flugel::Layer {
+  class TestLayer : public Flugel::Layer {
   public:
-    SandboxLayer(const Flugel::Time& time)
-      : Layer{"Sandbox Layer"}, time_{time} {}
+    TestLayer(const Flugel::Time& time)
+      : Layer{"TestLayer"}, time_{time} {}
 
     void updateFixed() override {
       //FLUGEL_TRACE("UwU");

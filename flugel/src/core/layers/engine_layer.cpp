@@ -1,4 +1,4 @@
-#include "app_layer.hpp"
+#include "engine_layer.hpp"
 
 #include "core/app.hpp"
 #include "core/input/input.hpp"
@@ -6,11 +6,11 @@
 #include "GLFW/glfw3.h"
 
 namespace Flugel {
-  void AppLayer::render() {
+  void EngineLayer::render() {
     App::instance().window().render();
   }
 
-  bool AppLayer::onWindowEvent(WindowEvent& e) {
+  bool EngineLayer::onWindowEvent(WindowEvent& e) {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     switch (e.type()) {
       case WindowEventType::Close: {
@@ -24,7 +24,7 @@ namespace Flugel {
     }
   }
 
-  bool AppLayer::onKeyboardEvent(KeyboardEvent& e) {
+  bool EngineLayer::onKeyboardEvent(KeyboardEvent& e) {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     if (Input::isKeyPressed(GLFW_KEY_ENTER) && (e.mods() & GLFW_MOD_ALT)) {
       FLUGEL_DEBUG_E("{0}: Fullscreen({1}) [Thread: {2}]", name_, !App::instance().window().isFullscreen(), App::instance().threadName(std::this_thread::get_id()));
@@ -33,7 +33,7 @@ namespace Flugel {
     return true;
   }
 
-  bool AppLayer::onMouseEvent(MouseEvent& e) {
+  bool EngineLayer::onMouseEvent(MouseEvent& e) {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     // custom dragging and close button
     if (App::instance().window().isUsingCustomDecor()) {
@@ -42,7 +42,7 @@ namespace Flugel {
     return true;
   }
 
-  bool AppLayer::onCursorEvent(CursorEvent& e) {
+  bool EngineLayer::onCursorEvent(CursorEvent& e) {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     if (draggingWindowDecor_) {
       App::instance().window().dragWindow(windowDragOffset_.x, windowDragOffset_.y);
@@ -51,12 +51,12 @@ namespace Flugel {
     return true;
   }
 
-  bool AppLayer::onScrollEvent(ScrollEvent& e) {
+  bool EngineLayer::onScrollEvent(ScrollEvent& e) {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     
     return true;
   }
-  void AppLayer::pollCustomDecor(MouseEvent& e) {
+  void EngineLayer::pollCustomDecor(MouseEvent& e) {
     if (App::instance().window().isFullscreen()) {
       draggingWindowDecor_ = false;
       closingWindowDecor_ = false;

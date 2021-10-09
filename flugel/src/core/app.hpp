@@ -2,7 +2,7 @@
 
 #include "core/window/window.hpp"
 #include "core/layers/layer_stack.hpp"
-#include "core/layers/app_layer.hpp"
+#include "core/layers/engine_layer.hpp"
 #include "core/callbacks/events/event.hpp"
 #include "core/callbacks/events/app_event.hpp"
 #include "core/callbacks/events/window_event.hpp"
@@ -39,10 +39,10 @@ namespace Flugel {
     std::map<std::thread::id, std::string> threadNames_{};
     // Layers
     LayerStack layerStack_;
-    AppLayer* appLayer_;
+    EngineLayer* engineLayer_;
     
-    void spawnThreads();
-    void killThreads();
+    void splitThreads();
+    void joinThreads();
 
     void gameThreadMain();
     void renderThreadMain();

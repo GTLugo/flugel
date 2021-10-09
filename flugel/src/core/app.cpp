@@ -22,21 +22,21 @@ namespace Flugel {
     window_->setIcon(icon, width, height);
     stbi_image_free(icon);
 
-    appLayer_ = new AppLayer{};
-    pushLayer(appLayer_);
+    engineLayer_ = new EngineLayer{};
+    pushLayer(engineLayer_);
   }
 
   App::~App() {
     FLUGEL_TRACE_E("Destructing App...");
   }
 
-  void App::spawnThreads() {
+  void App::splitThreads() {
     FLUGEL_TRACE_E("Spawning threads...");
     renderThread_ = std::thread{FLUGEL_BIND_FN(renderThreadMain)};
     gameThread_ = std::thread{FLUGEL_BIND_FN(gameThreadMain)};
   }
 
-  void App::killThreads() {
+  void App::joinThreads() {
     FLUGEL_TRACE_E("Killing threads...");
     gameThread_.join();
     renderThread_.join();
@@ -54,11 +54,12 @@ namespace Flugel {
     FLUGEL_TRACE_E("Running app on main thread (ID: {0})", std::this_thread::get_id());
     threadNames_.insert(std::pair{std::this_thread::get_id(), "MAIN"});
 
-    spawnThreads();
+    // MAIN THREAD
+    splitThreads();
     while (!shouldClose_) {
       pollEvents();
     }
-    killThreads();
+    joinThreads();
 
     FLUGEL_TRACE_E("Exiting app on main thread");
   }
@@ -68,7 +69,7 @@ namespace Flugel {
     threadNames_.insert(std::pair{std::this_thread::get_id(), "RENDER"});
     window_->setContextCurrent(true);
     
-    // RENDER LOOP
+    // RENDER THREAD
     while (!shouldClose_) {
       AppRenderEvent renderEvent{};
       eventDispatch(renderEvent);
@@ -81,7 +82,7 @@ namespace Flugel {
     FLUGEL_TRACE_E("Starting game thread (ID: {0})", std::this_thread::get_id());
     threadNames_.insert(std::pair{std::this_thread::get_id(), "GAME"});
     
-    // GAME LOOP
+    // GAME THREAD
     while (!shouldClose_) {
       // This loop will only occur once every fixedTimeStep, being skipped for every
       // frame which happens between each timestep. If the deltaTime per frame is too
