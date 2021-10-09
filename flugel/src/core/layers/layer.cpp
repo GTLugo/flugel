@@ -6,7 +6,6 @@ namespace Flugel {
   
   Layer::~Layer() {
     FLUGEL_TRACE_E("Destructing layer: {0}...", name_);
-    FLUGEL_TRACE_E("Destructed layer: {0}!", name_);
   }
 
   bool Layer::onAppEvent(AppEvent& e) {

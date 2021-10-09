@@ -28,8 +28,6 @@ namespace Flugel {
 
   App::~App() {
     FLUGEL_TRACE_E("Destructing App...");
-    killThreads();
-    FLUGEL_TRACE_E("App destruction complete!");
   }
 
   void App::spawnThreads() {
@@ -60,6 +58,7 @@ namespace Flugel {
     while (!shouldClose_) {
       pollEvents();
     }
+    killThreads();
 
     FLUGEL_TRACE_E("Exiting app on main thread");
   }

@@ -5,7 +5,6 @@ namespace Flugel {
   public:
     virtual ~Input() {
       FLUGEL_TRACE_E("Destructing Input...");
-      FLUGEL_TRACE_E("Destructed Input!");
     }
 
     static bool isKeyPressed(int32_t key) { return instance_->isKeyPressedImpl(key); }

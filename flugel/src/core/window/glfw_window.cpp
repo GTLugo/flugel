@@ -22,7 +22,6 @@ namespace Flugel {
   GlfwWindow::~GlfwWindow() {
     FLUGEL_TRACE_E("Destructing GlfwWindow...");
     shutdown();
-    FLUGEL_TRACE_E("Destructed GlfwWindow!");
   }
 
   void GlfwWindow::init() {
