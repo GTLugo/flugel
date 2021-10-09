@@ -2,7 +2,7 @@
 
 #include "core/layers/layer.hpp"
 
-namespace Flugel {
+namespace fge {
   class ImGuiLayer : public Layer {
   public:
     ImGuiLayer();

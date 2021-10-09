@@ -25,7 +25,7 @@
 #include "srgb_transform.hpp"
 
 
-namespace Flugel {
+namespace fge {
 
 /*---- sRGB values to is_linear intensities ----*/
 

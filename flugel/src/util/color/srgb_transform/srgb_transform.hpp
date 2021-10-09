@@ -24,7 +24,7 @@
 #pragma once
 
 
-namespace Flugel {
+namespace fge {
 
   float srgbToLinear(float x);
   double srgbToLinear(double x);

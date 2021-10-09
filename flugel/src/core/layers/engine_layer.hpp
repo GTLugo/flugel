@@ -2,13 +2,13 @@
 
 #include "layer.hpp"
 
-namespace Flugel {
+namespace fge {
   class EngineLayer : public Layer {
   public:
     EngineLayer()
-      : Layer{"FlugelEngine"} {}
+      : Layer{"flugel_game_engine"} {}
   private:
-    glm::vec2 windowDragOffset_; // cursor position at time of clicking to drag window
+    vector2_t windowDragOffset_; // cursor position at time of clicking to drag window
     bool draggingWindowDecor_{false};
     bool closingWindowDecor_{false};
       

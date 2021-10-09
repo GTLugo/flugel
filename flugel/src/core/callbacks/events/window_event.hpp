@@ -2,13 +2,13 @@
 
 #include "event.hpp"
 
-namespace Flugel {
+namespace fge {
   enum class WindowEventType {
     None = 0,
     Close, Resize, Focus, LostFocus, Moved,
   };
 
-  class FLUGEL_API WindowEvent : public Event {
+  class FGE_API WindowEvent : public Event {
   public:
     EVENT_CATEGORY(Window)
 
@@ -20,7 +20,7 @@ namespace Flugel {
       : type_{type} {}
   };
 
-  class FLUGEL_API WindowCloseEvent : public WindowEvent {
+  class FGE_API WindowCloseEvent : public WindowEvent {
   public:
     WindowCloseEvent()
      : WindowEvent{WindowEventType::Close} {}
@@ -32,7 +32,7 @@ namespace Flugel {
     }
   };
 
-  class FLUGEL_API WindowResizeEvent : public WindowEvent {
+  class FGE_API WindowResizeEvent : public WindowEvent {
   public:
     WindowResizeEvent(uint32_t width, uint32_t height)
       : WindowEvent{WindowEventType::Resize}, width_{width}, height_{height} {}
@@ -49,7 +49,7 @@ namespace Flugel {
     const uint32_t width_, height_;
   };
 
-  class FLUGEL_API WindowMovedEvent : public WindowEvent {
+  class FGE_API WindowMovedEvent : public WindowEvent {
   public:
     WindowMovedEvent(int32_t xPos, int32_t yPos)
       : WindowEvent{WindowEventType::Resize}, xPos_{xPos}, yPos_{yPos} {}

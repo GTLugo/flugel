@@ -3,20 +3,20 @@
 #include "flugel.hpp"
 
 namespace Sandbox {
-  class TestLayer : public Flugel::Layer {
+  class TestLayer : public fge::Layer {
   public:
-    TestLayer(const Flugel::Time& time)
-      : Layer{"TestLayer"}, time_{time} {}
+    TestLayer(const fge::Time& time)
+      : Layer{"test_layer"}, time_{time} {}
 
     void updateFixed() override {
       //FLUGEL_TRACE("UwU");
     }
     
-    bool onKeyboardEvent(Flugel::KeyboardEvent& e) override {
+    bool onKeyboardEvent(fge::KeyboardEvent& e) override {
       //FLUGEL_DEBUG("{0}: {1}", name_, e);
       return true;
     }
   private:
-    const Flugel::Time& time_;
+    const fge::Time& time_;
   };
 }

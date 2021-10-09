@@ -7,11 +7,11 @@
 
 #include <glad/glad.h>
 
-namespace Flugel {
+namespace fge {
   static uint8_t glfwWindowCount_s{0};
 
   static void glfwErrorCallback(int error, const char* message) {
-    FLUGEL_ERROR_E("GFLW Error {0} | {1}", error, message);
+    FGE_ERROR_ENG("GFLW Error {0} | {1}", error, message);
   }
 
   GlfwWindow::GlfwWindow(const WindowProperties& props)
@@ -20,20 +20,20 @@ namespace Flugel {
   }
 
   GlfwWindow::~GlfwWindow() {
-    FLUGEL_TRACE_E("Destructing GlfwWindow...");
+    FGE_TRACE_ENG("Destructing GlfwWindow...");
     shutdown();
   }
 
   void GlfwWindow::init() {
-    FLUGEL_DEBUG_E("Creating window: {0} ({1}, {2})", data_.title, data_.windowDims.x, data_.windowDims.y);
+    FGE_DEBUG_ENG("Creating window: {0} ({1}, {2})", data_.title, data_.windowDims.x, data_.windowDims.y);
     if (glfwWindowCount_s == 0) {
       int32_t glfwInitSuccess = glfwInit();
-      FLUGEL_ASSERT_E(glfwInitSuccess, "Failed to initialize GLFW!");
+      FGE_ASSERT_ENG(glfwInitSuccess, "Failed to initialize GLFW!");
       glfwSetErrorCallback(glfwErrorCallback);
     }
     int major, minor, revision;
     glfwGetVersion(&major, &minor, &revision);
-    FLUGEL_INFO_E("Initialized GLFW {0}.{1}.{2}!", major, minor, revision);
+    FGE_INFO_ENG("Initialized GLFW {0}.{1}.{2}!", major, minor, revision);
 
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
     glfwWindowHint(GLFW_DECORATED, !data_.customDecor);
@@ -46,11 +46,11 @@ namespace Flugel {
     );
     ++glfwWindowCount_s;
 
-    FLUGEL_TRACE_E("Setting up GLFW window data!");
+    FGE_TRACE_ENG("Setting up GLFW window data!");
     setContextCurrent(true); // Set up glfw
 
     int32_t gladLoadSuccess = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    FLUGEL_ASSERT_E(gladLoadSuccess, "Failed to initialize GLAD!");
+    FGE_ASSERT_ENG(gladLoadSuccess, "Failed to initialize GLAD!");
 
     glfwSetWindowUserPointer(glfwWindow_, &data_);
     setVSync(data_.vSync);
@@ -61,7 +61,7 @@ namespace Flugel {
     setCallbacks();
 
     setContextCurrent(false); // Prepare for context transfer to render thread
-    FLUGEL_TRACE_E("GLFW window data setup complete!");
+    FGE_TRACE_ENG("GLFW window data setup complete!");
   }
 
   void GlfwWindow::setCallbacks() {
@@ -131,7 +131,7 @@ namespace Flugel {
       data.cursorPosOld = data.cursorPos;
       data.cursorPos = {xPos, yPos};
       data.cursorDelta = data.cursorPos - data.cursorPosOld;
-      //FLUGEL_DEBUG_E("Delta: ({0}, {1})", data.cursorDelta.x, data.cursorDelta.y);
+      //FGE_DEBUG_ENG("Delta: ({0}, {1})", data.cursorDelta.x, data.cursorDelta.y);
 
       CursorEvent e{xPos, yPos};
       data.eventCallback(e);
@@ -161,11 +161,11 @@ namespace Flugel {
     glClear(GL_COLOR_BUFFER_BIT);
   }
   
-  void GlfwWindow::dragWindow(double cursorOffsetX, double cursorOffsetY) {
+  void GlfwWindow::dragWindow(vector2_t windowCursorOffset) {
     int32_t x, y;
     glfwGetWindowPos(glfwWindow_, &x, &y);
-    setPos(x + glm::floor(Input::cursorPosX()) - cursorOffsetX, 
-           y + glm::floor(Input::cursorPosY()) - cursorOffsetY);
+    setPos(x + glm::floor(Input::cursorPosX()) - windowCursorOffset.x, 
+           y + glm::floor(Input::cursorPosY()) - windowCursorOffset.y);
   }
 
   void GlfwWindow::setIcon(uint8_t* image, int32_t width, int32_t height) {
@@ -211,10 +211,10 @@ namespace Flugel {
 
   void GlfwWindow::setContextCurrent(bool current) {
     if (current) {
-      FLUGEL_DEBUG_E("Making GL context current to thread ID {0}", std::this_thread::get_id());
+      FGE_DEBUG_ENG("Making GL context current to thread ID {0}", std::this_thread::get_id());
       glfwMakeContextCurrent(glfwWindow_);
     } else {
-      FLUGEL_DEBUG_E("Making GL context non-current!");
+      FGE_DEBUG_ENG("Making GL context non-current!");
       glfwMakeContextCurrent(nullptr);
     }
   }

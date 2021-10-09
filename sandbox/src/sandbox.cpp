@@ -3,10 +3,10 @@
 #include "flugel.hpp"
 
 namespace Sandbox {
-  class App : public Flugel::App {
+  class App : public fge::App {
     public:
       App()
-        : Flugel::App{Flugel::WindowProperties{
+        : fge::App{fge::WindowProperties{
           "SANDBOX", // title
           800, // width
           450, // height
@@ -19,12 +19,12 @@ namespace Sandbox {
       }
 
       virtual ~App() override {
-        FLUGEL_TRACE("Destructing sandbox...");
+        FGE_TRACE("Destructing sandbox...");
       };
   };
 }
 
-namespace Flugel {
+namespace fge {
   Unique<App> createApp() {
     return std::move(makeUnique<Sandbox::App>());
   }

@@ -7,15 +7,15 @@
 #include <GLFW/glfw3.h>
 #include <boost/range/adaptor/reversed.hpp>
 
-namespace Flugel {
+namespace fge {
   App* App::instance_ = nullptr;
 
   App::App(const WindowProperties& props) {
-    FLUGEL_DEBUG_E("Current working directory: {0}", std::filesystem::current_path());
-    FLUGEL_TRACE_E("Constructing App...");
+    FGE_DEBUG_ENG("Current working directory: {0}", std::filesystem::current_path());
+    FGE_TRACE_ENG("Constructing App...");
     instance_ = this;
     window_ = Window::create(props);
-    window_->setEventCallback(FLUGEL_BIND_FN(eventDispatch));
+    window_->setEventCallback(FGE_BIND(eventDispatch));
     
     int32_t width, height;
     uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
@@ -27,17 +27,17 @@ namespace Flugel {
   }
 
   App::~App() {
-    FLUGEL_TRACE_E("Destructing App...");
+    FGE_TRACE_ENG("Destructing App...");
   }
 
   void App::splitThreads() {
-    FLUGEL_TRACE_E("Spawning threads...");
-    renderThread_ = std::thread{FLUGEL_BIND_FN(renderThreadMain)};
-    gameThread_ = std::thread{FLUGEL_BIND_FN(gameThreadMain)};
+    FGE_TRACE_ENG("Spawning threads...");
+    renderThread_ = std::thread{FGE_BIND(renderThreadMain)};
+    gameThread_ = std::thread{FGE_BIND(gameThreadMain)};
   }
 
   void App::joinThreads() {
-    FLUGEL_TRACE_E("Killing threads...");
+    FGE_TRACE_ENG("Killing threads...");
     gameThread_.join();
     renderThread_.join();
   }
@@ -51,7 +51,7 @@ namespace Flugel {
   }
 
   void App::run() {
-    FLUGEL_TRACE_E("Running app on main thread (ID: {0})", std::this_thread::get_id());
+    FGE_TRACE_ENG("Running app on main thread (ID: {0})", std::this_thread::get_id());
     threadNames_.insert(std::pair{std::this_thread::get_id(), "MAIN"});
 
     // MAIN THREAD
@@ -61,11 +61,11 @@ namespace Flugel {
     }
     joinThreads();
 
-    FLUGEL_TRACE_E("Exiting app on main thread");
+    FGE_TRACE_ENG("Exiting app on main thread");
   }
   
   void App::renderThreadMain() {
-    FLUGEL_TRACE_E("Starting render thread (ID: {0})", std::this_thread::get_id());
+    FGE_TRACE_ENG("Starting render thread (ID: {0})", std::this_thread::get_id());
     threadNames_.insert(std::pair{std::this_thread::get_id(), "RENDER"});
     window_->setContextCurrent(true);
     
@@ -75,11 +75,11 @@ namespace Flugel {
       eventDispatch(renderEvent);
     }
 
-    FLUGEL_TRACE_E("Ending render thread");
+    FGE_TRACE_ENG("Ending render thread");
   }
   
   void App::gameThreadMain() {
-    FLUGEL_TRACE_E("Starting game thread (ID: {0})", std::this_thread::get_id());
+    FGE_TRACE_ENG("Starting game thread (ID: {0})", std::this_thread::get_id());
     threadNames_.insert(std::pair{std::this_thread::get_id(), "GAME"});
     
     // GAME THREAD
@@ -106,7 +106,7 @@ namespace Flugel {
       time_.tick();
     }
 
-    FLUGEL_TRACE_E("Ending game thread");
+    FGE_TRACE_ENG("Ending game thread");
   }
 
   void App::pollEvents() {

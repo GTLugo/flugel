@@ -1,13 +1,16 @@
 #pragma once
 
-namespace Flugel {
-  class FLUGEL_API Input {
+#include "core/input/key_codes/key_codes.hpp"
+#include "core/input/mouse_codes/mouse_codes.hpp"
+
+namespace fge {
+  class FGE_API Input {
   public:
     virtual ~Input() {
-      FLUGEL_TRACE_E("Destructing Input...");
+      FGE_TRACE_ENG("Destructing Input...");
     }
-
-    static bool isKeyPressed(int32_t key) { return instance_->isKeyPressedImpl(key); }
+    
+    static bool isKeyPressed(Key key) { return instance_->isKeyPressedImpl(KeyMap::nativeKey(key)); }
     static bool isMousePressed(int32_t button) { return instance_->isMousePressedImpl(button); }
     static vector2_t cursorPos() { return instance_->cursorPosImpl(); }
     static double cursorPosX() { return instance_->cursorPosXImpl(); }

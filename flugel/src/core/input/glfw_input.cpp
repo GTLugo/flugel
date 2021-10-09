@@ -4,7 +4,7 @@
 
 #include <GLFW/glfw3.h>
 
-namespace Flugel {
+namespace fge {
   bool GlfwInput::isKeyPressedImpl(int32_t key) {
     auto window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
     auto state = glfwGetKey(window, key);

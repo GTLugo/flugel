@@ -3,7 +3,7 @@
 // BASED HEAVILY ON TheCherno's IMPLEMENTATION IN HIS GAME ENGINE SERIES
 // https://thecherno.com/engine
 
-namespace Flugel {
+namespace fge {
   enum class EventCategory {
     None = 0,
     App, Window, Keyboard, Mouse, Cursor, Scroll
@@ -30,7 +30,7 @@ namespace Flugel {
   #define EVENT_CATEGORY(event_cat) static EventCategory categoryStatic() { return EventCategory::##event_cat; }\
                                    virtual EventCategory category() const override { return categoryStatic(); }
   
-  class FLUGEL_API Event {
+  class FGE_API Event {
     friend class EventDispatcher;
   public:
     virtual EventCategory category() const = 0;
@@ -45,9 +45,9 @@ namespace Flugel {
   }
 
   #define FLUGEL_BIND_INPUT_EVENTS(dispatcher) dispatcher.tryDispatch<KeyboardEvent>(FLUGEL_BIND_FN(onKeyboardEvent));\
-                                               dispatcher.tryDispatch<MouseEvent>(FLUGEL_BIND_FN(onMouseEvent));\
-                                               dispatcher.tryDispatch<CursorEvent>(FLUGEL_BIND_FN(onCursorEvent));\
-                                               dispatcher.tryDispatch<ScrollEvent>(FLUGEL_BIND_FN(onScrollEvent))
+                                               dispatcher.tryDispatch<MouseEvent>(FGE_BIND(onMouseEvent));\
+                                               dispatcher.tryDispatch<CursorEvent>(FGE_BIND(onCursorEvent));\
+                                               dispatcher.tryDispatch<ScrollEvent>(FGE_BIND(onScrollEvent))
 
   // Takes an event and conditionally dispatches it to a handler if it matches the category type
   class EventDispatcher {

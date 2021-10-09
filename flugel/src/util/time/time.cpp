@@ -3,6 +3,6 @@
 //
 #include "time.hpp"
 
-namespace Flugel {
+namespace fge {
 
 }

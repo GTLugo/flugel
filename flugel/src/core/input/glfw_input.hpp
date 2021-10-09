@@ -2,8 +2,8 @@
 
 #include "input.hpp"
 
-namespace Flugel {
-  class FLUGEL_API GlfwInput : public Input {
+namespace fge {
+  class GlfwInput : public Input {
   protected:
     virtual bool isKeyPressedImpl(int32_t key) override;
     virtual bool isMousePressedImpl(int32_t button) override;

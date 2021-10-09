@@ -1,6 +1,6 @@
 #include "imgui_layer.hpp"
 
-namespace Flugel {
+namespace fge {
   ImGuiLayer::ImGuiLayer::ImGuiLayer() 
     : Layer{"ImGui Layer"} {
     

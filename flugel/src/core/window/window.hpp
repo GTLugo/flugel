@@ -2,7 +2,7 @@
 
 #include "core/callbacks/events/event.hpp"
 
-namespace Flugel {
+namespace fge {
   struct WindowProperties {
     std::string title;
     uint32_t width, height;
@@ -27,7 +27,7 @@ namespace Flugel {
         customDecor{customDecor} {}
   };
 
-  class FLUGEL_API Window {
+  class FGE_API Window {
   protected:
     using EventCallbackFn = std::function<void(Event&)>;
   public:
@@ -37,7 +37,7 @@ namespace Flugel {
     virtual void render() = 0;
     
     virtual void* nativeWindow() = 0;
-    virtual void dragWindow(double cursorOffsetX, double cursorOffsetY) = 0;
+    virtual void dragWindow(vector2_t windowCursorOffset) = 0;
 
     virtual void setIcon(uint8_t* image, int32_t width, int32_t height) = 0;
     virtual void setPos(double xPos, double yPos) = 0;

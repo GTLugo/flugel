@@ -9,8 +9,8 @@
 #include "core/callbacks/events/mouse_event.hpp"
 
 
-namespace Flugel {
-  class FLUGEL_API App {
+namespace fge {
+  class FGE_API App {
   public:
     App(const WindowProperties& props = {});
     virtual ~App();

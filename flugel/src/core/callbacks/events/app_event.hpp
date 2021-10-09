@@ -2,13 +2,13 @@
 
 #include "event.hpp"
 
-namespace Flugel {
+namespace fge {
   enum class AppEventType {
     None = 0,
     Start, Poll, Tick, UpdateFixed, Update, Render, End,
   };
 
-  class FLUGEL_API AppEvent : public Event {
+  class FGE_API AppEvent : public Event {
   public:
     EVENT_CATEGORY(App)
 
@@ -20,7 +20,7 @@ namespace Flugel {
       : type_{type} {}
   };
 
-  class FLUGEL_API AppStartEvent : public AppEvent {
+  class FGE_API AppStartEvent : public AppEvent {
   public:
     AppStartEvent()
      : AppEvent{AppEventType::Start} {}
@@ -32,7 +32,7 @@ namespace Flugel {
     }
   };
 
-  class FLUGEL_API AppPollEvent : public AppEvent {
+  class FGE_API AppPollEvent : public AppEvent {
   public:
     AppPollEvent()
      : AppEvent{AppEventType::Poll} {}
@@ -44,7 +44,7 @@ namespace Flugel {
     }
   };
 
-  class FLUGEL_API AppTickEvent : public AppEvent {
+  class FGE_API AppTickEvent : public AppEvent {
   public:
     AppTickEvent()
      : AppEvent{AppEventType::Tick} {}
@@ -56,7 +56,7 @@ namespace Flugel {
     }
   };
 
-  class FLUGEL_API AppUpdateFixedEvent : public AppEvent {
+  class FGE_API AppUpdateFixedEvent : public AppEvent {
   public:
     AppUpdateFixedEvent()
      : AppEvent{AppEventType::UpdateFixed} {}
@@ -68,7 +68,7 @@ namespace Flugel {
     }
   };
 
-  class FLUGEL_API AppUpdateEvent : public AppEvent {
+  class FGE_API AppUpdateEvent : public AppEvent {
   public:
     AppUpdateEvent()
      : AppEvent{AppEventType::Update} {}
@@ -80,7 +80,7 @@ namespace Flugel {
     }
   };
 
-  class FLUGEL_API AppRenderEvent : public AppEvent {
+  class FGE_API AppRenderEvent : public AppEvent {
   public:
     AppRenderEvent()
      : AppEvent{AppEventType::Render} {}
@@ -92,7 +92,7 @@ namespace Flugel {
     }
   };
 
-  class FLUGEL_API AppEndEvent : public AppEvent {
+  class FGE_API AppEndEvent : public AppEvent {
   public:
     AppEndEvent()
      : AppEvent{AppEventType::End} {}

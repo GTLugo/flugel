@@ -6,8 +6,8 @@
 #include "core/callbacks/events/keyboard_event.hpp"
 #include "core/callbacks/events/mouse_event.hpp"
 
-namespace Flugel {
-  class FLUGEL_API Layer {
+namespace fge {
+  class FGE_API Layer {
   public:
     Layer(const std::string& name = "layer");
     virtual ~Layer();
@@ -22,12 +22,12 @@ namespace Flugel {
     void onEvent(Event& e) {
       EventDispatcher dispatcher{e};
       
-      if (dispatcher.tryDispatch<AppEvent>(FLUGEL_BIND_FN(onAppEvent))) return;
-      if (dispatcher.tryDispatch<WindowEvent>(FLUGEL_BIND_FN(onWindowEvent))) return;
-      if (dispatcher.tryDispatch<KeyboardEvent>(FLUGEL_BIND_FN(onKeyboardEvent))) return;
-      if (dispatcher.tryDispatch<MouseEvent>(FLUGEL_BIND_FN(onMouseEvent))) return;
-      if (dispatcher.tryDispatch<CursorEvent>(FLUGEL_BIND_FN(onCursorEvent))) return;
-      if (dispatcher.tryDispatch<ScrollEvent>(FLUGEL_BIND_FN(onScrollEvent))) return;
+      if (dispatcher.tryDispatch<AppEvent>(FGE_BIND(onAppEvent))) return;
+      if (dispatcher.tryDispatch<WindowEvent>(FGE_BIND(onWindowEvent))) return;
+      if (dispatcher.tryDispatch<KeyboardEvent>(FGE_BIND(onKeyboardEvent))) return;
+      if (dispatcher.tryDispatch<MouseEvent>(FGE_BIND(onMouseEvent))) return;
+      if (dispatcher.tryDispatch<CursorEvent>(FGE_BIND(onCursorEvent))) return;
+      if (dispatcher.tryDispatch<ScrollEvent>(FGE_BIND(onScrollEvent))) return;
     }
 
     const std::string& name() const { return name_; }

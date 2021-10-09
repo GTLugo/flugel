@@ -3,7 +3,7 @@
 //
 #pragma once
 
-namespace Flugel {
+namespace fge {
   // duration types
   using NanoSeconds = std::chrono::duration<double, std::nano>;
   using MicroSeconds = std::chrono::duration<double, std::micro>;
@@ -20,7 +20,7 @@ namespace Flugel {
   using TimePointAccurate = ClockAccurate::time_point;
   using TimePointSystem = ClockSystem::time_point;
 
-  class FLUGEL_API Stopwatch {
+  class FGE_API Stopwatch {
   public:
     Stopwatch() {
       start();
@@ -49,11 +49,11 @@ namespace Flugel {
     TimePoint start_{};
   };
 
-  class FLUGEL_API Time {
+  class FGE_API Time {
   public:
     Time()
       : stopwatch_{ClockSteady::now()}, gameLast_{ClockSteady::now()}, gameCurrent_{ClockSteady::now()} {
-      FLUGEL_INFO_E("Initialized time!");
+      FGE_INFO_ENG("Initialized time!");
     }
     ~Time() = default;
 
@@ -100,7 +100,7 @@ namespace Flugel {
     bool shouldDoFixedStep() const {
       #if defined(DEBUG) || defined(RELDEB)
         if (stepCount_ >= bailCount_) {
-          FLUGEL_WARN("Struggling to catch up with physics rate!");
+          FGE_WARN_ENG("Struggling to catch up with physics rate!");
         }
       #endif
       

@@ -4,6 +4,6 @@
 
 #include "notifier.hpp"
 
-namespace Flugel {
+namespace fge {
 }
 

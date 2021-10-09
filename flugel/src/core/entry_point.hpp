@@ -3,13 +3,13 @@
 #include "core/app.hpp"
 
 int32_t main(int32_t argCount = 0, char* args[] = nullptr) {
-  Flugel::Log::init();
-  FLUGEL_TRACE_E("ENTERING ENGINE");
+  fge::Log::init();
+  FGE_TRACE_ENG("ENTERING ENGINE");
 
-  Flugel::Unique<Flugel::App> app{Flugel::createApp()};
+  fge::Unique<fge::App> app{fge::createApp()};
   app->run();
 
-  FLUGEL_TRACE_E("EXITING ENGINE");
+  FGE_TRACE_ENG("EXITING ENGINE");
   return EXIT_SUCCESS;
 }
 

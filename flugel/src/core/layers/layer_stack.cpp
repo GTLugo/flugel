@@ -1,6 +1,6 @@
 #include "layer_stack.hpp"
 
-namespace Flugel {
+namespace fge {
   LayerStack::LayerStack() {
     layerInsert_ = begin();
   }

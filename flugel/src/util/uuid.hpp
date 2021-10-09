@@ -3,8 +3,8 @@
 // Based on TheCherno's implementation of UUID
 // https://youtu.be/O_0nUE4S8T8
 
-namespace Flugel {
-  class FLUGEL_API UUID {
+namespace fge {
+  class FGE_API UUID {
   public:
     UUID();
     UUID(uint64_t uuid);
@@ -19,8 +19,8 @@ namespace Flugel {
 // Allow hashing
 namespace std {
   template<>
-  struct hash<Flugel::UUID> {
-    std::size_t operator()(const Flugel::UUID& uuid) const {
+  struct hash<fge::UUID> {
+    std::size_t operator()(const fge::UUID& uuid) const {
       return hash<uint64_t>()((uint64_t)uuid);
     }
   };

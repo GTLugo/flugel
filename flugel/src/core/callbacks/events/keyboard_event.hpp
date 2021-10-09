@@ -2,7 +2,7 @@
 
 #include "event.hpp"
 
-namespace Flugel {
+namespace fge {
   enum KeyModifiers {
     None = 0,
     Shift   = BIT(1),
@@ -13,7 +13,7 @@ namespace Flugel {
     Num     = BIT(6),
   };
 
-  class FLUGEL_API KeyboardEvent : public Event {
+  class FGE_API KeyboardEvent : public Event {
   public:
     EVENT_CATEGORY(Keyboard)
 

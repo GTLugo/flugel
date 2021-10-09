@@ -6,8 +6,8 @@
 
 #include <GLFW/glfw3.h>
 
-namespace Flugel {
-  class FLUGEL_API GlfwWindow : public Window {
+namespace fge {
+  class GlfwWindow : public Window {
   public:
     GlfwWindow(const WindowProperties& props);
     virtual ~GlfwWindow();
@@ -16,7 +16,7 @@ namespace Flugel {
     virtual void render() override;
     
     virtual void* nativeWindow() override { return glfwWindow_; }
-    virtual void dragWindow(double cursorOffsetX, double cursorOffsetY);
+    virtual void dragWindow(vector2_t windowCursorOffset);
 
     virtual void setIcon(uint8_t* image, int32_t width, int32_t height) override;
     virtual void setPos(double xPos, double yPos) override;
@@ -29,7 +29,7 @@ namespace Flugel {
     const GLFWvidmode* vidMode_;
 
     GLFWimage icons_[1];
-    Color clearColor_{0x2E3440FF};
+    Color clearColor_{0x2D2A2AFF};
     
     void init();
     void setCallbacks();

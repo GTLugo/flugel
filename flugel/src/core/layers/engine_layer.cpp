@@ -3,18 +3,18 @@
 #include "core/app.hpp"
 #include "core/input/input.hpp"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
-namespace Flugel {
+namespace fge {
   void EngineLayer::render() {
     App::instance().window().render();
   }
 
   bool EngineLayer::onWindowEvent(WindowEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     switch (e.type()) {
       case WindowEventType::Close: {
-        FLUGEL_DEBUG_E("{0}: {1} [Thread: {2}]", name_, e, App::instance().threadName(std::this_thread::get_id()));
+        FGE_DEBUG_ENG("{0}: {1} [Thread: {2}]", name_, e, App::instance().threadName(std::this_thread::get_id()));
         App::instance().close();
         return true;
       }
@@ -25,16 +25,19 @@ namespace Flugel {
   }
 
   bool EngineLayer::onKeyboardEvent(KeyboardEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    if (Input::isKeyPressed(GLFW_KEY_ENTER) && (e.mods() & GLFW_MOD_ALT)) {
-      FLUGEL_DEBUG_E("{0}: Fullscreen({1}) [Thread: {2}]", name_, !App::instance().window().isFullscreen(), App::instance().threadName(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    if (Input::isKeyPressed(Key::Enter) && Input::isKeyPressed(Key::LeftAlt)) {
+      FGE_DEBUG_ENG("{0}: Fullscreen({1}) [Thread: {2}]", name_, !App::instance().window().isFullscreen(), App::instance().threadName(std::this_thread::get_id()));
       App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
     }
+    
+    auto b = Key::B;
+    FGE_DEBUG("Key: {0} size: {1} bytes", b, sizeof(b));
     return true;
   }
 
   bool EngineLayer::onMouseEvent(MouseEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     // custom dragging and close button
     if (App::instance().window().isUsingCustomDecor()) {
       pollCustomDecor(e);
@@ -43,16 +46,16 @@ namespace Flugel {
   }
 
   bool EngineLayer::onCursorEvent(CursorEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     if (draggingWindowDecor_) {
-      App::instance().window().dragWindow(windowDragOffset_.x, windowDragOffset_.y);
+      App::instance().window().dragWindow(windowDragOffset_);
     }
     
     return true;
   }
 
   bool EngineLayer::onScrollEvent(ScrollEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     
     return true;
   }

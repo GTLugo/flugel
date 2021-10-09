@@ -3,7 +3,7 @@
 //
 #pragma once
 
-namespace Flugel {
+namespace fge {
   struct Color {
     float r, g, b, a;
     bool is_linear = false;

@@ -2,8 +2,8 @@
 
 #include "event.hpp"
 
-namespace Flugel {
-  class FLUGEL_API MouseEvent : public Event {
+namespace fge {
+  class FGE_API MouseEvent : public Event {
   public:
     EVENT_CATEGORY(Mouse)
 
@@ -23,7 +23,7 @@ namespace Flugel {
     int32_t button_;
   };
 
-  class FLUGEL_API CursorEvent : public Event {
+  class FGE_API CursorEvent : public Event {
   public:
     EVENT_CATEGORY(Cursor)
 
@@ -42,7 +42,7 @@ namespace Flugel {
     double xPos_, yPos_;
   };
 
-  class FLUGEL_API ScrollEvent : public Event {
+  class FGE_API ScrollEvent : public Event {
   public:
     EVENT_CATEGORY(Scroll)
 

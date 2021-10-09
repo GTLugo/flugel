@@ -2,41 +2,41 @@
 
 #ifdef FLUGEL_BUILD_DLL
   #ifdef _WIN32 // Windows
-    #define FLUGEL_API __declspec(dllexport)
+    #define FGE_API __declspec(dllexport)
   #elif __GNUC__ >= 4 // GCC
-    #define FLUGEL_API __attribute__((visibility("default")))
+    #define FGE_API __attribute__((visibility("default")))
   #else // None
-    #define FLUGEL_API
+    #define FGE_API
   #endif
 #else
   #ifdef _WIN32
-    #define FLUGEL_API __declspec(dllimport)
+    #define FGE_API __declspec(dllimport)
   #else // None
-    #define FLUGEL_API
+    #define FGE_API
   #endif
 #endif
 
 #if defined(DEBUG) || defined(RELDEB)
   #ifdef _WIN32 // Windows
-      #define DEBUG_BREAK __debugbreak()
+      #define FGE_DEBUG_BREAK __debugbreak()
   #else
     #include <csignal>
     #ifdef SIGTRAP // POSIX
-      #define DEBUG_BREAK raise(SIGTRAP)
+      #define FGE_DEBUG_BREAK raise(SIGTRAP)
     #else // Other
-      #define DEBUG_BREAK raise(SIGABRT)
+      #define FGE_DEBUG_BREAK raise(SIGABRT)
     #endif
   #endif
 #else
-  #define DEBUG_BREAK
+  #define FGE_DEBUG_BREAK
 #endif
 
 #ifdef FLUGEL_ENABLE_ASSERTS
-  #define FLUGEL_ASSERT(x, ...) {\
-    if(!(x)) {FLUGEL_CRIT("FAILED ASSERT: {0}", __VA_ARGS__); DEBUG_BREAK; }\
+  #define FGE_ASSERT(x, ...) {\
+    if(!(x)) {FGE_CRIT("FAILED ASSERT: {0}", __VA_ARGS__); FGE_DEBUG_BREAK; }\
   }
-  #define FLUGEL_ASSERT_E(x, ...) {\
-    if(!(x)) {FLUGEL_CRIT_E("FAILED ASSERT: {0}", __VA_ARGS__); DEBUG_BREAK; }\
+  #define FGE_ASSERT_ENG(x, ...) {\
+    if(!(x)) {FGE_CRIT_ENG("FAILED ASSERT: {0}", __VA_ARGS__); FGE_DEBUG_BREAK; }\
   }
 #else
   #define FLUGEL_ASSERT(x, ...)
@@ -45,9 +45,9 @@
 
 #define BIT(x) (1 << x)
 
-#define FLUGEL_BIND_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); } 
+#define FGE_BIND(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); } 
 
-namespace Flugel {
+namespace fge {
   // Scope = std::unique_ptr
   template<typename T, typename D = std::default_delete<T>>
   using Unique = std::unique_ptr<T, D>;

@@ -6,7 +6,7 @@
 #include "color.hpp"
 #include "util/color/srgb_transform/srgb_transform.hpp"
 
-namespace Flugel {
+namespace fge {
   bool Color::using_srgb_color_space = false;
 
   Color::Color(float r, float g, float b, float a)

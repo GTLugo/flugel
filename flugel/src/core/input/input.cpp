@@ -4,7 +4,7 @@
   #include "glfw_input.hpp"
 #endif
 
-namespace Flugel {
+namespace fge {
   #if defined(FLUGEL_USE_GLFW)
     Unique<Input> Input::instance_ = makeUnique<GlfwInput>();
   #else

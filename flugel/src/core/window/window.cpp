@@ -5,12 +5,12 @@
 #endif
 
 
-namespace Flugel {
+namespace fge {
   Unique<Window> Window::create(const WindowProperties& props) {
     #if defined(FLUGEL_USE_GLFW)
       return makeUnique<GlfwWindow>(props);
     #else
-      FLUGEL_ASSERT_E(false, "Unsupported/unknown windowing library!");
+      FGE_ASSERT_ENG(false, "Unsupported/unknown windowing library!");
       return nullptr;
     #endif
   }

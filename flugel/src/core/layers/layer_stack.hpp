@@ -2,8 +2,8 @@
 
 #include "layer.hpp"
 
-namespace Flugel {
-  class FLUGEL_API LayerStack {
+namespace fge {
+  class FGE_API LayerStack {
     using LayerCollection = std::vector<Layer*>;
   public:
     using iterator = LayerCollection::iterator;
