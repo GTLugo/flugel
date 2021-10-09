@@ -116,10 +116,10 @@ find_package(spdlog REQUIRED)
 set(SPDLOG_LIBRARY PUBLIC spdlog::spdlog_header_only) #spdlog::spdlog OR spdlog::spdlog_header_only
 message(CHECK_PASS "found!")
 
-# fmt
+# imgui
 message(CHECK_START "Finding imgui...")
 find_package(imgui REQUIRED)
-set(FMT_LIBRARY PUBLIC imgui::imgui)
+set(IMGUI_LIBRARY PUBLIC imgui::imgui)
 message(CHECK_PASS "found!")
 
 
@@ -156,6 +156,7 @@ set(LIBS
   ${GLM_LIBRARY}
   ${FMT_LIBRARY}
   ${SPDLOG_LIBRARY}
+  ${IMGUI_LIBRARY}
 )
 
 target_link_libraries(${TARGET_NAME}

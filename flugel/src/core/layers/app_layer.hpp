@@ -6,7 +6,7 @@ namespace Flugel {
   class AppLayer : public Layer {
   public:
     AppLayer(const Time* time)
-      : Layer{"App Layer"}, time_{time} {}
+      : Layer{"Flugel Layer"}, time_{time} {}
   private:
     const Time* time_;
     glm::vec2 windowDragOffset_; // cursor position at time of clicking to drag window

@@ -10,27 +10,6 @@ namespace Flugel {
     App::instance().window().render();
   }
 
-  bool Layer::onAppEvent(AppEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    switch (e.type()) {
-      case AppEventType::UpdateFixed: {
-        updateFixed();
-        return true;
-      }
-      case AppEventType::Update: {
-        update();
-        return true;
-      }
-      case AppEventType::Render: {
-        render();
-        return true;
-      }
-      default: {
-        return false;
-      }
-    }
-  }
-
   bool AppLayer::onWindowEvent(WindowEvent& e) {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     switch (e.type()) {
@@ -51,7 +30,7 @@ namespace Flugel {
       FLUGEL_DEBUG_E("{0}: Fullscreen({1}) [Thread: {2}]", name_, !App::instance().window().isFullscreen(), App::instance().threadName(std::this_thread::get_id()));
       App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
     }
-    return false; // return false so event isn't marked handled from base app
+    return true;
   }
 
   bool AppLayer::onMouseEvent(MouseEvent& e) {
@@ -60,7 +39,7 @@ namespace Flugel {
     if (App::instance().window().isUsingCustomDecor()) {
       pollCustomDecor(e);
     }
-    return false; // return false so event isn't marked handled from base app
+    return true;
   }
 
   bool AppLayer::onCursorEvent(CursorEvent& e) {
@@ -69,13 +48,13 @@ namespace Flugel {
       App::instance().window().dragWindow(windowDragOffset_.x, windowDragOffset_.y);
     }
     
-    return false; // return false so event isn't marked handled from base app
+    return true;
   }
 
   bool AppLayer::onScrollEvent(ScrollEvent& e) {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     
-    return false; // return false so event isn't marked handled from base app
+    return true;
   }
   void AppLayer::pollCustomDecor(MouseEvent& e) {
     if (App::instance().window().isFullscreen()) {
