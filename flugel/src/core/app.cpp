@@ -22,6 +22,7 @@ namespace fge {
     window_->setIcon(icon, width, height);
     stbi_image_free(icon);
 
+    // engine layer should be beginning layer
     engineLayer_ = new EngineLayer{};
     pushLayer(engineLayer_);
   }
@@ -123,7 +124,9 @@ namespace fge {
     // LAYER EVENT FNs
     for (auto& layer : boost::adaptors::reverse(layerStack_)) {
       layer->onEvent(e);
-      if (e.wasHandled()) {
+      //FGE_DEBUG_ENG("{0}: {1}", layer->name(), e);
+      if (e.wasHandled() && layer != *layerStack_.begin()) {
+        (*layerStack_.begin())->onEvent(e); // engine layer should always run
         break;
       }
     }

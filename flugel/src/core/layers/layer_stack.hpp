@@ -11,7 +11,7 @@ namespace fge {
     using reverse_iterator = LayerCollection::reverse_iterator;
     using const_reverse_iterator = LayerCollection::const_reverse_iterator;
   public:
-    LayerStack();
+    LayerStack() = default;
     ~LayerStack();
 
     void pushLayer(Layer* layer);
@@ -30,6 +30,6 @@ namespace fge {
     const_reverse_iterator rend() const { return layers_.rend(); }
   private:
     LayerCollection layers_;
-    iterator layerInsert_;
+		uint32_t layerInsertIndex_{0};
   };
 }

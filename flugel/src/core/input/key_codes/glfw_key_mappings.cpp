@@ -142,4 +142,14 @@ namespace fge {
     {Key::World1,       GLFW_KEY_WORLD_1},
     {Key::World2,       GLFW_KEY_WORLD_2},
   };
+
+  std::map<KeyMod, int32_t> GlfwModMap::modMap_{
+    {KeyMod::None,     0}, 
+    {KeyMod::Shift,    GLFW_MOD_SHIFT},
+    {KeyMod::Control,  GLFW_MOD_CONTROL}, 
+    {KeyMod::Alt,      GLFW_MOD_ALT}, 
+    {KeyMod::Super,    GLFW_MOD_SUPER},
+    {KeyMod::CapsLock, GLFW_MOD_CAPS_LOCK},
+    {KeyMod::NumLock,  GLFW_MOD_NUM_LOCK},
+  };
 }

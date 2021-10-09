@@ -9,19 +9,19 @@ namespace fge {
   }
 
   bool Layer::onAppEvent(AppEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
     switch (e.type()) {
       case AppEventType::UpdateFixed: {
         updateFixed();
-        return true;
+        return false;
       }
       case AppEventType::Update: {
         update();
-        return true;
+        return false;
       }
       case AppEventType::Render: {
         render();
-        return true;
+        return false;
       }
       default: {
         return false;

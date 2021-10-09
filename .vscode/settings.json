@@ -89,6 +89,7 @@
     "fstream": "cpp",
     "strstream": "cpp",
     "valarray": "cpp",
-    "filesystem": "cpp"
+    "filesystem": "cpp",
+    "*.rh": "cpp"
   }
 }

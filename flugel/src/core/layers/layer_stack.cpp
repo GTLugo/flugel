@@ -1,18 +1,15 @@
 #include "layer_stack.hpp"
 
 namespace fge {
-  LayerStack::LayerStack() {
-    layerInsert_ = begin();
-  }
-
   LayerStack::~LayerStack() {
     for (Layer* layer : layers_) {
+      layer->detach();
       delete layer;
     }
   }
 
   void LayerStack::pushLayer(Layer* layer) {
-    layerInsert_ = layers_.emplace(layerInsert_, layer);
+    layers_.emplace(begin() + layerInsertIndex_++, layer);
   }
 
   void LayerStack::pushOverlay(Layer* overlay) {
@@ -21,15 +18,17 @@ namespace fge {
 
   void LayerStack::popLayer(Layer* layer) {
     auto itr = std::find(begin(), end(), layer);
-    if (itr != end()) {
+    if (itr != begin() + layerInsertIndex_) {
+      layer->detach();
       layers_.erase(itr);
-      --layerInsert_;
+      --layerInsertIndex_;
     }
   }
 
   void LayerStack::popOverlay(Layer* overlay) {
     auto itr = std::find(begin(), end(), overlay);
     if (itr != end()) {
+      overlay->detach();
       layers_.erase(itr);
     }
   }

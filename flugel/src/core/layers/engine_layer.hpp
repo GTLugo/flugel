@@ -12,6 +12,8 @@ namespace fge {
     bool draggingWindowDecor_{false};
     bool closingWindowDecor_{false};
       
+    virtual void updateFixed() override {}
+    virtual void update() override {}
     virtual void render() override;
     
     virtual bool onWindowEvent(WindowEvent& e) override;

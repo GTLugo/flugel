@@ -8,13 +8,15 @@ namespace Sandbox {
     TestLayer(const fge::Time& time)
       : Layer{"test_layer"}, time_{time} {}
 
-    void updateFixed() override {
+    virtual void updateFixed() override {
       //FLUGEL_TRACE("UwU");
     }
-    
-    bool onKeyboardEvent(fge::KeyboardEvent& e) override {
-      //FLUGEL_DEBUG("{0}: {1}", name_, e);
-      return true;
+
+    virtual void update() override {
+      if (fge::Input::isPressed(fge::Key::Space)) {
+        FGE_TRACE("OwO");
+      }
+      //FLUGEL_TRACE("UwU");
     }
   private:
     const fge::Time& time_;

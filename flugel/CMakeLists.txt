@@ -21,6 +21,8 @@ set(SOURCE_FILES
   src/core/imgui/imgui_layer.cpp
   src/core/input/key_codes/glfw_key_mappings.cpp
   src/core/input/key_codes/key_codes.cpp
+  src/core/input/mouse_codes/glfw_mouse_mappings.cpp
+  src/core/input/mouse_codes/mouse_codes.cpp
   src/core/input/glfw_input.cpp
   src/core/input/input.cpp
   src/core/layers/engine_layer.cpp

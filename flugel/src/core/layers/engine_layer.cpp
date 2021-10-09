@@ -3,8 +3,6 @@
 #include "core/app.hpp"
 #include "core/input/input.hpp"
 
-#include <GLFW/glfw3.h>
-
 namespace fge {
   void EngineLayer::render() {
     App::instance().window().render();
@@ -26,13 +24,10 @@ namespace fge {
 
   bool EngineLayer::onKeyboardEvent(KeyboardEvent& e) {
     //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    if (Input::isKeyPressed(Key::Enter) && Input::isKeyPressed(Key::LeftAlt)) {
+    if (Input::isPressed(Key::Enter) && Input::isPressed(Key::LeftAlt)) {
       FGE_DEBUG_ENG("{0}: Fullscreen({1}) [Thread: {2}]", name_, !App::instance().window().isFullscreen(), App::instance().threadName(std::this_thread::get_id()));
       App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
     }
-    
-    auto b = Key::B;
-    FGE_DEBUG("Key: {0} size: {1} bytes", b, sizeof(b));
     return true;
   }
 
@@ -65,7 +60,7 @@ namespace fge {
       closingWindowDecor_ = false;
       return;
     }
-    if (e.button() == GLFW_MOUSE_BUTTON_LEFT) {
+    if (e.button() == MouseButton::Left) {
       if (e.buttonState() == ButtonState::Pressed
         && Input::cursorPosY() < 50 && Input::cursorPosX() < (App::instance().window().dims().x - 50)) {
         draggingWindowDecor_ = true;

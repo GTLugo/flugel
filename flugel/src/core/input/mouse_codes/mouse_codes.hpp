@@ -1,12 +1,8 @@
 #pragma once
 
-#if defined(FLUGEL_USE_GLFW)
-  #include "glfw_mouse_mappings.hpp"
-#endif
-
 namespace fge {
-  enum class Mouse {
-    //None = 0,
+  enum class MouseButton {
+    Unknown = 0,
     Left,
     Right,
     Middle,
@@ -15,5 +11,17 @@ namespace fge {
     _6,
     _7,
     _8
+  };
+  
+  class MouseMap {
+  public:
+    virtual ~MouseMap() { FGE_TRACE_ENG("Destructing KeyMap..."); }
+    static int32_t nativeButton(MouseButton button) { return instance_->nativeButtonImpl(button); }
+    static MouseButton fromNative(int32_t button) { return instance_->fromNativeImpl(button); }
+  protected:
+    virtual int32_t nativeButtonImpl(MouseButton button) = 0;
+    virtual MouseButton fromNativeImpl(int32_t button) = 0;
+  private:
+    static Unique<MouseMap> instance_;
   };
 }

@@ -22,7 +22,7 @@ namespace fge {
     World1, World2, // international
   };
 
-  enum class Modifier {
+  enum class KeyMod {
     None     = 0,
     Shift    = BIT(0),
     Control  = BIT(1),
@@ -36,9 +36,23 @@ namespace fge {
   public:
     virtual ~KeyMap() { FGE_TRACE_ENG("Destructing KeyMap..."); }
     static int32_t nativeKey(Key key) { return instance_->nativeKeyImpl(key); }
+    static Key fromNative(int32_t key) { return instance_->fromNativeImpl(key); }
   protected:
     virtual int32_t nativeKeyImpl(Key key) = 0;
+    virtual Key fromNativeImpl(int32_t key) = 0;
   private:
     static Unique<KeyMap> instance_;
+  };
+  
+  class ModMap {
+  public:
+    virtual ~ModMap() { FGE_TRACE_ENG("Destructing KeyMap..."); }
+    static int32_t nativeMod(KeyMod mod) { return instance_->nativeModImpl(mod); }
+    static KeyMod fromNative(int32_t mod) { return instance_->fromNativeImpl(mod); }
+  protected:
+    virtual int32_t nativeModImpl(KeyMod mod) = 0;
+    virtual KeyMod fromNativeImpl(int32_t mod) = 0;
+  private:
+    static Unique<ModMap> instance_;
   };
 }

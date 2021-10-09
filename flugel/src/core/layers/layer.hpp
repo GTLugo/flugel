@@ -15,13 +15,13 @@ namespace fge {
     virtual void attach() {}
     virtual void detach() {}
 
-    virtual void updateFixed() {}
-    virtual void update() {}
-    virtual void render() {}
+    inline virtual void updateFixed() {}
+    inline virtual void update() {}
+    inline virtual void render() {}
     
     void onEvent(Event& e) {
       EventDispatcher dispatcher{e};
-      
+      //FGE_DEBUG_ENG("{0}: {1}", name_, e);
       if (dispatcher.tryDispatch<AppEvent>(FGE_BIND(onAppEvent))) return;
       if (dispatcher.tryDispatch<WindowEvent>(FGE_BIND(onWindowEvent))) return;
       if (dispatcher.tryDispatch<KeyboardEvent>(FGE_BIND(onKeyboardEvent))) return;
