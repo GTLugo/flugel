@@ -8,6 +8,7 @@
 #include "core/callbacks/events/window_event.hpp"
 #include "core/callbacks/events/mouse_event.hpp"
 
+
 namespace Flugel {
   class FLUGEL_API App {
   public:
@@ -26,7 +27,7 @@ namespace Flugel {
     void run();
     void close();
   private:
-    static Unique<App> instance_;
+    static App* instance_;
     // Util
     Time time_{};
     // Window

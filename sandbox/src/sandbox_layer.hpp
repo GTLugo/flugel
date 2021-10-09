@@ -5,7 +5,7 @@
 namespace Sandbox {
   class SandboxLayer : public Flugel::Layer {
   public:
-    SandboxLayer(const Flugel::Time* time)
+    SandboxLayer(const Flugel::Time& time)
       : Layer{"Sandbox Layer"}, time_{time} {}
 
     void updateFixed() override {
@@ -17,6 +17,6 @@ namespace Sandbox {
       return true;
     }
   private:
-    const Flugel::Time* time_;
+    const Flugel::Time& time_;
   };
 }

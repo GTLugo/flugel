@@ -1,4 +1,5 @@
 #include "glfw_window.hpp"
+
 #include "core/callbacks/events/window_event.hpp"
 #include "core/callbacks/events/mouse_event.hpp"
 #include "core/callbacks/events/keyboard_event.hpp"
@@ -19,7 +20,9 @@ namespace Flugel {
   }
 
   GlfwWindow::~GlfwWindow() {
+    FLUGEL_TRACE_E("Destructing GlfwWindow...");
     shutdown();
+    FLUGEL_TRACE_E("Destructed GlfwWindow!");
   }
 
   void GlfwWindow::init() {
@@ -166,6 +169,11 @@ namespace Flugel {
     glfwGetWindowPos(glfwWindow_, &x, &y);
     setPos(x + glm::floor(Input::cursorPosX()) - cursorOffsetX, 
            y + glm::floor(Input::cursorPosY()) - cursorOffsetY);
+  }
+
+  void GlfwWindow::setIcon(uint8_t* image, int32_t width, int32_t height) {
+    icons_[0] = GLFWimage{width, height, image};
+    glfwSetWindowIcon(glfwWindow_, 1, icons_);
   }
 
   void GlfwWindow::setPos(double xPos, double yPos) {

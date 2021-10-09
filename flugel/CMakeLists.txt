@@ -86,22 +86,9 @@ set(BOOST_LIBRARIES
 )
 message(CHECK_PASS "found!")
 
-# glad
+# stb
 message(CHECK_START "Finding glad...")
-find_package(glad REQUIRED)
-set(GLAD_LIBRARY PUBLIC glad::glad)
-message(CHECK_PASS "found!")
-
-# glfw3
-message(CHECK_START "Finding glfw3...")
-find_package(glfw3 REQUIRED)
-set(GLFW_LIBRARY PUBLIC glfw)
-message(CHECK_PASS "found!")
-
-# glm
-message(CHECK_START "Finding glm...")
-find_package(glm REQUIRED)
-set(GLM_LIBRARY PUBLIC glm::glm)
+find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
 message(CHECK_PASS "found!")
 
 # fmt
@@ -122,6 +109,24 @@ find_package(imgui REQUIRED)
 set(IMGUI_LIBRARY PUBLIC imgui::imgui)
 message(CHECK_PASS "found!")
 
+# glad
+message(CHECK_START "Finding glad...")
+find_package(glad REQUIRED)
+set(GLAD_LIBRARY PUBLIC glad::glad)
+message(CHECK_PASS "found!")
+
+# glfw3
+message(CHECK_START "Finding glfw3...")
+find_package(glfw3 REQUIRED)
+set(GLFW_LIBRARY PUBLIC glfw)
+message(CHECK_PASS "found!")
+
+# glm
+message(CHECK_START "Finding glm...")
+find_package(glm REQUIRED)
+set(GLM_LIBRARY PUBLIC glm::glm)
+message(CHECK_PASS "found!")
+
 
 # ===================================================
 # INCLUDING & LINKING
@@ -131,6 +136,7 @@ message(CHECK_PASS "found!")
 target_include_directories(${TARGET_NAME}
   PRIVATE
     "src" "include"
+    ${STB_INCLUDE_DIRS}
   INTERFACE
     "src"
 )
@@ -151,12 +157,12 @@ target_link_directories(${TARGET_NAME}
 # Put all libraries into a variable & link the libraries
 set(LIBS
   ${BOOST_LIBRARIES}
-  ${GLAD_LIBRARY}
-  ${GLFW_LIBRARY}
-  ${GLM_LIBRARY}
   ${FMT_LIBRARY}
   ${SPDLOG_LIBRARY}
   ${IMGUI_LIBRARY}
+  ${GLAD_LIBRARY}
+  ${GLFW_LIBRARY}
+  ${GLM_LIBRARY}
 )
 
 target_link_libraries(${TARGET_NAME}

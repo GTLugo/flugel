@@ -6,6 +6,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <filesystem>
 // Utilities
 #include <cstdlib>
 #include <algorithm>

@@ -17,6 +17,8 @@ namespace Flugel {
     
     virtual void* nativeWindow() override { return glfwWindow_; }
     virtual void dragWindow(double cursorOffsetX, double cursorOffsetY);
+
+    virtual void setIcon(uint8_t* image, int32_t width, int32_t height) override;
     virtual void setPos(double xPos, double yPos) override;
     virtual void setVSync(bool enabled) override;
     virtual void setFullscreen(bool enabled) override;
@@ -26,6 +28,7 @@ namespace Flugel {
     GLFWwindow* glfwWindow_;
     const GLFWvidmode* vidMode_;
 
+    GLFWimage icons_[1];
     Color clearColor_{0x2E3440FF};
     
     void init();

@@ -15,15 +15,18 @@ namespace Sandbox {
           false, // borderless
           false // custom window decorations
         }} {
-        pushLayer(new SandboxLayer{&time()});
+        pushLayer(new SandboxLayer{time()});
       }
 
-      virtual ~App() override = default;
+      virtual ~App() override {
+        FLUGEL_TRACE("Destructing sandbox...");
+        FLUGEL_TRACE("Destructed sandbox!");
+      };
   };
 }
 
 namespace Flugel {
   Unique<App> createApp() {
-    return makeUnique<Sandbox::App>();
+    return std::move(makeUnique<Sandbox::App>());
   }
 }

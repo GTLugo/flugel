@@ -2,19 +2,27 @@
 
 #include "core/input/input.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 #include <GLFW/glfw3.h>
 #include <boost/range/adaptor/reversed.hpp>
 
 namespace Flugel {
-  Unique<App> App::instance_ = nullptr;
+  App* App::instance_ = nullptr;
 
   App::App(const WindowProperties& props) {
+    FLUGEL_DEBUG_E("Current working directory: {0}", std::filesystem::current_path());
     FLUGEL_TRACE_E("Constructing App...");
-    instance_ = Unique<App>{this};
+    instance_ = this;
     window_ = Window::create(props);
     window_->setEventCallback(FLUGEL_BIND_FN(eventDispatch));
     
-    appLayer_ = new AppLayer{&time_};
+    int32_t width, height;
+    uint8_t* icon = stbi_load("res/icon.png", &width, &height, 0, 4);
+    window_->setIcon(icon, width, height);
+    stbi_image_free(icon);
+
+    appLayer_ = new AppLayer{};
     pushLayer(appLayer_);
   }
 
@@ -25,11 +33,13 @@ namespace Flugel {
   }
 
   void App::spawnThreads() {
+    FLUGEL_TRACE_E("Spawning threads...");
     renderThread_ = std::thread{FLUGEL_BIND_FN(renderThreadMain)};
     gameThread_ = std::thread{FLUGEL_BIND_FN(gameThreadMain)};
   }
 
   void App::killThreads() {
+    FLUGEL_TRACE_E("Killing threads...");
     gameThread_.join();
     renderThread_.join();
   }
@@ -108,7 +118,7 @@ namespace Flugel {
   }
   
   void App::eventDispatch(Event& e) {
-    EventDispatcher dispatcher{e};
+    //EventDispatcher dispatcher{e};
     
     // LAYER EVENT FNs
     for (auto& layer : boost::adaptors::reverse(layerStack_)) {

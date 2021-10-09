@@ -21,13 +21,13 @@ namespace Flugel {
     
     void onEvent(Event& e) {
       EventDispatcher dispatcher{e};
-
-      dispatcher.tryDispatch<AppEvent>(FLUGEL_BIND_FN(onAppEvent));
-      dispatcher.tryDispatch<WindowEvent>(FLUGEL_BIND_FN(onWindowEvent));
-      dispatcher.tryDispatch<KeyboardEvent>(FLUGEL_BIND_FN(onKeyboardEvent));
-      dispatcher.tryDispatch<MouseEvent>(FLUGEL_BIND_FN(onMouseEvent));
-      dispatcher.tryDispatch<CursorEvent>(FLUGEL_BIND_FN(onCursorEvent));
-      dispatcher.tryDispatch<ScrollEvent>(FLUGEL_BIND_FN(onScrollEvent));
+      
+      if (dispatcher.tryDispatch<AppEvent>(FLUGEL_BIND_FN(onAppEvent))) return;
+      if (dispatcher.tryDispatch<WindowEvent>(FLUGEL_BIND_FN(onWindowEvent))) return;
+      if (dispatcher.tryDispatch<KeyboardEvent>(FLUGEL_BIND_FN(onKeyboardEvent))) return;
+      if (dispatcher.tryDispatch<MouseEvent>(FLUGEL_BIND_FN(onMouseEvent))) return;
+      if (dispatcher.tryDispatch<CursorEvent>(FLUGEL_BIND_FN(onCursorEvent))) return;
+      if (dispatcher.tryDispatch<ScrollEvent>(FLUGEL_BIND_FN(onScrollEvent))) return;
     }
 
     const std::string& name() const { return name_; }

@@ -4,10 +4,12 @@
 
 int32_t main(int32_t argCount = 0, char* args[] = nullptr) {
   Flugel::Log::init();
+  FLUGEL_TRACE_E("ENTERING ENGINE");
 
   Flugel::Unique<Flugel::App> app{Flugel::createApp()};
   app->run();
 
+  FLUGEL_TRACE_E("EXITING ENGINE");
   return EXIT_SUCCESS;
 }
 

@@ -4,7 +4,10 @@ namespace Flugel {
   Layer::Layer(const std::string& name)
     : name_{name} {}
   
-  Layer::~Layer() {}
+  Layer::~Layer() {
+    FLUGEL_TRACE_E("Destructing layer: {0}...", name_);
+    FLUGEL_TRACE_E("Destructed layer: {0}!", name_);
+  }
 
   bool Layer::onAppEvent(AppEvent& e) {
     //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
