@@ -13,6 +13,9 @@ namespace Flugel {
     instance_ = Unique<App>{this};
     window_ = Window::create(props);
     window_->setEventCallback(FLUGEL_BIND_FN(eventDispatch));
+    
+    appLayer_ = new AppLayer{&time_};
+    pushLayer(appLayer_);
   }
 
   App::~App() {
@@ -29,6 +32,14 @@ namespace Flugel {
   void App::killThreads() {
     gameThread_.join();
     renderThread_.join();
+  }
+
+  void App::pushLayer(Layer* layer) {
+    layerStack_.pushLayer(layer);
+  }
+
+  void App::pushOverlay(Layer* overlay) {
+    layerStack_.pushOverlay(overlay);
   }
 
   void App::run() {
@@ -92,151 +103,18 @@ namespace Flugel {
     window_->pollEvents();
   }
 
-  void App::updateFixed() {
-    for (Layer* layer : layerStack_) {
-      layer->updateFixed();
-    }
-  }
-
-  void App::update() {
-
-    for (Layer* layer : layerStack_) {
-      layer->update();
-    }
-  }
-
-  void App::render() {
-    for (Layer* layer : layerStack_) {
-      layer->render();
-    }
-    window_->render();
-  }
-
   void App::close() {
     shouldClose_ = true;
-  }
-
-  void App::pushLayer(Layer* layer) {
-    layerStack_.pushLayer(layer);
-  }
-
-  void App::pushOverlay(Layer* overlay) {
-    layerStack_.pushOverlay(overlay);
   }
   
   void App::eventDispatch(Event& e) {
     EventDispatcher dispatcher{e};
-
-    // PRIMARY EVENT FNs
-    dispatcher.tryDispatch<AppEvent>(FLUGEL_BIND_FN(onAppEvent));
-    dispatcher.tryDispatch<WindowEvent>(FLUGEL_BIND_FN(onWindowEvent));
-
-    // INPUT EVENT FNs
-    dispatcher.tryDispatch<KeyboardEvent>(FLUGEL_BIND_FN(onKeyboardEvent));
-    dispatcher.tryDispatch<MouseEvent>(FLUGEL_BIND_FN(onMouseEvent));
-    dispatcher.tryDispatch<CursorEvent>(FLUGEL_BIND_FN(onCursorEvent));
-    dispatcher.tryDispatch<ScrollEvent>(FLUGEL_BIND_FN(onScrollEvent));
     
     // LAYER EVENT FNs
     for (auto& layer : boost::adaptors::reverse(layerStack_)) {
       layer->onEvent(e);
       if (e.wasHandled()) {
         break;
-      }
-    }
-  }
-
-  bool App::onAppEvent(AppEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    switch (e.type()) {
-      case AppEventType::UpdateFixed: {
-        updateFixed();
-        return true;
-      }
-      case AppEventType::Update: {
-        update();
-        return true;
-      }
-      case AppEventType::Render: {
-        render();
-        return true;
-      }
-      default: {
-        return true;
-      }
-    }
-  }
-
-  bool App::onWindowEvent(WindowEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    switch (e.type()) {
-      case WindowEventType::Close: {
-        FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-        close();
-        return true;
-      }
-      default: {
-        return false;
-      }
-    }
-  }
-
-  bool App::onKeyboardEvent(KeyboardEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    if (Input::isKeyPressed(GLFW_KEY_ENTER) && (e.mods() & GLFW_MOD_ALT)) {
-      FLUGEL_DEBUG_E("Fullscreen: {0} [Thread: {1}]", !window_->isFullscreen(), threadNames_.at(std::this_thread::get_id()));
-      window_->setFullscreen(!window_->isFullscreen());
-    }
-    return false; // return false so event isn't marked handled from base app
-  }
-
-  bool App::onMouseEvent(MouseEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    // custom dragging and close button
-    if (window_->isUsingCustomDecor()) {
-      pollCustomDecor(e);
-    }
-    return false; // return false so event isn't marked handled from base app
-  }
-
-  bool App::onCursorEvent(CursorEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    if (draggingWindowDecor_) {
-      window_->dragWindow(windowDragOffset_.x, windowDragOffset_.y);
-    }
-    
-    return false; // return false so event isn't marked handled from base app
-  }
-
-  bool App::onScrollEvent(ScrollEvent& e) {
-    //FLUGEL_DEBUG_E("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    
-    return false; // return false so event isn't marked handled from base app
-  }
-
-  void App::pollCustomDecor(MouseEvent& e) {
-    if (window_->isFullscreen()) {
-      draggingWindowDecor_ = false;
-      closingWindowDecor_ = false;
-      return;
-    }
-    if (e.button() == GLFW_MOUSE_BUTTON_LEFT) {
-      if (e.buttonState() == ButtonState::Pressed
-        && Input::cursorPosY() < 50 && Input::cursorPosX() < (window_->width() - 50)) {
-        draggingWindowDecor_ = true;
-        windowDragOffset_ = {glm::floor(Input::cursorPosX()), glm::floor(Input::cursorPosY())};
-      } else {
-        draggingWindowDecor_ = false;
-      }
-      if (closingWindowDecor_ && e.buttonState() == ButtonState::Released
-        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (window_->width() - 50)) {
-        shouldClose_ = true;
-      }
-      if (e.buttonState() == ButtonState::Pressed
-        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (window_->width() - 50)) {
-        closingWindowDecor_ = true;
-      } else {
-        closingWindowDecor_ = false;
       }
     }
   }

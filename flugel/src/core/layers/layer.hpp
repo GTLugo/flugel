@@ -22,6 +22,7 @@ namespace Flugel {
     void onEvent(Event& e) {
       EventDispatcher dispatcher{e};
 
+      dispatcher.tryDispatch<AppEvent>(FLUGEL_BIND_FN(onAppEvent));
       dispatcher.tryDispatch<WindowEvent>(FLUGEL_BIND_FN(onWindowEvent));
       dispatcher.tryDispatch<KeyboardEvent>(FLUGEL_BIND_FN(onKeyboardEvent));
       dispatcher.tryDispatch<MouseEvent>(FLUGEL_BIND_FN(onMouseEvent));
@@ -34,10 +35,11 @@ namespace Flugel {
     std::string name_;
     // bool enabled_;
 
-    virtual bool onWindowEvent(WindowEvent& e) { return false; }
-    virtual bool onKeyboardEvent(KeyboardEvent& e) { return false; }
-    virtual bool onMouseEvent(MouseEvent& e) { return false; }
-    virtual bool onCursorEvent(CursorEvent& e) { return false; }
-    virtual bool onScrollEvent(ScrollEvent& e) { return false; }
+    inline virtual bool onAppEvent(AppEvent& e);
+    inline virtual bool onWindowEvent(WindowEvent& e);
+    inline virtual bool onKeyboardEvent(KeyboardEvent& e);
+    inline virtual bool onMouseEvent(MouseEvent& e);
+    inline virtual bool onCursorEvent(CursorEvent& e);
+    inline virtual bool onScrollEvent(ScrollEvent& e);
   };
 }

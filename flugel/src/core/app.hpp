@@ -2,6 +2,7 @@
 
 #include "core/window/window.hpp"
 #include "core/layers/layer_stack.hpp"
+#include "core/layers/app_layer.hpp"
 #include "core/callbacks/events/event.hpp"
 #include "core/callbacks/events/app_event.hpp"
 #include "core/callbacks/events/window_event.hpp"
@@ -20,7 +21,10 @@ namespace Flugel {
     void pushLayer(Layer* layer);
     void pushOverlay(Layer* overlay);
 
+    std::string threadName(const std::thread::id& id) const { return threadNames_.at(id); }
+
     void run();
+    void close();
   private:
     static Unique<App> instance_;
     // Util
@@ -28,15 +32,13 @@ namespace Flugel {
     // Window
     Unique<Window> window_;
     bool shouldClose_{false};
-    bool draggingWindowDecor_{false};
-    bool closingWindowDecor_{false};
-    glm::vec2 windowDragOffset_; // cursor position at time of clicking to drag window
     // Threads
     std::thread gameThread_;
     std::thread renderThread_;
     std::map<std::thread::id, std::string> threadNames_{};
     // Layers
     LayerStack layerStack_;
+    AppLayer* appLayer_;
     
     void spawnThreads();
     void killThreads();
@@ -45,20 +47,8 @@ namespace Flugel {
     void renderThreadMain();
 
     void pollEvents();
-    void updateFixed();
-    void update();
-    void render();
-    void close();
-
-    void pollCustomDecor(MouseEvent& e);
     
     void eventDispatch(Event& e);
-    bool onAppEvent(AppEvent& e);
-    bool onWindowEvent(WindowEvent& e);
-    bool onKeyboardEvent(KeyboardEvent& e);
-    bool onMouseEvent(MouseEvent& e);
-    bool onCursorEvent(CursorEvent& e);
-    bool onScrollEvent(ScrollEvent& e);
   };
 
   // To be defined in project app

@@ -21,6 +21,7 @@ set(SOURCE_FILES
   src/core/imgui/imgui_layer.cpp
   src/core/input/glfw_input.cpp
   src/core/input/input.cpp
+  src/core/layers/app_layer.cpp
   src/core/layers/layer_stack.cpp
   src/core/layers/layer.cpp
   src/core/window/glfw_window.cpp
