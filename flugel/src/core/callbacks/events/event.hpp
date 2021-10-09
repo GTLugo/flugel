@@ -27,7 +27,8 @@ namespace fge {
     }
   }
 
-  #define EVENT_CATEGORY(event_cat) static EventCategory categoryStatic() { return EventCategory::##event_cat; }\
+  /// TODO: Remove this macro! It's unnecesary!
+  #define EVENT_CATEGORY(event_cat) static EventCategory categoryStatic() { return event_cat; }\
                                    virtual EventCategory category() const override { return categoryStatic(); }
   
   class FGE_API Event {

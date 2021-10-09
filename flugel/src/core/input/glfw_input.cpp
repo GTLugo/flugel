@@ -5,15 +5,15 @@
 #include <GLFW/glfw3.h>
 
 namespace fge {
-  bool GlfwInput::isKeyPressedImpl(Key key) {
+  bool GlfwInput::isKeyPressedImpl(Key::Code key) {
     auto window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
-    auto state = glfwGetKey(window, KeyMap::nativeKey(key));
+    auto state = glfwGetKey(window, Key::toNative(key));
     return state == GLFW_PRESS || state == GLFW_REPEAT;
   }
 
-  bool GlfwInput::isMousePressedImpl(MouseButton button) {
+  bool GlfwInput::isMousePressedImpl(Mouse::Code button) {
     auto window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
-    auto state = glfwGetMouseButton(window, MouseMap::nativeButton(button));
+    auto state = glfwGetMouseButton(window, Mouse::toNative(button));
     return state == GLFW_PRESS;
   }
 

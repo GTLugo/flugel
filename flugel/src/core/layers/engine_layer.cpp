@@ -60,7 +60,7 @@ namespace fge {
       closingWindowDecor_ = false;
       return;
     }
-    if (e.button() == MouseButton::Left) {
+    if (e.button() == Mouse::Left) {
       if (e.buttonState() == ButtonState::Pressed
         && Input::cursorPosY() < 50 && Input::cursorPosX() < (App::instance().window().dims().x - 50)) {
         draggingWindowDecor_ = true;

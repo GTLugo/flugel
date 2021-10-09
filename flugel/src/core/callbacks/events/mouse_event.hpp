@@ -2,17 +2,19 @@
 
 #include "event.hpp"
 #include "core/input/mouse_codes/mouse_codes.hpp"
+#include "core/input/key_codes/key_codes.hpp"
 
 namespace fge {
   class FGE_API MouseEvent : public Event {
   public:
-    EVENT_CATEGORY(Mouse)
+    EVENT_CATEGORY(EventCategory::Mouse)
 
-    MouseEvent(ButtonState buttonState, MouseButton button)
-      : buttonState_{buttonState}, button_{button} {}
+    MouseEvent(ButtonState buttonState, Mouse::Code button, Modifier::Codes mods)
+      : buttonState_{buttonState}, button_{button}, mods_{mods} {}
 
     ButtonState buttonState() const { return buttonState_; }
-    MouseButton button() const { return button_; }
+    Mouse::Code button() const { return button_; }
+    Modifier::Codes mods() const { return mods_; }
     
     std::string toString() const override {
       std::stringstream ss;
@@ -21,12 +23,13 @@ namespace fge {
     }
   protected:
     ButtonState buttonState_;
-    MouseButton button_;
+    Mouse::Code button_;
+    Modifier::Codes mods_;
   };
 
   class FGE_API CursorEvent : public Event {
   public:
-    EVENT_CATEGORY(Cursor)
+    EVENT_CATEGORY(EventCategory::Cursor)
 
     CursorEvent(double xPos, double yPos)
       : xPos_{xPos}, yPos_{yPos} {}
@@ -45,7 +48,7 @@ namespace fge {
 
   class FGE_API ScrollEvent : public Event {
   public:
-    EVENT_CATEGORY(Scroll)
+    EVENT_CATEGORY(EventCategory::Scroll)
 
     ScrollEvent(double xOffset, double yOffset)
       : xOffset_{xOffset}, yOffset_{yOffset} {}

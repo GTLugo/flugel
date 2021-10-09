@@ -6,15 +6,15 @@
 namespace fge {
   class FGE_API KeyboardEvent : public Event {
   public:
-    EVENT_CATEGORY(Keyboard)
+    EVENT_CATEGORY(EventCategory::Keyboard)
 
-    KeyboardEvent(ButtonState keyState, Key key, int32_t repeatCount, int32_t mods)
+    KeyboardEvent(ButtonState keyState, Key::Code key, int32_t repeatCount, Modifier::Codes mods)
       : keyState_{keyState}, key_{key}, repeatCount_{repeatCount}, mods_{mods} {}
 
     ButtonState keyState() const { return keyState_; }
-    Key key() const { return key_; }
+    Key::Code key() const { return key_; }
     int32_t repeatCount() const { return repeatCount_; }
-    int32_t mods() const { return mods_; }
+    Modifier::Codes mods() const { return mods_; }
     
     std::string toString() const override {
       std::stringstream ss;
@@ -23,8 +23,8 @@ namespace fge {
     }
   protected:
     const ButtonState keyState_;
-    const Key key_;
+    const Key::Code key_;
     const int32_t repeatCount_;
-    const int32_t mods_;
+    const Modifier::Codes mods_;
   };
 }

@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 
 namespace fge {
-  std::map<Key, int32_t> GlfwKeyMap::keyMap_{
+  std::map<Key::Code, int32_t> GlfwKey::keyMap_{
     {Key::Unknown,      GLFW_KEY_UNKNOWN},
     //num row
     {Key::_1,           GLFW_KEY_1}, 
@@ -143,13 +143,13 @@ namespace fge {
     {Key::World2,       GLFW_KEY_WORLD_2},
   };
 
-  std::map<KeyMod, int32_t> GlfwModMap::modMap_{
-    {KeyMod::None,     0}, 
-    {KeyMod::Shift,    GLFW_MOD_SHIFT},
-    {KeyMod::Control,  GLFW_MOD_CONTROL}, 
-    {KeyMod::Alt,      GLFW_MOD_ALT}, 
-    {KeyMod::Super,    GLFW_MOD_SUPER},
-    {KeyMod::CapsLock, GLFW_MOD_CAPS_LOCK},
-    {KeyMod::NumLock,  GLFW_MOD_NUM_LOCK},
+  std::map<Modifier::Code, int32_t> GlfwModifier::modMap_{
+    {Modifier::None,     0}, 
+    {Modifier::Shift,    GLFW_MOD_SHIFT},
+    {Modifier::Control,  GLFW_MOD_CONTROL}, 
+    {Modifier::Alt,      GLFW_MOD_ALT}, 
+    {Modifier::Super,    GLFW_MOD_SUPER},
+    {Modifier::CapsLock, GLFW_MOD_CAPS_LOCK},
+    {Modifier::NumLock,  GLFW_MOD_NUM_LOCK},
   };
 }

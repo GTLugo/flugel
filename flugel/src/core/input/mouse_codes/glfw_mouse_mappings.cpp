@@ -3,15 +3,15 @@
 #include "GLFW/glfw3.h"
 
 namespace fge {
-  std::map<MouseButton, int32_t> GlfwMouseMap::mouseMap_{
-    {MouseButton::Unknown, -1},
-    {MouseButton::Left,    GLFW_MOUSE_BUTTON_1}, 
-    {MouseButton::Right,   GLFW_MOUSE_BUTTON_2}, 
-    {MouseButton::Middle,  GLFW_MOUSE_BUTTON_3}, 
-    {MouseButton::Back,    GLFW_MOUSE_BUTTON_4}, 
-    {MouseButton::Forward, GLFW_MOUSE_BUTTON_5},
-    {MouseButton::_6,      GLFW_MOUSE_BUTTON_6},
-    {MouseButton::_7,      GLFW_MOUSE_BUTTON_7},
-    {MouseButton::_8,      GLFW_MOUSE_BUTTON_8},
+  std::map<Mouse::Code, int32_t> GlfwMouse::mouseMap_{
+    {Mouse::Unknown, -1},
+    {Mouse::Left,    GLFW_MOUSE_BUTTON_1}, 
+    {Mouse::Right,   GLFW_MOUSE_BUTTON_2}, 
+    {Mouse::Middle,  GLFW_MOUSE_BUTTON_3}, 
+    {Mouse::Back,    GLFW_MOUSE_BUTTON_4}, 
+    {Mouse::Forward, GLFW_MOUSE_BUTTON_5},
+    {Mouse::_6,      GLFW_MOUSE_BUTTON_6},
+    {Mouse::_7,      GLFW_MOUSE_BUTTON_7},
+    {Mouse::_8,      GLFW_MOUSE_BUTTON_8},
   };
 }

@@ -4,12 +4,10 @@
 
 int32_t main(int32_t argCount = 0, char* args[] = nullptr) {
   fge::Log::init();
-  FGE_TRACE_ENG("ENTERING ENGINE");
 
   fge::Unique<fge::App> app{fge::createApp()};
   app->run();
-
-  FGE_TRACE_ENG("EXITING ENGINE");
+  
   return EXIT_SUCCESS;
 }
 

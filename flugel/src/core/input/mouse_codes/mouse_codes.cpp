@@ -6,7 +6,7 @@
 
 namespace fge {
   #if defined(FLUGEL_USE_GLFW)
-    Unique<MouseMap> MouseMap::instance_ = makeUnique<GlfwMouseMap>();
+    Unique<Mouse> Mouse::instance_ = makeUnique<GlfwMouse>();
   #else
     Unique<MouseMap> MouseMap::instance_ = nullptr;
   #endif

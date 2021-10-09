@@ -13,9 +13,6 @@ namespace Sandbox {
     }
 
     virtual void update() override {
-      if (fge::Input::isPressed(fge::Key::Space)) {
-        FGE_TRACE("OwO");
-      }
       //FLUGEL_TRACE("UwU");
     }
   private:

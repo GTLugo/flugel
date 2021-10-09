@@ -21,7 +21,7 @@ namespace fge {
     uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
     window_->setIcon(icon, width, height);
     stbi_image_free(icon);
-
+    
     // engine layer should be beginning layer
     engineLayer_ = new EngineLayer{};
     pushLayer(engineLayer_);
@@ -32,13 +32,13 @@ namespace fge {
   }
 
   void App::splitThreads() {
-    FGE_TRACE_ENG("Spawning threads...");
+    FGE_TRACE_ENG("Splitting threads...");
     renderThread_ = std::thread{FGE_BIND(renderThreadMain)};
     gameThread_ = std::thread{FGE_BIND(gameThreadMain)};
   }
 
   void App::joinThreads() {
-    FGE_TRACE_ENG("Killing threads...");
+    FGE_TRACE_ENG("Joining threads...");
     gameThread_.join();
     renderThread_.join();
   }
@@ -52,7 +52,7 @@ namespace fge {
   }
 
   void App::run() {
-    FGE_TRACE_ENG("Running app on main thread (ID: {0})", std::this_thread::get_id());
+    FGE_TRACE_ENG("Started main thread (ID: {0})", std::this_thread::get_id());
     threadNames_.insert(std::pair{std::this_thread::get_id(), "MAIN"});
 
     // MAIN THREAD
@@ -62,11 +62,11 @@ namespace fge {
     }
     joinThreads();
 
-    FGE_TRACE_ENG("Exiting app on main thread");
+    FGE_TRACE_ENG("Ended main thread");
   }
   
   void App::renderThreadMain() {
-    FGE_TRACE_ENG("Starting render thread (ID: {0})", std::this_thread::get_id());
+    FGE_TRACE_ENG("Started render thread (ID: {0})", std::this_thread::get_id());
     threadNames_.insert(std::pair{std::this_thread::get_id(), "RENDER"});
     window_->setContextCurrent(true);
     
@@ -76,11 +76,11 @@ namespace fge {
       eventDispatch(renderEvent);
     }
 
-    FGE_TRACE_ENG("Ending render thread");
+    FGE_TRACE_ENG("Ended render thread");
   }
   
   void App::gameThreadMain() {
-    FGE_TRACE_ENG("Starting game thread (ID: {0})", std::this_thread::get_id());
+    FGE_TRACE_ENG("Started game thread (ID: {0})", std::this_thread::get_id());
     threadNames_.insert(std::pair{std::this_thread::get_id(), "GAME"});
     
     // GAME THREAD
@@ -107,7 +107,7 @@ namespace fge {
       time_.tick();
     }
 
-    FGE_TRACE_ENG("Ending game thread");
+    FGE_TRACE_ENG("Ended game thread");
   }
 
   void App::pollEvents() {

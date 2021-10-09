@@ -10,7 +10,7 @@ namespace fge {
 
   class FGE_API WindowEvent : public Event {
   public:
-    EVENT_CATEGORY(Window)
+    EVENT_CATEGORY(EventCategory::Window)
 
     WindowEventType type() const { return type_; }
   protected:

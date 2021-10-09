@@ -6,8 +6,10 @@
 
 namespace fge {
   #if defined(FLUGEL_USE_GLFW)
-    Unique<KeyMap> KeyMap::instance_ = makeUnique<GlfwKeyMap>();
+    Unique<Key> Key::instance_ = makeUnique<GlfwKey>();
+    Unique<Modifier> Modifier::instance_ = makeUnique<GlfwModifier>();
   #else
-    Unique<KeyMap> KeyMap::instance_ = nullptr;
+    Unique<Key> Key::instance_ = nullptr;
+    Unique<Modifier> Modifier::instance_ = nullptr;
   #endif
 }
