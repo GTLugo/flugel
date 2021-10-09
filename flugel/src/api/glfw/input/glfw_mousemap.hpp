@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mouse_codes.hpp"
+#include "core/input/mouse_codes.hpp"
 
 namespace fge {
   class GlfwMouse : public Mouse {

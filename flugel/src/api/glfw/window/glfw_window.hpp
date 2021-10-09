@@ -1,8 +1,8 @@
 #pragma once
 
-#include "window.hpp"
-#include "util/color/color.hpp"
+#include "core/window/window.hpp"
 #include "core/callbacks/events/event.hpp"
+#include "util/color/color.hpp"
 
 #include <GLFW/glfw3.h>
 

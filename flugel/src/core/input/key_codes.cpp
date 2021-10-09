@@ -1,7 +1,7 @@
 #include "key_codes.hpp"
 
 #if defined(FLUGEL_USE_GLFW)
-  #include "glfw_key_mappings.hpp"
+  #include "api/glfw/input/glfw_keymap.hpp"
 #endif
 
 namespace fge {

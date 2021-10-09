@@ -1,7 +1,6 @@
 #pragma once
 
 namespace fge {
-  
   class Mouse {
   public:
     enum Code : int32_t {
@@ -15,8 +14,7 @@ namespace fge {
       _7,
       _8
     };
-
-    virtual ~Mouse() { FGE_TRACE_ENG("Destructing Mouse..."); }
+    
     static int32_t toNative(Code button) { return instance_->nativeButtonImpl(button); }
     static Code fromNative(int32_t button) { return instance_->fromNativeImpl(button); }
   protected:

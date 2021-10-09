@@ -1,6 +1,6 @@
-#include "glfw_key_mappings.hpp"
+#include "glfw_keymap.hpp"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 namespace fge {
   std::map<Key::Code, int32_t> GlfwKey::keyMap_{

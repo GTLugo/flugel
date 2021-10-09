@@ -1,6 +1,6 @@
-#include "glfw_mouse_mappings.hpp"
+#include "glfw_mousemap.hpp"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 namespace fge {
   std::map<Mouse::Code, int32_t> GlfwMouse::mouseMap_{

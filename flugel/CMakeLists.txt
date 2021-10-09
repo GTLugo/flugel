@@ -12,25 +12,25 @@ message(STATUS "Configuring: ${PROJECT_NAME}")
 # ===================================================
 
 set(SOURCE_FILES
-  src/util/color/srgb_transform/srgb_transform.cpp
-  src/util/color/color.cpp
-  src/util/logging/log.cpp
-  src/util/time/time.cpp
-  src/util/uuid.cpp
+  src/api/glfw/input/glfw_input.cpp
+  src/api/glfw/input/glfw_keymap.cpp
+  src/api/glfw/input/glfw_mousemap.cpp
+  src/api/glfw/window/glfw_window.cpp
   src/core/callbacks/notifier/notifier.cpp
   src/core/imgui/imgui_layer.cpp
-  src/core/input/key_codes/glfw_key_mappings.cpp
-  src/core/input/key_codes/key_codes.cpp
-  src/core/input/mouse_codes/glfw_mouse_mappings.cpp
-  src/core/input/mouse_codes/mouse_codes.cpp
-  src/core/input/glfw_input.cpp
+  src/core/input/key_codes.cpp
+  src/core/input/mouse_codes.cpp
   src/core/input/input.cpp
   src/core/layers/engine_layer.cpp
   src/core/layers/layer_stack.cpp
   src/core/layers/layer.cpp
-  src/core/window/glfw_window.cpp
   src/core/window/window.cpp
-  src/core/app.cpp)
+  src/core/app.cpp
+  src/util/color/srgb_transform/srgb_transform.cpp
+  src/util/color/color.cpp
+  src/util/logging/log.cpp
+  src/util/time/time.cpp
+  src/util/uuid.cpp)
 
 set(SHADER_FILES
   res/shaders/simple_shader.glsl)

@@ -28,8 +28,7 @@ namespace fge {
       RightShift, RightControl, RightAlt, RightSuper, // right modifiers
       World1, World2, // international
     };
-
-    virtual ~Key() { FGE_TRACE_ENG("Destructing Key..."); }
+    
     static int32_t toNative(Code keyCode) { return instance_->nativeKeyImpl(keyCode); }
     static Code fromNative(int32_t keyCode) { return instance_->fromNativeImpl(keyCode); }
   protected:
@@ -52,8 +51,7 @@ namespace fge {
       CapsLock = BIT(4),
       NumLock  = BIT(5),
     };
-
-    virtual ~Modifier() { FGE_TRACE_ENG("Destructing Modifier..."); }
+    
     static int32_t toNative(Code mod) { return instance_->nativeModImpl(mod); }
     static Code fromNative(int32_t mod) { return instance_->fromNativeImpl(mod); }
     

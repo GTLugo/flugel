@@ -1,6 +1,6 @@
 #pragma once
 
-#include "key_codes.hpp"
+#include "core/input/key_codes.hpp"
 
 namespace fge {
   class GlfwKey : public Key {

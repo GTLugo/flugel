@@ -1,7 +1,7 @@
 #pragma once
 
 #include "event.hpp"
-#include "core/input/key_codes/key_codes.hpp"
+#include "core/input/key_codes.hpp"
 
 namespace fge {
   class FGE_API KeyboardEvent : public Event {

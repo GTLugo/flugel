@@ -1,7 +1,7 @@
 #include "window.hpp"
 
 #if defined(FLUGEL_USE_GLFW)
-  #include "core/window/glfw_window.hpp"
+  #include "api/glfw/window/glfw_window.hpp"
 #endif
 
 

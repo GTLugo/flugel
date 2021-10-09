@@ -1,7 +1,7 @@
 #include "mouse_codes.hpp"
 
 #if defined(FLUGEL_USE_GLFW)
-  #include "glfw_mouse_mappings.hpp"
+  #include "api/glfw/input/glfw_mousemap.hpp"
 #endif
 
 namespace fge {

@@ -1,7 +1,7 @@
 #include "input.hpp"
 
 #if defined(FLUGEL_USE_GLFW)
-  #include "glfw_input.hpp"
+  #include "api/glfw/input/glfw_input.hpp"
 #endif
 
 namespace fge {

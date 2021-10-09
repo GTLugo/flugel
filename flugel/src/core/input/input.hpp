@@ -1,15 +1,11 @@
 #pragma once
 
-#include "core/input/key_codes/key_codes.hpp"
-#include "core/input/mouse_codes/mouse_codes.hpp"
+#include "core/input/key_codes.hpp"
+#include "core/input/mouse_codes.hpp"
 
 namespace fge {
   class FGE_API Input {
   public:
-    virtual ~Input() {
-      FGE_TRACE_ENG("Destructing Input...");
-    }
-
     static bool isPressed(Key::Code key) { return instance_->isKeyPressedImpl(key); }
     static bool isPressed(Mouse::Code button) { return instance_->isMousePressedImpl(button); }
     //static bool isPressed(Modifier::Codes mods) { return instance_->areModifiersPressedImpl(mods); }
