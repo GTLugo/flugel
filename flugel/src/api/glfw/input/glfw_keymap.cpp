@@ -106,7 +106,7 @@ namespace fge {
     {Key::Escape,       GLFW_KEY_ESCAPE},
     {Key::Menu,         GLFW_KEY_MENU},
     {Key::Pause,        GLFW_KEY_PAUSE},
-    {Key::Backspace,    GLFW_KEY_BACKSLASH},
+    {Key::Backspace,    GLFW_KEY_BACKSPACE},
     {Key::Insert,       GLFW_KEY_INSERT},
     {Key::Delete,       GLFW_KEY_DELETE},
     {Key::PrintScreen,  GLFW_KEY_PRINT_SCREEN},
