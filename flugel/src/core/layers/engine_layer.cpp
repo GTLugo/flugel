@@ -62,18 +62,18 @@ namespace fge {
     }
     if (e.button() == Mouse::Left) {
       if (e.buttonState() == Mouse::Pressed
-        && Input::cursorPosY() < 50 && Input::cursorPosX() < (App::instance().window().dims().x - 50)) {
+        && Input::cursorPos().y < 50 && Input::cursorPos().x < (App::instance().window().dims().x - 50)) {
         draggingWindowDecor_ = true;
-        windowDragOffset_ = {glm::floor(Input::cursorPosX()), glm::floor(Input::cursorPosY())};
+        windowDragOffset_ = {glm::floor(Input::cursorPos().x), glm::floor(Input::cursorPos().y)};
       } else {
         draggingWindowDecor_ = false;
       }
       if (closingWindowDecor_ && e.buttonState() == Mouse::Released
-        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (App::instance().window().dims().x - 50)) {
+        && Input::cursorPos().y < 50 && Input::cursorPos().x >= (App::instance().window().dims().x - 50)) {
         App::instance().close();
       }
       if (e.buttonState() == Mouse::Pressed
-        && Input::cursorPosY() < 50 && Input::cursorPosX() >= (App::instance().window().dims().x - 50)) {
+        && Input::cursorPos().y < 50 && Input::cursorPos().x >= (App::instance().window().dims().x - 50)) {
         closingWindowDecor_ = true;
       } else {
         closingWindowDecor_ = false;

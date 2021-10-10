@@ -164,8 +164,8 @@ namespace fge {
   void GlfwWindow::dragWindow(vector2_t windowCursorOffset) {
     int32_t x, y;
     glfwGetWindowPos(glfwWindow_, &x, &y);
-    setPos(x + glm::floor(Input::cursorPosX()) - windowCursorOffset.x, 
-           y + glm::floor(Input::cursorPosY()) - windowCursorOffset.y);
+    setPos(x + glm::floor(Input::cursorPos().x) - windowCursorOffset.x, 
+           y + glm::floor(Input::cursorPos().y) - windowCursorOffset.y);
   }
 
   void GlfwWindow::setIcon(uint8_t* image, int32_t width, int32_t height) {

@@ -25,14 +25,6 @@ namespace fge {
     glfwGetCursorPos(window, &pos.x, &pos.y);
     return pos;
   }
-
-  double Input::cursorPosX() {
-    return cursorPos().x;
-  }
-
-  double Input::cursorPosY() {
-    return cursorPos().y;
-  }
 }
 
 #endif // API GUARD

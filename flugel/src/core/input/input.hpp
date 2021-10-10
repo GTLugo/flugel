@@ -10,7 +10,5 @@ namespace fge {
     static bool isPressed(Mouse::Code button);
     //static bool isPressed(Modifier::Codes mods);
     static vector2_t cursorPos();
-    static double cursorPosX();
-    static double cursorPosY();
   };
 }
