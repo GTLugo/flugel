@@ -18,9 +18,6 @@ set(SOURCE_FILES
   src/api/glfw/window/glfw_window.cpp
   src/core/callbacks/notifier/notifier.cpp
   src/core/imgui/imgui_layer.cpp
-  src/core/input/key_codes.cpp
-  src/core/input/mouse_codes.cpp
-  src/core/input/input.cpp
   src/core/layers/engine_layer.cpp
   src/core/layers/layer_stack.cpp
   src/core/layers/layer.cpp
@@ -66,13 +63,16 @@ add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME}
   PRIVATE
-    $<$<CONFIG:debug>:DEBUG=1 FLUGEL_ENABLE_ASSERTS=1>
+    $<$<CONFIG:debug>:DEBUG=1>
     $<$<CONFIG:release>:RELEASE=1>
-    $<$<CONFIG:relwithdebinfo>:RELDEB=1 FLUGEL_ENABLE_ASSERTS=1>
+    $<$<CONFIG:relwithdebinfo>:RELDEB=1>
     $<$<CONFIG:minsizerel>:MINREL=1>
     FLUGEL_BUILD_DLL=1
-    FLUGEL_USE_GLFW=1
     GLFW_INCLUDE_NONE=1
+  PUBLIC
+    FLUGEL_USE_GLFW=1
+    $<$<CONFIG:debug>:FLUGEL_ENABLE_ASSERTS=1>
+    $<$<CONFIG:relwithdebinfo>:FLUGEL_ENABLE_ASSERTS=1>
 )
 
 # ===================================================

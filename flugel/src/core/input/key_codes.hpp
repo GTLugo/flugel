@@ -1,11 +1,6 @@
 #pragma once
 
 namespace fge {
-
-  // inline std::ostream& operator<<(std::ostream& out, const Modifiers& m) {
-  //   return out << m.mods_;
-  // }
-  
   class Key {
   public:
     enum Code : int32_t {
@@ -29,18 +24,15 @@ namespace fge {
       World1, World2, // international
     };
     
-    static int32_t toNative(Code keyCode) { return instance_->nativeKeyImpl(keyCode); }
-    static Code fromNative(int32_t keyCode) { return instance_->fromNativeImpl(keyCode); }
+    static int32_t toNative(Code keyCode);
+    static Code fromNative(int32_t keyCode);
   protected:
-    virtual int32_t nativeKeyImpl(Code keyCode) = 0;
-    virtual Code fromNativeImpl(int32_t keyCode) = 0;
-  private:
-    static Unique<Key> instance_;
+    static std::map<Code, int32_t> keyMap_;
   };
   
   class Modifier {
   public:
-    using Codes = int32_t;
+    using BitCodes = int32_t;
 
     enum Code : int32_t {
       None     = 0,
@@ -52,18 +44,11 @@ namespace fge {
       NumLock  = BIT(5),
     };
     
-    static int32_t toNative(Code mod) { return instance_->nativeModImpl(mod); }
-    static Code fromNative(int32_t mod) { return instance_->fromNativeImpl(mod); }
-    
-    static int32_t toNatives(int32_t mods) { return instance_->nativeModsImpl(mods); }
-    static int32_t fromNatives(int32_t mods) { return instance_->fromNativesImpl(mods); }
+    static int32_t toNative(Code mod);
+    static int32_t toNativeBits(BitCodes mods);
+    static Code fromNative(int32_t mod);
+    static BitCodes fromNativeBits(int32_t mods);
   protected:
-    virtual int32_t nativeModImpl(Code mod) = 0;
-    virtual Code fromNativeImpl(int32_t mod) = 0;
-
-    virtual int32_t nativeModsImpl(Codes mods) = 0;
-    virtual Codes fromNativesImpl(int32_t mods) = 0;
-  private:
-    static Unique<Modifier> instance_;
+    static std::map<Code, int32_t> modMap_;
   };
 }

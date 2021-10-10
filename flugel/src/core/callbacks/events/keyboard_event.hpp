@@ -1,20 +1,21 @@
 #pragma once
 
 #include "event.hpp"
-#include "core/input/key_codes.hpp"
+#include "core/input/input.hpp"
 
 namespace fge {
   class FGE_API KeyboardEvent : public Event {
   public:
     EVENT_CATEGORY(EventCategory::Keyboard)
 
-    KeyboardEvent(ButtonState keyState, Key::Code key, int32_t repeatCount, Modifier::Codes mods)
+    KeyboardEvent(ButtonState keyState, Key::Code key, int32_t repeatCount, Modifier::BitCodes mods)
       : keyState_{keyState}, key_{key}, repeatCount_{repeatCount}, mods_{mods} {}
 
+    /// TODO: Move button state to input enum. Add Repeat state for key
     ButtonState keyState() const { return keyState_; }
     Key::Code key() const { return key_; }
     int32_t repeatCount() const { return repeatCount_; }
-    Modifier::Codes mods() const { return mods_; }
+    Modifier::BitCodes mods() const { return mods_; }
     
     std::string toString() const override {
       std::stringstream ss;
@@ -25,6 +26,6 @@ namespace fge {
     const ButtonState keyState_;
     const Key::Code key_;
     const int32_t repeatCount_;
-    const Modifier::Codes mods_;
+    const Modifier::BitCodes mods_;
   };
 }

@@ -38,9 +38,9 @@ add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME}
   PRIVATE
-    $<$<CONFIG:debug>:DEBUG=1 FLUGEL_ENABLE_ASSERTS=1>
+    $<$<CONFIG:debug>:DEBUG=1>
     $<$<CONFIG:release>:RELEASE=1>
-    $<$<CONFIG:relwithdebinfo>:RELDEB=1 FLUGEL_ENABLE_ASSERTS=1>
+    $<$<CONFIG:relwithdebinfo>:RELDEB=1>
     $<$<CONFIG:minsizerel>:MINREL=1>
 )
 

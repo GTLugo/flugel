@@ -1,20 +1,20 @@
 #pragma once
 
 #include "event.hpp"
-#include "core/input/mouse_codes.hpp"
-#include "core/input/key_codes.hpp"
+#include "core/input/input.hpp"
 
 namespace fge {
   class FGE_API MouseEvent : public Event {
   public:
     EVENT_CATEGORY(EventCategory::Mouse)
 
-    MouseEvent(ButtonState buttonState, Mouse::Code button, Modifier::Codes mods)
+    MouseEvent(ButtonState buttonState, Mouse::Code button, Modifier::BitCodes mods)
       : buttonState_{buttonState}, button_{button}, mods_{mods} {}
 
+    /// TODO: Move button state to input enum. Add Repeat state for key
     ButtonState buttonState() const { return buttonState_; }
     Mouse::Code button() const { return button_; }
-    Modifier::Codes mods() const { return mods_; }
+    Modifier::BitCodes mods() const { return mods_; }
     
     std::string toString() const override {
       std::stringstream ss;
@@ -24,7 +24,7 @@ namespace fge {
   protected:
     ButtonState buttonState_;
     Mouse::Code button_;
-    Modifier::Codes mods_;
+    Modifier::BitCodes mods_;
   };
 
   class FGE_API CursorEvent : public Event {

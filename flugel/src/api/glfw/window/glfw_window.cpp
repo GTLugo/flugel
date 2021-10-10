@@ -88,18 +88,18 @@ namespace fge {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
-          KeyboardEvent e{ButtonState::Pressed, Key::fromNative(key), 0, Modifier::fromNatives(mods)};
+          KeyboardEvent e{ButtonState::Pressed, Key::fromNative(key), 0, Modifier::fromNativeBits(mods)};
           data.eventCallback(e);
           break;
         }
         case GLFW_REPEAT: {
           // GLFW doesn't provide a repeat count, so 1 will do for most use cases
-          KeyboardEvent e{ButtonState::Pressed, Key::fromNative(key), 1, Modifier::fromNatives(mods)};
+          KeyboardEvent e{ButtonState::Pressed, Key::fromNative(key), 1, Modifier::fromNativeBits(mods)};
           data.eventCallback(e);
         }
           break;
         case GLFW_RELEASE:{
-          KeyboardEvent e{ButtonState::Released, Key::fromNative(key), 0, Modifier::fromNatives(mods)};
+          KeyboardEvent e{ButtonState::Released, Key::fromNative(key), 0, Modifier::fromNativeBits(mods)};
           data.eventCallback(e);
           break;
         }
@@ -113,12 +113,12 @@ namespace fge {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
-          MouseEvent e{ButtonState::Pressed, Mouse::fromNative(button), Modifier::fromNatives(mods)};
+          MouseEvent e{ButtonState::Pressed, Mouse::fromNative(button), Modifier::fromNativeBits(mods)};
           data.eventCallback(e);
           break;
         }
         case GLFW_RELEASE:{
-          MouseEvent e{ButtonState::Released, Mouse::fromNative(button), Modifier::fromNatives(mods)};
+          MouseEvent e{ButtonState::Released, Mouse::fromNative(button), Modifier::fromNativeBits(mods)};
           data.eventCallback(e);
           break;
         }

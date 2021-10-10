@@ -1,9 +1,11 @@
-#include "glfw_keymap.hpp"
+#if defined(FLUGEL_USE_GLFW) // API GUARD
+
+#include "core/input/key_codes.hpp"
 
 #include <GLFW/glfw3.h>
 
 namespace fge {
-  std::map<Key::Code, int32_t> GlfwKey::keyMap_{
+  std::map<Key::Code, int32_t> Key::keyMap_{
     {Key::Unknown,      GLFW_KEY_UNKNOWN},
     //num row
     {Key::_1,           GLFW_KEY_1}, 
@@ -143,7 +145,20 @@ namespace fge {
     {Key::World2,       GLFW_KEY_WORLD_2},
   };
 
-  std::map<Modifier::Code, int32_t> GlfwModifier::modMap_{
+  int32_t Key::toNative(Key::Code key) { 
+    return Key::keyMap_.at(key);
+  }
+  
+  Key::Code Key::fromNative(int32_t key) {
+    for (const auto& itr : keyMap_) {
+      if (itr.second == key) {
+        return itr.first;
+      }
+    } 
+    return Key::Unknown;
+  };
+
+  std::map<Modifier::Code, int32_t> Modifier::modMap_{
     {Modifier::None,     0}, 
     {Modifier::Shift,    GLFW_MOD_SHIFT},
     {Modifier::Control,  GLFW_MOD_CONTROL}, 
@@ -152,4 +167,43 @@ namespace fge {
     {Modifier::CapsLock, GLFW_MOD_CAPS_LOCK},
     {Modifier::NumLock,  GLFW_MOD_NUM_LOCK},
   };
+
+
+  int32_t Modifier::toNative(Modifier::Code mod) { 
+    return modMap_.at(mod); 
+  }
+
+  int32_t Modifier::toNativeBits(Modifier::BitCodes mods) {
+    int32_t result{0};
+    if (mods & Shift)    result |= toNative(Shift);
+    if (mods & Control)  result |= toNative(Control);
+    if (mods & Alt)      result |= toNative(Alt);
+    if (mods & Super)    result |= toNative(Super);
+    if (mods & CapsLock) result |= toNative(CapsLock);
+    if (mods & NumLock)  result |= toNative(NumLock);
+    return result;
+  }
+
+  Modifier::Code Modifier::fromNative(int32_t mod) {
+    int32_t modifiers{0};
+    for (const auto& itr : modMap_) {
+      if (itr.second == mod) {
+        return itr.first;
+      }
+    }
+    return Modifier::None;
+  };
+
+  Modifier::BitCodes Modifier::fromNativeBits(int32_t mods) {
+    Modifier::BitCodes result{0};
+    if (mods & toNative(Shift))    result |= Shift;
+    if (mods & toNative(Control))  result |= Control;
+    if (mods & toNative(Alt))      result |= Alt;
+    if (mods & toNative(Super))    result |= Super;
+    if (mods & toNative(CapsLock)) result |= CapsLock;
+    if (mods & toNative(NumLock))  result |= NumLock;
+    return result;
+  }
 }
+
+#endif // API GUARD

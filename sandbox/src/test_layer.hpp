@@ -15,6 +15,11 @@ namespace Sandbox {
     virtual void update() override {
       //FLUGEL_TRACE("UwU");
     }
+
+    virtual bool onKeyboardEvent(fge::KeyboardEvent& e) override {
+      FGE_DEBUG("{0}: {1}", name_, e);
+      return true;
+    }
   private:
     const fge::Time& time_;
   };

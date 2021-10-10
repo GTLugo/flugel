@@ -15,12 +15,9 @@ namespace fge {
       _8
     };
     
-    static int32_t toNative(Code button) { return instance_->nativeButtonImpl(button); }
-    static Code fromNative(int32_t button) { return instance_->fromNativeImpl(button); }
+    static int32_t toNative(Code button);
+    static Code fromNative(int32_t button);
   protected:
-    virtual int32_t nativeButtonImpl(Code button) = 0;
-    virtual Code fromNativeImpl(int32_t button) = 0;
-  private:
-    static Unique<Mouse> instance_;
+    static std::map<Code, int32_t> mouseMap_;
   };
 }
