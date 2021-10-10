@@ -52,7 +52,7 @@ namespace fge {
 
   void App::run() {
     FGE_TRACE_ENG("Started main thread (ID: {0})", std::this_thread::get_id());
-    threadNames_.insert(std::pair{std::this_thread::get_id(), "MAIN"});
+    threadNames_.insert({std::this_thread::get_id(), "MAIN"});
 
     // MAIN THREAD
     splitThreads();
@@ -66,7 +66,7 @@ namespace fge {
   
   void App::renderThreadMain() {
     FGE_TRACE_ENG("Started render thread (ID: {0})", std::this_thread::get_id());
-    threadNames_.insert(std::pair{std::this_thread::get_id(), "RENDER"});
+    threadNames_.insert({std::this_thread::get_id(), "RENDER"});
     window_->setContextCurrent(true);
     
     // RENDER THREAD
@@ -80,7 +80,7 @@ namespace fge {
   
   void App::gameThreadMain() {
     FGE_TRACE_ENG("Started game thread (ID: {0})", std::this_thread::get_id());
-    threadNames_.insert(std::pair{std::this_thread::get_id(), "GAME"});
+    threadNames_.insert({std::this_thread::get_id(), "GAME"});
     
     // GAME THREAD
     while (!shouldClose_) {

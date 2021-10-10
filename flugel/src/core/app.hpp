@@ -8,7 +8,6 @@
 #include "core/callbacks/events/window_event.hpp"
 #include "core/callbacks/events/mouse_event.hpp"
 
-
 namespace fge {
   class FGE_API App {
   public:

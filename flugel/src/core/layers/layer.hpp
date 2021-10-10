@@ -35,11 +35,11 @@ namespace fge {
     std::string name_;
     // bool enabled_;
 
-    inline virtual bool onAppEvent(AppEvent& e);
-    inline virtual bool onWindowEvent(WindowEvent& e);
-    inline virtual bool onKeyboardEvent(KeyboardEvent& e);
-    inline virtual bool onMouseEvent(MouseEvent& e);
-    inline virtual bool onCursorEvent(CursorEvent& e);
-    inline virtual bool onScrollEvent(ScrollEvent& e);
+    virtual bool onAppEvent(AppEvent& e);
+    virtual bool onWindowEvent(WindowEvent& e);
+    virtual bool onKeyboardEvent(KeyboardEvent& e);
+    virtual bool onMouseEvent(MouseEvent& e);
+    virtual bool onCursorEvent(CursorEvent& e);
+    virtual bool onScrollEvent(ScrollEvent& e);
   };
 }
