@@ -5,8 +5,8 @@
 namespace Sandbox {
   class TestLayer : public fge::Layer {
   public:
-    TestLayer(const fge::Time& time)
-      : Layer{"test_layer"}, time_{time} {}
+    TestLayer()
+      : Layer{"test_layer"} {}
 
     virtual void updateFixed() override {
       //FLUGEL_TRACE("UwU");
@@ -17,15 +17,13 @@ namespace Sandbox {
     }
 
     virtual bool onMouseEvent(fge::MouseEvent& e) override {
-      FGE_DEBUG("{0}: {1}", name_, e);
+      FGE_DEBUG("{0} | {1}: {2}", fge::App::instance().time().deltaTime<fge::Seconds>(), name_, e);
       return true;
     }
 
     virtual bool onKeyboardEvent(fge::KeyboardEvent& e) override {
-      FGE_DEBUG("{0}: {1}", name_, e);
+      FGE_DEBUG("{0} | {1}: {2}", fge::App::instance().time().deltaTime<fge::Seconds>(), name_, e);
       return true;
     }
-  private:
-    const fge::Time& time_;
   };
 }

@@ -15,7 +15,7 @@ namespace Sandbox {
           false, // borderless
           false // custom window decorations
         }} {
-        pushLayer(new TestLayer{time()});
+        pushLayer(new TestLayer{});
       }
 
       virtual ~App() override {

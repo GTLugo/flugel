@@ -29,6 +29,7 @@ namespace fge {
   private:
     static App* instance_;
     // Util
+    /// TODO: Handle multithreaded time. (Perhaps one time per thread?)
     Time time_{};
     // Window
     Unique<Window> window_;

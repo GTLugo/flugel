@@ -3,6 +3,7 @@
 namespace fge {
   class Key {
   public:
+    /// TODO: mark these with unicode values for printing as char
     enum Code : int32_t {
       Unknown = -1,
       _1, _2, _3, _4, _5, _6, _7, _8, _9, _0, // num row
