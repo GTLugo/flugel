@@ -61,18 +61,18 @@ namespace fge {
       return;
     }
     if (e.button() == Mouse::Left) {
-      if (e.buttonState() == ButtonState::Pressed
+      if (e.buttonState() == Mouse::Pressed
         && Input::cursorPosY() < 50 && Input::cursorPosX() < (App::instance().window().dims().x - 50)) {
         draggingWindowDecor_ = true;
         windowDragOffset_ = {glm::floor(Input::cursorPosX()), glm::floor(Input::cursorPosY())};
       } else {
         draggingWindowDecor_ = false;
       }
-      if (closingWindowDecor_ && e.buttonState() == ButtonState::Released
+      if (closingWindowDecor_ && e.buttonState() == Mouse::Released
         && Input::cursorPosY() < 50 && Input::cursorPosX() >= (App::instance().window().dims().x - 50)) {
         App::instance().close();
       }
-      if (e.buttonState() == ButtonState::Pressed
+      if (e.buttonState() == Mouse::Pressed
         && Input::cursorPosY() < 50 && Input::cursorPosX() >= (App::instance().window().dims().x - 50)) {
         closingWindowDecor_ = true;
       } else {

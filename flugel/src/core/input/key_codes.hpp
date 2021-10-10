@@ -3,6 +3,12 @@
 namespace fge {
   class Key {
   public:
+    enum State : int32_t {
+      Released,
+      Pressed,
+      Repeat
+    };
+
     /// TODO: mark these with unicode values for printing as char
     enum Code : int32_t {
       Unknown = -1,

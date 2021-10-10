@@ -3,6 +3,11 @@
 namespace fge {
   class Mouse {
   public:
+    enum State : int32_t {
+      Released,
+      Pressed
+    };
+
     enum Code : int32_t {
       Unknown = 0,
       Left,

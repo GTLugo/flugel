@@ -8,11 +8,11 @@ namespace fge {
   public:
     EVENT_CATEGORY(EventCategory::Mouse)
 
-    MouseEvent(ButtonState buttonState, Mouse::Code button, Modifier::BitCodes mods)
+    MouseEvent(Mouse::State buttonState, Mouse::Code button, Modifier::BitCodes mods)
       : buttonState_{buttonState}, button_{button}, mods_{mods} {}
 
     /// TODO: Move button state to input enum. Add Repeat state for key
-    ButtonState buttonState() const { return buttonState_; }
+    Mouse::State buttonState() const { return buttonState_; }
     Mouse::Code button() const { return button_; }
     Modifier::BitCodes mods() const { return mods_; }
     
@@ -22,7 +22,7 @@ namespace fge {
       return ss.str();
     }
   protected:
-    ButtonState buttonState_;
+    Mouse::State buttonState_;
     Mouse::Code button_;
     Modifier::BitCodes mods_;
   };

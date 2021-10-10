@@ -8,24 +8,6 @@ namespace fge {
     None = 0,
     App, Window, Keyboard, Mouse, Cursor, Scroll
   };
-  
-  enum class ButtonState {
-    Pressed, Released,
-  };
-
-  inline std::ostream& operator<<(std::ostream& out, const ButtonState& b) {
-    switch (b) {
-      case ButtonState::Pressed: {
-        return out << "PRESSED";
-      }
-      case ButtonState::Released: {
-        return out << "RELEASED";
-      }
-      default: {
-        return out << "NULL";
-      }
-    }
-  }
 
   /// TODO: Remove this macro! It's unnecesary!
   #define EVENT_CATEGORY(event_cat) static EventCategory categoryStatic() { return event_cat; }\
