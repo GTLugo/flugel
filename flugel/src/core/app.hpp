@@ -16,7 +16,7 @@ namespace fge {
     virtual ~App();
 
     static App& instance() { return *instance_; }
-    const Time& time() const { return time_; }
+    static const Time& time() { return instance_->time_; }
     Window& window() { return *window_; }
 
     void pushLayer(Layer* layer);
