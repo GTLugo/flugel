@@ -10,14 +10,20 @@ namespace fge {
 
     enum Code : int32_t {
       Unknown = 0,
-      Left,
-      Right,
-      Middle,
-      Back,
-      Forward,
+      _1,
+      _2,
+      _3,
+      _4,
+      _5,
       _6,
       _7,
-      _8
+      _8,
+      
+      Left = _1,
+      Right = _2,
+      Middle = _3,
+      Back = _4,
+      Forward = _5,
     };
     
     static int32_t toNative(Code button);
