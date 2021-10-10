@@ -16,6 +16,11 @@ namespace Sandbox {
       //FLUGEL_TRACE("UwU");
     }
 
+    virtual bool onMouseEvent(fge::MouseEvent& e) override {
+      FGE_DEBUG("{0}: {1}", name_, e);
+      return true;
+    }
+
     virtual bool onKeyboardEvent(fge::KeyboardEvent& e) override {
       FGE_DEBUG("{0}: {1}", name_, e);
       return true;
