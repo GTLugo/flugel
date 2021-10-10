@@ -33,8 +33,13 @@ namespace fge {
     
     static int32_t toNative(Code keyCode);
     static Code fromNative(int32_t keyCode);
+
+    static std::string toString(Code keyCode) {
+      return nameMap_.at(keyCode);
+    }
   protected:
     static std::map<Code, int32_t> keyMap_;
+    static std::map<Code, std::string> nameMap_;
   };
   
   class Modifier {

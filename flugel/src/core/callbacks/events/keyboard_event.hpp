@@ -19,7 +19,7 @@ namespace fge {
     
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <Keyboard> (" << keyState_ << ": " << static_cast<int32_t>(key_) << " + " << mods_ << ", REP: " << repeatCount_ << ")";
+      ss << "Event <Keyboard> (" << keyState_ << ": " << Key::toString(key_) << " + " << mods_ << ", REP: " << repeatCount_ << ")";
       return ss.str();
     }
   protected:
