@@ -18,6 +18,7 @@ set(SOURCE_FILES
   src/api/glfw/window/glfw_window.cpp
   src/core/callbacks/notifier/notifier.cpp
   src/core/imgui/imgui_layer.cpp
+  src/core/input/mouse_codes.cpp
   src/core/input/key_codes.cpp
   src/core/layers/engine_layer.cpp
   src/core/layers/layer_stack.cpp

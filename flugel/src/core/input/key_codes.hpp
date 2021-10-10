@@ -32,16 +32,16 @@ namespace fge {
     };
 
     static int32_t toNative(Code key) { 
-      return Key::keyMap_.at(key);
+      return keyMap_.at(key);
     }
 
-    static Key::Code fromNative(int32_t key) {
+    static Code fromNative(int32_t key) {
       for (const auto& itr : keyMap_) {
         if (itr.second == key) {
           return itr.first;
         }
       } 
-      return Key::Unknown;
+      return Unknown;
     };
 
     static std::string toString(Code keyCode) {
