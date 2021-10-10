@@ -30,9 +30,19 @@ namespace fge {
       RightShift, RightControl, RightAlt, RightSuper, // right modifiers
       World1, World2, // international
     };
-    
-    static int32_t toNative(Code keyCode);
-    static Code fromNative(int32_t keyCode);
+
+    static int32_t toNative(Code key) { 
+      return Key::keyMap_.at(key);
+    }
+
+    static Key::Code fromNative(int32_t key) {
+      for (const auto& itr : keyMap_) {
+        if (itr.second == key) {
+          return itr.first;
+        }
+      } 
+      return Key::Unknown;
+    };
 
     static std::string toString(Code keyCode) {
       return nameMap_.at(keyCode);
@@ -55,11 +65,43 @@ namespace fge {
       CapsLock = BIT(4),
       NumLock  = BIT(5),
     };
-    
-    static int32_t toNative(Code mod);
-    static int32_t toNativeBits(BitCodes mods);
-    static Code fromNative(int32_t mod);
-    static BitCodes fromNativeBits(int32_t mods);
+
+
+    static int32_t toNative(Code mod) { 
+      return modMap_.at(mod); 
+    }
+
+    static int32_t toNativeBits(BitCodes mods) {
+      int32_t result{0};
+      if (mods & Shift)    result |= toNative(Shift);
+      if (mods & Control)  result |= toNative(Control);
+      if (mods & Alt)      result |= toNative(Alt);
+      if (mods & Super)    result |= toNative(Super);
+      if (mods & CapsLock) result |= toNative(CapsLock);
+      if (mods & NumLock)  result |= toNative(NumLock);
+      return result;
+    }
+
+    static Code fromNative(int32_t mod) {
+      int32_t modifiers{0};
+      for (const auto& itr : modMap_) {
+        if (itr.second == mod) {
+          return itr.first;
+        }
+      }
+      return None;
+    };
+
+    static BitCodes fromNativeBits(int32_t mods) {
+      BitCodes result{0};
+      if (mods & toNative(Shift))    result |= Shift;
+      if (mods & toNative(Control))  result |= Control;
+      if (mods & toNative(Alt))      result |= Alt;
+      if (mods & toNative(Super))    result |= Super;
+      if (mods & toNative(CapsLock)) result |= CapsLock;
+      if (mods & toNative(NumLock))  result |= NumLock;
+      return result;
+    }
   protected:
     static std::map<Code, int32_t> modMap_;
   };
