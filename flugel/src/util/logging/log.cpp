@@ -59,7 +59,7 @@ namespace fge {
     engineLogger_->set_level(spdlog::level::trace);
     appLogger_->set_level(spdlog::level::trace);
 
-    FGE_INFO_ENG("Initialized engine logger!");
-    FGE_INFO("Initialized app logger!");
+    FGE_DEBUG_ENG("Initialized engine logger!");
+    FGE_DEBUG("Initialized app logger!");
   }
 }

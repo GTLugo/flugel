@@ -34,7 +34,7 @@ namespace fge {
     bool shouldClose_{false};
     // Threads
     
-    ThreadPool threadPool_{};
+    ThreadPool threadPool_{std::thread::hardware_concurrency()};
     // Layers
     LayerStack layerStack_;
     EngineLayer* engineLayer_;

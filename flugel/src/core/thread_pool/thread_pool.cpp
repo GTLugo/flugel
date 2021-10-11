@@ -3,7 +3,7 @@
 namespace fge {
   ThreadPool::ThreadPool(uint32_t numThreads) {
     initialize(numThreads);
-    FGE_TRACE_ENG("Thread pool size: {0}", threadPool_.size());
+    FGE_DEBUG_ENG("Thread pool size: {0}", threadPool_.size());
   }
 
   ThreadPool::~ThreadPool() {
@@ -33,10 +33,10 @@ namespace fge {
   }
    
   void ThreadPool::initialize(uint32_t numThreads) {
-    FGE_TRACE_ENG("Initializing thread pool...");
     for (uint32_t i = 0; i < numThreads; ++i) {
       threadPool_.push_back(std::thread{FGE_BIND(threadLoop)});
     }
+    FGE_DEBUG_ENG("Initialized thread pool!");
   }
    
   void ThreadPool::shutdown() {

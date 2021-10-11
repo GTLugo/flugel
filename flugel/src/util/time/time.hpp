@@ -53,7 +53,7 @@ namespace fge {
   public:
     Time()
       : stopwatch_{ClockSteady::now()}, gameLast_{ClockSteady::now()}, gameCurrent_{ClockSteady::now()} {
-      FGE_INFO_ENG("Initialized time!");
+      FGE_DEBUG_ENG("Initialized time!");
     }
     ~Time() = default;
 

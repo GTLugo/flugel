@@ -25,7 +25,7 @@ namespace fge {
   }
 
   void GlfwWindow::init() {
-    FGE_DEBUG_ENG("Creating window: {0} ({1}, {2})", data_.title, data_.windowDims.x, data_.windowDims.y);
+    FGE_TRACE_ENG("Creating window...");
     if (glfwWindowCount_s == 0) {
       int32_t glfwInitSuccess = glfwInit();
       FGE_ASSERT_ENG(glfwInitSuccess, "Failed to initialize GLFW!");
@@ -33,7 +33,7 @@ namespace fge {
     }
     int major, minor, revision;
     glfwGetVersion(&major, &minor, &revision);
-    FGE_INFO_ENG("Initialized GLFW {0}.{1}.{2}!", major, minor, revision);
+    FGE_INFO_ENG("Using GLFW {0}.{1}.{2}!", major, minor, revision);
 
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
     glfwWindowHint(GLFW_DECORATED, !data_.customDecor);
@@ -61,7 +61,7 @@ namespace fge {
     setCallbacks();
 
     setContextCurrent(false); // Prepare for context transfer to render thread
-    FGE_TRACE_ENG("GLFW window data setup complete!");
+    FGE_DEBUG_ENG("Created window: {0} ({1}, {2})", data_.title, data_.windowDims.x, data_.windowDims.y);
   }
 
   void GlfwWindow::setCallbacks() {
