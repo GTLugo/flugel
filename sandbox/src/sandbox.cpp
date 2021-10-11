@@ -2,7 +2,7 @@
 
 #include "flugel.hpp"
 
-namespace Sandbox {
+namespace sbx {
   class App : public fge::App {
     public:
       App()
@@ -26,6 +26,6 @@ namespace Sandbox {
 
 namespace fge {
   Unique<App> createApp() {
-    return std::move(makeUnique<Sandbox::App>());
+    return std::move(makeUnique<sbx::App>());
   }
 }

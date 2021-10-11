@@ -105,10 +105,10 @@ set(BOOST_LIBRARIES
 )
 message(CHECK_PASS "found!")
 
-# stb
-message(CHECK_START "Finding glad...")
-find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
-message(CHECK_PASS "found!")
+# # stb
+# message(CHECK_START "Finding stb...")
+# find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
+# message(CHECK_PASS "found!")
 
 # fmt
 message(CHECK_START "Finding fmt...")
@@ -155,7 +155,7 @@ message(CHECK_PASS "found!")
 target_include_directories(${TARGET_NAME}
   PRIVATE
     "src" "include"
-    ${STB_INCLUDE_DIRS}
+    #${STB_INCLUDE_DIRS}
   INTERFACE
     "src"
 )

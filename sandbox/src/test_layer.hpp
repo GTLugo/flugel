@@ -2,7 +2,7 @@
 
 #include "flugel.hpp"
 
-namespace Sandbox {
+namespace sbx {
   class TestLayer : public fge::Layer {
   public:
     TestLayer()

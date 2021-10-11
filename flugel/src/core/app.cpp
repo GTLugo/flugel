@@ -2,8 +2,10 @@
 
 #include "core/input/input.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+// #define STB_IMAGE_IMPLEMENTATION
+// #include <stb_image.h>
+// #include <boost/gil.hpp>
+// #include <boost/gil/extension/io/png.hpp>
 #include <boost/range/adaptor/reversed.hpp>
 
 namespace fge {
@@ -16,10 +18,12 @@ namespace fge {
     window_ = Window::create(props);
     window_->setEventCallback(FGE_BIND(eventDispatch));
     
-    int32_t width, height;
-    uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
-    window_->setIcon(icon, width, height);
-    stbi_image_free(icon);
+    // int32_t width, height;
+    // boost::gil::rgb8_image_t icon;
+    // boost::gil::
+    // uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
+    // window_->setIcon(icon, width, height);
+    // stbi_image_free(icon);
     
     // engine layer should be beginning layer
     engineLayer_ = new EngineLayer{};
