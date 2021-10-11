@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/thread_pool/thread_pool.hpp"
 #include "core/window/window.hpp"
 #include "core/layers/layer_stack.hpp"
 #include "core/layers/engine_layer.hpp"
@@ -21,8 +22,6 @@ namespace fge {
     void pushLayer(Layer* layer);
     void pushOverlay(Layer* overlay);
 
-    std::string threadName(const std::thread::id& id) const { return threadNames_.at(id); }
-
     void run();
     void close();
   private:
@@ -34,9 +33,8 @@ namespace fge {
     Unique<Window> window_;
     bool shouldClose_{false};
     // Threads
-    std::thread gameThread_;
-    std::thread renderThread_;
-    std::map<std::thread::id, std::string> threadNames_{};
+    
+    ThreadPool threadPool_{};
     // Layers
     LayerStack layerStack_;
     EngineLayer* engineLayer_;
@@ -44,8 +42,8 @@ namespace fge {
     void splitThreads();
     void joinThreads();
 
-    void gameThreadMain();
-    void renderThreadMain();
+    void gameLoop();
+    void renderLoop();
 
     void pollEvents();
     

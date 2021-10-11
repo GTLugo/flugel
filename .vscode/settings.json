@@ -90,6 +90,9 @@
     "strstream": "cpp",
     "valarray": "cpp",
     "filesystem": "cpp",
-    "*.rh": "cpp"
+    "*.rh": "cpp",
+    "any": "cpp",
+    "codecvt": "cpp",
+    "*.ipp": "cpp"
   }
 }

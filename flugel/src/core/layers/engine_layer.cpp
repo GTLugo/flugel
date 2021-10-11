@@ -12,7 +12,7 @@ namespace fge {
     //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     switch (e.type()) {
       case WindowEventType::Close: {
-        FGE_DEBUG_ENG("{0}: {1} [Thread: {2}]", name_, e, App::instance().threadName(std::this_thread::get_id()));
+        FGE_DEBUG_ENG("{0}: {1}", name_, e);
         App::instance().close();
         return true;
       }
@@ -25,7 +25,7 @@ namespace fge {
   bool EngineLayer::onKeyboardEvent(KeyboardEvent& e) {
     //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     if (Input::isPressed(Key::Enter) && Input::isPressed(Key::LeftAlt)) {
-      FGE_DEBUG_ENG("{0}: Fullscreen({1}) [Thread: {2}]", name_, !App::instance().window().isFullscreen(), App::instance().threadName(std::this_thread::get_id()));
+      FGE_DEBUG_ENG("{0}: Fullscreen({1})", name_, !App::instance().window().isFullscreen());
       App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
     }
     return true;

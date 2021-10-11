@@ -30,18 +30,6 @@ namespace fge {
     FGE_TRACE_ENG("Destructing App...");
   }
 
-  void App::splitThreads() {
-    FGE_TRACE_ENG("Splitting threads...");
-    renderThread_ = std::thread{FGE_BIND(renderThreadMain)};
-    gameThread_ = std::thread{FGE_BIND(gameThreadMain)};
-  }
-
-  void App::joinThreads() {
-    FGE_TRACE_ENG("Joining threads...");
-    gameThread_.join();
-    renderThread_.join();
-  }
-
   void App::pushLayer(Layer* layer) {
     layerStack_.pushLayer(layer);
   }
@@ -52,21 +40,19 @@ namespace fge {
 
   void App::run() {
     FGE_TRACE_ENG("Started main thread (ID: {0})", std::this_thread::get_id());
-    threadNames_.insert({std::this_thread::get_id(), "MAIN"});
-
+    
     // MAIN THREAD
-    splitThreads();
+    threadPool_.pushJob(FGE_BIND(renderLoop));
+    threadPool_.pushJob(FGE_BIND(gameLoop));
     while (!shouldClose_) {
       pollEvents();
     }
-    joinThreads();
 
     FGE_TRACE_ENG("Ended main thread");
   }
   
-  void App::renderThreadMain() {
+  void App::renderLoop() {
     FGE_TRACE_ENG("Started render thread (ID: {0})", std::this_thread::get_id());
-    threadNames_.insert({std::this_thread::get_id(), "RENDER"});
     window_->setContextCurrent(true);
     
     // RENDER THREAD
@@ -78,9 +64,8 @@ namespace fge {
     FGE_TRACE_ENG("Ended render thread");
   }
   
-  void App::gameThreadMain() {
+  void App::gameLoop() {
     FGE_TRACE_ENG("Started game thread (ID: {0})", std::this_thread::get_id());
-    threadNames_.insert({std::this_thread::get_id(), "GAME"});
     
     // GAME THREAD
     while (!shouldClose_) {

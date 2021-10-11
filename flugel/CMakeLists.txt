@@ -23,6 +23,7 @@ set(SOURCE_FILES
   src/core/layers/engine_layer.cpp
   src/core/layers/layer_stack.cpp
   src/core/layers/layer.cpp
+  src/core/thread_pool/thread_pool.cpp
   src/core/window/window.cpp
   src/core/app.cpp
   src/util/color/srgb_transform/srgb_transform.cpp
