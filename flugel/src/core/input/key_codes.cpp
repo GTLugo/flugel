@@ -90,6 +90,7 @@ namespace fge{
     {Key::Period,       "Period"},
     {Key::Comma,        "Comma"},
     {Key::Apostrophe,   "Apostrophe"},
+    {Key::Accent,       "Accent"},
     // math
     {Key::Minus,        "Minus"},
     {Key::Equal,        "Equal"},

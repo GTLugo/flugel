@@ -19,7 +19,7 @@ namespace fge {
       F21, F22, F23, F24, F25, // f-row part 3
       A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, // letters
       Space, Tab, Enter, NumEnter, // whitespace
-      Semicolon, Period, Comma, Apostrophe, // punctuation
+      Semicolon, Period, Comma, Apostrophe, Accent, // punctuation
       Minus, Equal, ForwardSlash, BackSlash, // math
       LeftBracket, RightBracket, // brackets
       Escape, Menu, Pause, Backspace, Insert, Delete, PrintScreen, // non-visible

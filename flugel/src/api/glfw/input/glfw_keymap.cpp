@@ -94,6 +94,7 @@ namespace fge {
     {Key::Period,       GLFW_KEY_PERIOD},
     {Key::Comma,        GLFW_KEY_COMMA},
     {Key::Apostrophe,   GLFW_KEY_APOSTROPHE},
+    {Key::Accent,       GLFW_KEY_GRAVE_ACCENT},
     // math
     {Key::Minus,        GLFW_KEY_MINUS},
     {Key::Equal,        GLFW_KEY_EQUAL},
