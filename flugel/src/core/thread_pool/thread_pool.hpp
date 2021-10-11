@@ -5,8 +5,11 @@ namespace fge {
   class FGE_API ThreadPool {
     using JobFn = std::function<void()>;
   public:
-    ThreadPool(uint32_t numThreads = std::thread::hardware_concurrency());
-    ~ThreadPool();
+    ThreadPool() = default;
+    ~ThreadPool() = default;
+    
+    void initialize(uint32_t numThreads = std::thread::hardware_concurrency());
+    void shutdown();
 
     void pushJob(const JobFn& job);
   private:
@@ -18,9 +21,6 @@ namespace fge {
     std::mutex threadPoolMutex_;
 
     bool killPool{false};
-    
-    void initialize(uint32_t numThreads);
-    void shutdown();
 
     void threadLoop();
   };

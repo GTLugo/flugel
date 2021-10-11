@@ -1,15 +1,6 @@
 #include "thread_pool.hpp"
 
 namespace fge {
-  ThreadPool::ThreadPool(uint32_t numThreads) {
-    initialize(numThreads);
-    FGE_DEBUG_ENG("Thread pool size: {0}", threadPool_.size());
-  }
-
-  ThreadPool::~ThreadPool() {
-    shutdown();
-  }
-
   void ThreadPool::threadLoop() {
     while (!killPool) {
       JobFn job;
@@ -36,7 +27,7 @@ namespace fge {
     for (uint32_t i = 0; i < numThreads; ++i) {
       threadPool_.push_back(std::thread{FGE_BIND(threadLoop)});
     }
-    FGE_DEBUG_ENG("Initialized thread pool!");
+    FGE_DEBUG_ENG("Initialized thread pool! Number of threads: {0}", threadPool_.size());
   }
    
   void ThreadPool::shutdown() {

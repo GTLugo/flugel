@@ -40,7 +40,8 @@ namespace fge {
 
   void App::run() {
     FGE_TRACE_ENG("Started main thread (ID: {0})", std::this_thread::get_id());
-    
+    threadPool_.initialize();
+
     // MAIN THREAD
     threadPool_.pushJob(FGE_BIND(renderLoop));
     threadPool_.pushJob(FGE_BIND(gameLoop));
@@ -48,6 +49,7 @@ namespace fge {
       pollEvents();
     }
 
+    threadPool_.shutdown();
     FGE_TRACE_ENG("Ended main thread");
   }
   
