@@ -14,10 +14,6 @@ namespace fge {
     
     virtual void attach() {}
     virtual void detach() {}
-
-    inline virtual void updateFixed() {}
-    inline virtual void update() {}
-    inline virtual void render() {}
     
     void onEvent(Event& e) {
       EventDispatcher dispatcher{e};
@@ -34,6 +30,10 @@ namespace fge {
   protected:
     std::string name_;
     // bool enabled_;
+
+    virtual void onUpdateFixedEvent(AppUpdateFixedEvent& e);
+    virtual void onUpdateEvent(AppUpdateEvent& e);
+    virtual void onRenderEvent(AppRenderEvent& e);
 
     virtual bool onAppEvent(AppEvent& e);
     virtual bool onWindowEvent(WindowEvent& e);

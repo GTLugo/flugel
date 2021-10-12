@@ -12,21 +12,33 @@ namespace fge {
     //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
     switch (e.type()) {
       case AppEventType::UpdateFixed: {
-        updateFixed();
+        onUpdateFixedEvent(dynamic_cast<AppUpdateFixedEvent&>(e));
         return false;
       }
       case AppEventType::Update: {
-        update();
+        onUpdateEvent(dynamic_cast<AppUpdateEvent&>(e));
         return false;
       }
       case AppEventType::Render: {
-        render();
+        onRenderEvent(dynamic_cast<AppRenderEvent&>(e));
         return false;
       }
       default: {
         return false;
       }
     }
+  }
+
+  void Layer::onUpdateFixedEvent(AppUpdateFixedEvent& e) {
+    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+  }
+
+  void Layer::onUpdateEvent(AppUpdateEvent& e) {
+    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+  }
+
+  void Layer::onRenderEvent(AppRenderEvent& e) {
+    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
   }
 
   bool Layer::onWindowEvent(WindowEvent& e) {

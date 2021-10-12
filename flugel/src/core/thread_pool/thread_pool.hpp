@@ -13,12 +13,12 @@ namespace fge {
 
     void pushJob(const JobFn& job);
   private:
+    std::mutex threadPoolMutex_;
     std::vector<std::thread> threadPool_{};
-    std::queue<JobFn> jobQueue_{};
 
     std::condition_variable queueCondition_; 
     std::mutex queueMutex_;
-    std::mutex threadPoolMutex_;
+    std::queue<JobFn> jobQueue_{};
 
     bool killPool{false};
 

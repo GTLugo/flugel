@@ -8,11 +8,11 @@ namespace sbx {
     TestLayer()
       : Layer{"test_layer"} {}
 
-    virtual void updateFixed() override {
+    virtual void onUpdateFixedEvent(fge::AppUpdateFixedEvent& e) override {
       //FLUGEL_TRACE("UwU");
     }
 
-    virtual void update() override {
+    virtual void onUpdateEvent(fge::AppUpdateEvent& e) override {
       //FLUGEL_TRACE("UwU");
     }
 

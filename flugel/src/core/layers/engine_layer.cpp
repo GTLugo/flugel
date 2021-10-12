@@ -4,7 +4,7 @@
 #include "core/input/input.hpp"
 
 namespace fge {
-  void EngineLayer::render() {
+  void EngineLayer::onRenderEvent(AppRenderEvent& e) {
     App::instance().window().render();
   }
 
