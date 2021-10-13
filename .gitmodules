@@ -1,0 +1,10 @@
+[submodule "flugel/vendor/spdlog"]
+	path = flugel/vendor/spdlog
+	url = https://github.com/gabime/spdlog
+  
+[submodule "flugel/vendor/glfw"]
+	path = flugel/vendor/glfw
+	url = https://github.com/glfw/glfw
+[submodule "flugel/vendor/imgui"]
+	path = flugel/vendor/imgui
+	url = https://github.com/GTLugo/imgui

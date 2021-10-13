@@ -2,8 +2,8 @@
 
 #include "core/input/input.hpp"
 
-// #define STB_IMAGE_IMPLEMENTATION
-// #include <stb_image.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 // #include <boost/gil.hpp>
 // #include <boost/gil/extension/io/png.hpp>
 #include <boost/range/adaptor/reversed.hpp>
@@ -12,20 +12,20 @@ namespace fge {
   App* App::instance_ = nullptr;
 
   App::App(const WindowProperties& props) {
-    FGE_DEBUG_ENG("Current working directory: {0}", std::filesystem::current_path());
+    FGE_DEBUG_ENG("Current working directory: {}", std::filesystem::current_path());
     FGE_TRACE_ENG("Constructing App...");
     instance_ = this;
     window_ = Window::create(props);
     window_->setEventCallback(FGE_BIND(eventDispatch));
     
-    // int32_t width, height;
+    int32_t width, height;
     // boost::gil::rgb8_image_t icon;
     // boost::gil::
-    // uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
-    // window_->setIcon(icon, width, height);
-    // stbi_image_free(icon);
+    uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
+    window_->setIcon(icon, width, height);
+    stbi_image_free(icon);
     
-    // engine layer should be beginning layer
+    // engine layer should be first layer (last to check)
     engineLayer_ = new EngineLayer{};
     pushLayer(engineLayer_);
   }
@@ -43,7 +43,7 @@ namespace fge {
   }
 
   void App::run() {
-    FGE_TRACE_ENG("Started main thread (ID: {0})", std::this_thread::get_id());
+    FGE_TRACE_ENG("Started main thread (ID: {})", std::this_thread::get_id());
     threadPool_.initialize();
     threadPool_.pushJob(FGE_BIND(renderLoop));
     threadPool_.pushJob(FGE_BIND(gameLoop));
@@ -58,7 +58,7 @@ namespace fge {
   }
   
   void App::renderLoop() {
-    FGE_TRACE_ENG("Started render thread (ID: {0})", std::this_thread::get_id());
+    FGE_TRACE_ENG("Started render thread (ID: {})", std::this_thread::get_id());
     window_->setContextCurrent(true);
     
     // RENDER THREAD
@@ -71,7 +71,7 @@ namespace fge {
   }
   
   void App::gameLoop() {
-    FGE_TRACE_ENG("Started game thread (ID: {0})", std::this_thread::get_id());
+    FGE_TRACE_ENG("Started game thread (ID: {})", std::this_thread::get_id());
     
     // GAME THREAD
     while (!shouldClose_) {

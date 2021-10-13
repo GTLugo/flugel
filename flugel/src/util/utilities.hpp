@@ -1,19 +1,23 @@
 #pragma once
 
-#ifdef FLUGEL_BUILD_DLL
-  #ifdef _WIN32 // Windows
-    #define FGE_API __declspec(dllexport)
-  #elif __GNUC__ >= 4 // GCC
-    #define FGE_API __attribute__((visibility("default")))
-  #else // None
-    #define FGE_API
+#ifdef FLUGEL_DYNAMIC
+  #ifdef FLUGEL_BUILD_DLL
+    #ifdef _WIN32 // Windows
+      #define FGE_API __declspec(dllexport)
+    #elif __GNUC__ >= 4 // GCC
+      #define FGE_API __attribute__((visibility("default")))
+    #else // None
+      #define FGE_API
+    #endif
+  #else
+    #ifdef _WIN32
+      #define FGE_API __declspec(dllimport)
+    #else // None
+      #define FGE_API
+    #endif
   #endif
 #else
-  #ifdef _WIN32
-    #define FGE_API __declspec(dllimport)
-  #else // None
-    #define FGE_API
-  #endif
+  #define FGE_API
 #endif
 
 #if defined(DEBUG) || defined(RELDEB)

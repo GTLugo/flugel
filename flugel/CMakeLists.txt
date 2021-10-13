@@ -34,19 +34,12 @@ set(SOURCE_FILES
 
 set(SHADER_FILES
   res/shaders/simple_shader.glsl)
-# file(GLOB_RECURSE RES_FILES CONFIGURE_DEPENDS
-#   RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/res
-#   res/*.*)
-
-# foreach(RES_FILE ${RES_FILES})
-#   configure_file(res/${RES_FILE} ${WORKING_DIRECTORY}/res/${RES_FILE} COPYONLY)
-# endforeach()
 
 # ===================================================
-# ADD SHARED LIBRARY TARGET
+# ADD LIBRARY TARGET
 # ===================================================
 add_library(${TARGET_NAME}
-  SHARED
+  STATIC
     ${SOURCE_FILES}
 )
 set_target_properties(${TARGET_NAME}
@@ -70,82 +63,12 @@ target_compile_definitions(${TARGET_NAME}
     $<$<CONFIG:release>:RELEASE=1>
     $<$<CONFIG:relwithdebinfo>:RELDEB=1>
     $<$<CONFIG:minsizerel>:MINREL=1>
-    FLUGEL_BUILD_DLL=1
     GLFW_INCLUDE_NONE=1
   PUBLIC
     FLUGEL_USE_GLFW=1
     $<$<CONFIG:debug>:FLUGEL_ENABLE_ASSERTS=1>
     $<$<CONFIG:relwithdebinfo>:FLUGEL_ENABLE_ASSERTS=1>
 )
-
-# ===================================================
-# DEPENDENCIES - VCPKG SUGGESTED
-# ===================================================
-# We need a CMAKE_DIR with some code to find external dependencies
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
-
-# boost
-message(CHECK_START "Finding boost...")
-find_package(Boost REQUIRED
-  COMPONENTS
-    container
-    coroutine
-    log
-    system
-    thread
-)
-set(BOOST_LIBRARIES
-  PUBLIC
-    Boost::headers
-    Boost::container
-    Boost::coroutine
-    Boost::log
-    Boost::system
-    Boost::thread
-)
-message(CHECK_PASS "found!")
-
-# # stb
-# message(CHECK_START "Finding stb...")
-# find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
-# message(CHECK_PASS "found!")
-
-# fmt
-message(CHECK_START "Finding fmt...")
-find_package(fmt REQUIRED)
-set(FMT_LIBRARY PUBLIC fmt::fmt-header-only)
-message(CHECK_PASS "found!")
-
-# spdlog
-message(CHECK_START "Finding spdlog...")
-find_package(spdlog REQUIRED)
-set(SPDLOG_LIBRARY PUBLIC spdlog::spdlog_header_only) #spdlog::spdlog OR spdlog::spdlog_header_only
-message(CHECK_PASS "found!")
-
-# imgui
-message(CHECK_START "Finding imgui...")
-find_package(imgui REQUIRED)
-set(IMGUI_LIBRARY PUBLIC imgui::imgui)
-message(CHECK_PASS "found!")
-
-# glad
-message(CHECK_START "Finding glad...")
-find_package(glad REQUIRED)
-set(GLAD_LIBRARY PUBLIC glad::glad)
-message(CHECK_PASS "found!")
-
-# glfw3
-message(CHECK_START "Finding glfw3...")
-find_package(glfw3 REQUIRED)
-set(GLFW_LIBRARY PUBLIC glfw)
-message(CHECK_PASS "found!")
-
-# glm
-message(CHECK_START "Finding glm...")
-find_package(glm REQUIRED)
-set(GLM_LIBRARY PUBLIC glm::glm)
-message(CHECK_PASS "found!")
-
 
 # ===================================================
 # INCLUDING & LINKING
@@ -155,11 +78,9 @@ message(CHECK_PASS "found!")
 target_include_directories(${TARGET_NAME}
   PRIVATE
     "src" "include"
-    #${STB_INCLUDE_DIRS}
-  INTERFACE
+  PUBLIC
     "src"
 )
-
 
 # Precompiled Headers
 target_precompile_headers(${TARGET_NAME}
@@ -173,17 +94,79 @@ target_link_directories(${TARGET_NAME}
     "lib"
 )
 
-# Put all libraries into a variable & link the libraries
-set(LIBS
-  ${BOOST_LIBRARIES}
-  ${FMT_LIBRARY}
-  ${SPDLOG_LIBRARY}
-  ${IMGUI_LIBRARY}
-  ${GLAD_LIBRARY}
-  ${GLFW_LIBRARY}
-  ${GLM_LIBRARY}
+# ===================================================
+# DEPENDENCIES - VCPKG SUGGESTED
+# ===================================================
+# We need a CMAKE_DIR with some code to find external dependencies
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
+# PACKAGE
+# boost
+find_package(Boost REQUIRED
+  COMPONENTS
+    container
+    coroutine
+    log
+    system
+    thread
+)
+target_link_libraries(${TARGET_NAME}
+  PUBLIC
+    Boost::headers
+    Boost::container
+    Boost::coroutine
+    Boost::log
+    Boost::system
+    Boost::thread
 )
 
+# glad
+find_package(glad REQUIRED)
 target_link_libraries(${TARGET_NAME}
-  ${LIBS}
+  PRIVATE
+    glad::glad
+)
+
+# glm
+find_package(glm REQUIRED)
+target_link_libraries(${TARGET_NAME}
+  PRIVATE
+    glm::glm
+)
+
+# HEADER ONLY
+# stb
+find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
+target_include_directories(${TARGET_NAME}
+  PRIVATE
+    ${STB_INCLUDE_DIRS}
+)
+
+# SUBMODULE
+# glfw
+add_subdirectory(vendor/glfw)
+target_include_directories(${TARGET_NAME}
+  PRIVATE
+    "vendor/glfw/include"
+)
+target_link_libraries(${TARGET_NAME}
+  PRIVATE
+    glfw
+)
+
+# spdlog
+add_subdirectory(vendor/spdlog)
+target_include_directories(${TARGET_NAME}
+  PRIVATE
+    "vendor/spdlog/include"
+)
+target_link_libraries(${TARGET_NAME}
+  PUBLIC
+    spdlog::spdlog
+)
+
+# imgui
+target_include_directories(${TARGET_NAME}
+  PRIVATE
+    "vendor/imgui"
 )

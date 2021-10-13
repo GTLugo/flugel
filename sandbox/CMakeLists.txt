@@ -45,12 +45,6 @@ target_compile_definitions(${TARGET_NAME}
 )
 
 # ===================================================
-# DEPENDENCIES - VCPKG SUGGESTED
-# ===================================================
-# We need a CMAKE_DIR with some code to find external dependencies
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-
-# ===================================================
 # INCLUDING & LINKING
 # ===================================================
 # Define the include DIRs
@@ -73,3 +67,9 @@ target_link_libraries(${TARGET_NAME}
     ${LIBS}
 )
 message(CHECK_PASS "linked!")
+
+# ===================================================
+# DEPENDENCIES - VCPKG SUGGESTED
+# ===================================================
+# We need a CMAKE_DIR with some code to find external dependencies
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")

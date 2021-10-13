@@ -3,10 +3,10 @@
 #include "flugel.hpp"
 
 namespace sbx {
-  class App : public fge::App {
+  class Sandbox : public fge::App {
     public:
-      App()
-        : fge::App{fge::WindowProperties{
+      Sandbox()
+        : fge::App{{
           "SANDBOX", // title
           800, // width
           450, // height
@@ -15,10 +15,13 @@ namespace sbx {
           false, // borderless
           true // custom window decorations
         }} {
+        FGE_TRACE("Constructing sandbox...");
+
+        
         pushLayer(new TestLayer{});
       }
 
-      virtual ~App() override {
+      virtual ~Sandbox() override {
         FGE_TRACE("Destructing sandbox...");
       };
   };
@@ -26,6 +29,6 @@ namespace sbx {
 
 namespace fge {
   Unique<App> createApp() {
-    return std::move(makeUnique<sbx::App>());
+    return std::move(makeUnique<sbx::Sandbox>());
   }
 }

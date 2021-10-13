@@ -9,20 +9,25 @@ namespace sbx {
       : Layer{"test_layer"} {}
 
     virtual void onUpdateFixedEvent(fge::AppUpdateFixedEvent& e) override {
-      //FLUGEL_TRACE("UwU");
+      if (fge::Input::isPressed(fge::Key::Space) && !fge::Input::isPressed(fge::Key::LeftShift)) {
+        FGE_TRACE("UwU");
+      }
+      if (fge::Input::isPressed(fge::Key::Space) && fge::Input::isPressed(fge::Key::LeftShift)) {
+        FGE_TRACE("OwO");
+      }
     }
 
     virtual void onUpdateEvent(fge::AppUpdateEvent& e) override {
-      //FLUGEL_TRACE("UwU");
+      //FGE_TRACE("UwU");
     }
 
     virtual bool onMouseEvent(fge::MouseEvent& e) override {
-      FGE_DEBUG("{0} | {1}: {2}", fge::App::time().deltaTime<fge::Seconds>(), name_, e);
+      FGE_DEBUG("{}: {}", name_, e);
       return true;
     }
 
     virtual bool onKeyboardEvent(fge::KeyboardEvent& e) override {
-      FGE_DEBUG("{0} | {1}: {2}", fge::App::time().deltaTime<fge::Seconds>(), name_, e);
+      FGE_DEBUG("{}: {}", name_, e);
       return true;
     }
   };

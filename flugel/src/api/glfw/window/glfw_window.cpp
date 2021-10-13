@@ -33,7 +33,7 @@ namespace fge {
     }
     int major, minor, revision;
     glfwGetVersion(&major, &minor, &revision);
-    FGE_INFO_ENG("Using GLFW {0}.{1}.{2}!", major, minor, revision);
+    FGE_INFO_ENG("Using GLFW {}.{}.{}!", major, minor, revision);
 
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
     glfwWindowHint(GLFW_DECORATED, !data_.customDecor);
@@ -61,7 +61,7 @@ namespace fge {
     setCallbacks();
 
     setContextCurrent(false); // Prepare for context transfer to render thread
-    FGE_DEBUG_ENG("Created window: {0} ({1}, {2})", data_.title, data_.windowDims.x, data_.windowDims.y);
+    FGE_DEBUG_ENG("Created window: {} ({}, {})", data_.title, data_.windowDims.x, data_.windowDims.y);
   }
 
   void GlfwWindow::setCallbacks() {
@@ -211,10 +211,10 @@ namespace fge {
 
   void GlfwWindow::setContextCurrent(bool current) {
     if (current) {
-      FGE_DEBUG_ENG("Making GL context current to thread ID {0}", std::this_thread::get_id());
+      FGE_DEBUG_ENG("Making GL context current to thread: {}", std::this_thread::get_id());
       glfwMakeContextCurrent(glfwWindow_);
     } else {
-      FGE_DEBUG_ENG("Making GL context non-current!");
+      FGE_DEBUG_ENG("Making GL context non-current to thread: {}", std::this_thread::get_id());
       glfwMakeContextCurrent(nullptr);
     }
   }
