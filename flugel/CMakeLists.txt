@@ -127,13 +127,6 @@ target_link_libraries(${TARGET_NAME}
     glad::glad
 )
 
-# glm
-find_package(glm REQUIRED)
-target_link_libraries(${TARGET_NAME}
-  PRIVATE
-    glm::glm
-)
-
 # HEADER ONLY
 # stb
 find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
@@ -152,6 +145,17 @@ target_include_directories(${TARGET_NAME}
 target_link_libraries(${TARGET_NAME}
   PRIVATE
     glfw
+)
+
+# glm
+add_subdirectory(vendor/glm)
+target_include_directories(${TARGET_NAME}
+  PRIVATE
+    "vendor/glm"
+)
+target_link_libraries(${TARGET_NAME}
+  PRIVATE
+    glm::glm
 )
 
 # spdlog

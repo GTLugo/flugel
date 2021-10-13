@@ -8,3 +8,6 @@
 [submodule "flugel/vendor/imgui"]
 	path = flugel/vendor/imgui
 	url = https://github.com/GTLugo/imgui
+[submodule "flugel/vendor/glm"]
+	path = flugel/vendor/glm
+	url = https://github.com/g-truc/glm
