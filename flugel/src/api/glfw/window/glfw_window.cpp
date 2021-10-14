@@ -47,17 +47,14 @@ namespace fge {
     ++glfwWindowCount_s;
 
     FGE_TRACE_ENG("Setting up GLFW window data!");
-    setContextCurrent(true); // Set up glfw
+    setContextCurrent(true);
 
     int32_t gladLoadSuccess = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     FGE_ASSERT_ENG(gladLoadSuccess, "Failed to initialize GLAD!");
 
     glfwSetWindowUserPointer(glfwWindow_, &data_);
     setVSync(data_.vSync);
-    // ONLY run this if screen needs to start as fullscreen (otherwise errors!)
-    //if (data_.fullScreen) {
-      setFullscreen(data_.fullScreen);
-    //}
+    setFullscreen(data_.fullScreen);
     setCallbacks();
 
     setContextCurrent(false); // Prepare for context transfer to render thread

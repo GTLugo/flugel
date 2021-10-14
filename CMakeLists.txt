@@ -11,7 +11,17 @@ if(WIN32)
   #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<OR:$<CONFIG:debug>,$<CONFIG:relwithdebinfo>>:Debug>")
 endif()
 
-set(FLUGEL_USE_SDL2 OFF)
-set(FLUGEL_USE_GLFW ON)
+# RENDERING API
+# > OpenGL, Vulkan, D3D11
+# WINDOWING API
+# > GLFW, SDL2, Win32
+if(WIN32)
+  set(FLUGEL_RENDER_API "OpenGL")
+  set(FLUGEL_WINDOW_API "GLFW")
+else()
+  set(FLUGEL_RENDER_API "OpenGL")
+  set(FLUGEL_WINDOW_API "GLFW")
+endif()
+
 add_subdirectory(flugel)
 add_subdirectory(sandbox)
