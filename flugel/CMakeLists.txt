@@ -53,34 +53,6 @@ add_library(${TARGET_NAME}
     ${SOURCE_FILES}
 )
 
-if(FLUGEL_RENDER_API STREQUAL "OpenGL")
-  message(STATUS "Using OPENGL!")
-  #target_sources(${TARGET_NAME} PRIVATE ${GLFW_FILES})
-  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_OPENGL=1)
-elseif(FLUGEL_RENDER_API STREQUAL "Vulkan")
-  message(STATUS "Using VULKAN!")
-  #target_sources(${TARGET_NAME} PRIVATE ${SDL2_FILES})
-  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_VULKAN=1)
-elseif(FLUGEL_RENDER_API STREQUAL "D3D11")
-  #message(STATUS "Using VULKAN!")
-  #target_sources(${TARGET_NAME} PRIVATE ${SDL2_FILES})
-  #target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_VULKAN=1)
-endif()
-
-if(FLUGEL_WINDOW_API STREQUAL "GLFW")
-  message(STATUS "Using GLFW!")
-  target_sources(${TARGET_NAME} PRIVATE ${GLFW_FILES})
-  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_GLFW=1 GLFW_INCLUDE_NONE=1)
-elseif(FLUGEL_WINDOW_API STREQUAL "SDL2")
-  message(STATUS "Using SDL2!")
-  target_sources(${TARGET_NAME} PRIVATE ${SDL2_FILES})
-  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_SDL2=1)
-elseif(FLUGEL_WINDOW_API STREQUAL "Win32")
-  #message(STATUS "Using SDL2!")
-  #target_sources(${TARGET_NAME} PRIVATE ${SDL2_FILES})
-  #target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_SDL2=1)
-endif()
-
 set_target_properties(${TARGET_NAME}
   PROPERTIES
     OUTPUT_NAME "${TARGET_NAME}"
@@ -157,24 +129,6 @@ target_link_libraries(${TARGET_NAME}
     Boost::thread
 )
 
-if(FLUGEL_USE_OPENGL)
-  find_package(glad REQUIRED)
-  target_link_libraries(${TARGET_NAME}
-    PRIVATE
-      glad::glad
-  )
-elseif(FLUGEL_USE_VULKAN)
-  find_package(Vulkan REQUIRED)
-  target_include_directories(${TARGET_NAME}
-    PRIVATE
-      ${Vulkan_INCLUDE_DIRS}
-  )
-  target_link_libraries(${TARGET_NAME}
-    PRIVATE
-      ${Vulkan_LIBRARIES}
-  )
-endif()
-
 # HEADER ONLY
 # stb
 find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
@@ -189,29 +143,7 @@ target_include_directories(${TARGET_NAME}
     "vendor/imgui"
 )
 
-# LIBRARY
-if(FLUGEL_USE_GLFW)
-  add_subdirectory(vendor/glfw)
-  target_include_directories(${TARGET_NAME}
-    PRIVATE
-      "vendor/glfw/include"
-  )
-  target_link_libraries(${TARGET_NAME}
-    PRIVATE
-      glfw
-  )
-elseif(FLUGEL_USE_SDL2)
-  add_subdirectory(vendor/sdl)
-  target_include_directories(${TARGET_NAME}
-    PRIVATE
-      "vendor/sdl/include"
-  )
-  target_link_libraries(${TARGET_NAME}
-    PRIVATE
-      SDL2::SDL2
-  )
-endif()
-
+# SUBMODULE
 # glm
 add_subdirectory(vendor/glm)
 target_include_directories(${TARGET_NAME}
@@ -233,3 +165,65 @@ target_link_libraries(${TARGET_NAME}
   PUBLIC
     spdlog::spdlog
 )
+
+# ===================================================
+# API SPECIFICS
+# ===================================================
+# RENDER API
+if(FLUGEL_RENDER_API STREQUAL "OpenGL")
+  message(STATUS "Using OPENGL!")
+  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_OPENGL=1)
+  find_package(glad REQUIRED)
+  target_link_libraries(${TARGET_NAME}
+    PRIVATE
+      glad::glad
+  )
+elseif(FLUGEL_RENDER_API STREQUAL "Vulkan")
+  message(STATUS "Using VULKAN!")
+  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_VULKAN=1)
+  find_package(Vulkan REQUIRED)
+  target_include_directories(${TARGET_NAME}
+    PRIVATE
+      ${Vulkan_INCLUDE_DIRS}
+  )
+  target_link_libraries(${TARGET_NAME}
+    PRIVATE
+      ${Vulkan_LIBRARIES}
+  )
+elseif(FLUGEL_RENDER_API STREQUAL "D3D11")
+  message(STATUS "Using D3D11!")
+  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_D3D11=1)
+endif()
+
+# WINDOW API
+if(FLUGEL_WINDOW_API STREQUAL "GLFW")
+  message(STATUS "Using GLFW!")
+  target_sources(${TARGET_NAME} PRIVATE ${GLFW_FILES})
+  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_GLFW=1 GLFW_INCLUDE_NONE=1)
+  add_subdirectory(vendor/glfw)
+  target_include_directories(${TARGET_NAME}
+    PRIVATE
+      "vendor/glfw/include"
+  )
+  target_link_libraries(${TARGET_NAME}
+    PRIVATE
+      glfw
+  )
+elseif(FLUGEL_WINDOW_API STREQUAL "SDL2")
+  message(STATUS "Using SDL2!")
+  target_sources(${TARGET_NAME} PRIVATE ${SDL2_FILES})
+  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_SDL2=1)
+  add_subdirectory(vendor/sdl)
+  target_include_directories(${TARGET_NAME}
+    PRIVATE
+      "vendor/sdl/include"
+  )
+  target_link_libraries(${TARGET_NAME}
+    PRIVATE
+      SDL2::SDL2
+  )
+elseif(FLUGEL_WINDOW_API STREQUAL "Win32")
+  message(STATUS "Using WIN32!")
+  #target_sources(${TARGET_NAME} PRIVATE ${SDL2_FILES})
+  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_WIN32=1)
+endif()
