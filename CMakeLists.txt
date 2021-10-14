@@ -11,6 +11,7 @@ if(WIN32)
   #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<OR:$<CONFIG:debug>,$<CONFIG:relwithdebinfo>>:Debug>")
 endif()
 
-
+set(FLUGEL_USE_SDL2 OFF)
+set(FLUGEL_USE_GLFW ON)
 add_subdirectory(flugel)
 add_subdirectory(sandbox)

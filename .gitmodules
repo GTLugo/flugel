@@ -10,3 +10,6 @@
 [submodule "flugel/vendor/glm"]
 	path = flugel/vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "flugel/vendor/sdl"]
+	path = flugel/vendor/sdl
+	url = https://github.com/libsdl-org/SDL

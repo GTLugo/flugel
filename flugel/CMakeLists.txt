@@ -12,10 +12,6 @@ message(STATUS "Configuring: ${PROJECT_NAME}")
 # ===================================================
 
 set(SOURCE_FILES
-  src/api/glfw/input/glfw_input.cpp
-  src/api/glfw/input/glfw_keymap.cpp
-  src/api/glfw/input/glfw_mousemap.cpp
-  src/api/glfw/window/glfw_window.cpp
   src/core/callbacks/notifier/notifier.cpp
   src/core/imgui/imgui_layer.cpp
   src/core/input/mouse_codes.cpp
@@ -32,6 +28,20 @@ set(SOURCE_FILES
   src/util/time/time.cpp
   src/util/uuid.cpp)
 
+set(GLFW_FILES
+  src/api/glfw/input/glfw_input.cpp
+  src/api/glfw/input/glfw_keymap.cpp
+  src/api/glfw/input/glfw_mousemap.cpp
+  src/api/glfw/window/glfw_window.cpp
+)
+
+set(SDL2_FILES
+  src/api/sdl2/input/sdl2_input.cpp
+  src/api/sdl2/input/sdl2_keymap.cpp
+  src/api/sdl2/input/sdl2_mousemap.cpp
+  src/api/sdl2/window/sdl2_window.cpp
+)
+
 set(SHADER_FILES
   res/shaders/simple_shader.glsl)
 
@@ -42,6 +52,17 @@ add_library(${TARGET_NAME}
   STATIC
     ${SOURCE_FILES}
 )
+
+if(FLUGEL_USE_GLFW)
+  message(STATUS "Using GLFW!")
+  target_sources(${TARGET_NAME} PRIVATE ${GLFW_FILES})
+  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_GLFW=1 GLFW_INCLUDE_NONE=1)
+elseif(FLUGEL_USE_SDL2)
+  message(STATUS "Using SDL2!")
+  target_sources(${TARGET_NAME} PRIVATE ${SDL2_FILES})
+  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_SDL2=1)
+endif()
+
 set_target_properties(${TARGET_NAME}
   PROPERTIES
     OUTPUT_NAME "${TARGET_NAME}"
@@ -63,9 +84,7 @@ target_compile_definitions(${TARGET_NAME}
     $<$<CONFIG:release>:RELEASE=1>
     $<$<CONFIG:relwithdebinfo>:RELDEB=1>
     $<$<CONFIG:minsizerel>:MINREL=1>
-    GLFW_INCLUDE_NONE=1
   PUBLIC
-    FLUGEL_USE_GLFW=1
     $<$<CONFIG:debug>:FLUGEL_ENABLE_ASSERTS=1>
     $<$<CONFIG:relwithdebinfo>:FLUGEL_ENABLE_ASSERTS=1>
 )
@@ -135,17 +154,34 @@ target_include_directories(${TARGET_NAME}
     ${STB_INCLUDE_DIRS}
 )
 
-# SUBMODULE
-# glfw
-add_subdirectory(vendor/glfw)
+# imgui
 target_include_directories(${TARGET_NAME}
   PRIVATE
-    "vendor/glfw/include"
+    "vendor/imgui"
 )
-target_link_libraries(${TARGET_NAME}
-  PRIVATE
-    glfw
-)
+
+# LIBRARY
+if(FLUGEL_USE_GLFW)
+  add_subdirectory(vendor/glfw)
+  target_include_directories(${TARGET_NAME}
+    PRIVATE
+      "vendor/glfw/include"
+  )
+  target_link_libraries(${TARGET_NAME}
+    PRIVATE
+      glfw
+  )
+elseif(FLUGEL_USE_SDL2)
+  add_subdirectory(vendor/sdl)
+  target_include_directories(${TARGET_NAME}
+    PRIVATE
+      "vendor/sdl/include"
+  )
+  target_link_libraries(${TARGET_NAME}
+    PRIVATE
+      SDL2::SDL2
+  )
+endif()
 
 # glm
 add_subdirectory(vendor/glm)
@@ -167,10 +203,4 @@ target_include_directories(${TARGET_NAME}
 target_link_libraries(${TARGET_NAME}
   PUBLIC
     spdlog::spdlog
-)
-
-# imgui
-target_include_directories(${TARGET_NAME}
-  PRIVATE
-    "vendor/imgui"
 )
