@@ -11,12 +11,10 @@ namespace sbx {
     virtual bool onAppEvent(fge::AppEvent& e) override {
       switch (e.type()) {
         case fge::AppEventType::FixedUpdate: {
-          // if (fge::Input::isPressed(fge::Key::Space) && !fge::Input::isPressed(fge::Key::LeftShift)) {
-          //   FGE_TRACE("UwU");
-          // }
-          
-          FGE_TRACE("FIXED");
-          if (fge::Input::isPressed(fge::Key::Space) /* && fge::Input::isPressed(fge::Key::LeftShift) */) {
+          if (fge::Input::isPressed(fge::Key::Space) && !fge::Input::isPressed(fge::Key::LeftShift)) {
+            FGE_TRACE("UwU");
+          }
+          if (fge::Input::isPressed(fge::Key::Space) && fge::Input::isPressed(fge::Key::LeftShift)) {
             FGE_TRACE("OwO");
           }
           return false;

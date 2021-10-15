@@ -93,8 +93,7 @@ namespace fge {
       //FGE_TRACE_ENG("UPDATE");
       while (time_.shouldDoFixedStep()) {
         time_.tickLag();
-        FGE_TRACE_ENG("FIXED");
-
+        
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
         AppFixedUpdateEvent fixedUpdateEvent{};
         eventDispatch(fixedUpdateEvent);
