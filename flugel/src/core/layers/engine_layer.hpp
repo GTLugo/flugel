@@ -13,10 +13,11 @@ namespace fge {
     bool draggingWindowDecor_{false};
     bool closingWindowDecor_{false};
 
+    // Rendering
     Color clearColor_{0x2D2A2AFF};
+    uint32_t vertexArray_, vertexBuffer_, indexBuffer_;
     
-    virtual void onRenderEvent(AppRenderEvent& e) override;
-    
+    virtual bool onAppEvent(AppEvent& e) override;
     virtual bool onWindowEvent(WindowEvent& e) override;
     virtual bool onKeyboardEvent(KeyboardEvent& e) override;
     virtual bool onMouseEvent(MouseEvent& e) override;

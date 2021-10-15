@@ -53,8 +53,13 @@ namespace fge {
       pollEvents();
     }
 
+    renderCondition_.notify_all();
     threadPool_.shutdown();
     FGE_TRACE_ENG("Ended main thread");
+  }
+
+  void App::close() {
+    shouldClose_ = true;
   }
   
   void App::renderLoop() {
@@ -62,9 +67,10 @@ namespace fge {
     window_->context().setCurrent(true);
     
     // RENDER THREAD
+    AppRenderStartEvent renderStartEvent{};
+    eventDispatch(renderStartEvent);
     while (!shouldClose_) {
-      AppRenderEvent renderEvent{};
-      eventDispatch(renderEvent);
+      waitForRenderJob();
     }
 
     FGE_TRACE_ENG("Ended render thread");
@@ -72,40 +78,78 @@ namespace fge {
   
   void App::gameLoop() {
     FGE_TRACE_ENG("Started game thread (ID: {})", std::this_thread::get_id());
-    
+
     // GAME THREAD
+    AppStartEvent startEvent{};
+    eventDispatch(startEvent);
     while (!shouldClose_) {
+      time_.tick();
+
       // This loop will only occur once every fixedTimeStep, being skipped for every
       // frame which happens between each timestep. If the deltaTime per frame is too
       // long, then for each frame, this loop will occur more than once in order to
       // "catch up" with the proper pacing of physics.
       // Source: https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
+      //FGE_TRACE_ENG("UPDATE");
       while (time_.shouldDoFixedStep()) {
-        // Physics & timestep sensitive stuff happens in here, where timestep is fixed
-        AppUpdateFixedEvent updateFixedEvent{};
-        eventDispatch(updateFixedEvent);
-
-        // End inner, fixed loop with lag tick
         time_.tickLag();
-      }
+        FGE_TRACE_ENG("FIXED");
 
+        // Physics & timestep sensitive stuff happens in here, where timestep is fixed
+        AppFixedUpdateEvent fixedUpdateEvent{};
+        eventDispatch(fixedUpdateEvent);
+      }
       // Timestep INSENSITIVE stuff happens out here, where pacing goes as fast as possible
       AppUpdateEvent updateEvent{};
       eventDispatch(updateEvent);
 
-      // End outer, unfixed loop with regular tick
-      time_.tick();
+      AppRenderUpdateEvent renderUpdateEvent{};
+      pushRenderJob(renderUpdateEvent);
     }
+    AppEndEvent endEvent{};
+    eventDispatch(endEvent);
 
     FGE_TRACE_ENG("Ended game thread");
   }
 
-  void App::pollEvents() {
-    window_->pollEvents();
+  void App::waitForRenderJob() {
+    AppRenderUpdateEvent event;
+    bool pulledEvent{false};
+
+    {
+      std::unique_lock<std::mutex> lock{renderMutex_};
+      //FGE_DEBUG_ENG("Render thread waiting...");
+      renderCondition_.wait(lock, [&]{
+        return !renderQueue_.empty() || shouldClose_;
+      });
+
+      if (!renderQueue_.empty()) {
+        event = renderQueue_.front();
+        renderQueue_.pop();
+        pulledEvent = true;
+      }
+      //FGE_INFO_ENG("Render thread done waiting!");
+    }
+
+    if (pulledEvent) {
+      //FGE_TRACE_ENG("Starting render job!");
+      eventDispatch(event);
+    }
   }
 
-  void App::close() {
-    shouldClose_ = true;
+  void App::pushRenderJob(AppRenderUpdateEvent& event) {
+    { // Mutex lock scope
+      std::unique_lock<std::mutex> lock{renderMutex_};
+      if (renderQueue_.size() < 2) {
+        renderQueue_.push(event);
+      }
+    } // Unlock mutex
+
+    renderCondition_.notify_all();
+  }
+
+  void App::pollEvents() {
+    window_->pollEvents();
   }
   
   void App::eventDispatch(Event& e) {

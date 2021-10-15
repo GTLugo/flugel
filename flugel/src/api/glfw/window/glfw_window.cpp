@@ -79,7 +79,6 @@ namespace fge {
         break;
       }
     }
-    context_->init();
     context_->setCurrent(true);
 
     glfwSetWindowUserPointer(glfwWindow_, &data_);

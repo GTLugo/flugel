@@ -16,7 +16,7 @@ namespace fge {
     std::mutex threadPoolMutex_;
     std::vector<std::thread> threadPool_{};
 
-    std::condition_variable queueCondition_; 
+    std::condition_variable queueCondition_;
     std::mutex queueMutex_;
     std::queue<JobFn> jobQueue_{};
 

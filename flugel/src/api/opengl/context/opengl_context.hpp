@@ -9,11 +9,11 @@ namespace fge {
   public:
     OpenGLContext(GLFWwindow* windowHandle);
 
-    virtual void init() override;
-
     virtual void setCurrent(bool isCurrent) override;
     virtual void swapBuffers() override;
   private:
     GLFWwindow* windowHandle_;
+
+    virtual void init() override;
   };
 }

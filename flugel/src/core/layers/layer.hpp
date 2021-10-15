@@ -31,9 +31,12 @@ namespace fge {
     std::string name_;
     // bool enabled_;
 
-    virtual void onUpdateFixedEvent(AppUpdateFixedEvent& e);
-    virtual void onUpdateEvent(AppUpdateEvent& e);
-    virtual void onRenderEvent(AppRenderEvent& e);
+    // virtual void onStartEvent(AppStartEvent& e);
+    // virtual void onRenderStartEvent(AppRenderStartEvent& e);
+    // virtual void onFixedUpdateEvent(AppFixedUpdateEvent& e);
+    // virtual void onUpdateEvent(AppUpdateEvent& e);
+    // virtual void onRenderUpdateEvent(AppRenderUpdateEvent& e);
+    // virtual void onEndEvent(AppEndEvent& e);
 
     virtual bool onAppEvent(AppEvent& e);
     virtual bool onWindowEvent(WindowEvent& e);

@@ -11,63 +11,63 @@ namespace fge {
   bool Layer::onAppEvent(AppEvent& e) {
     //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
     switch (e.type()) {
-      case AppEventType::UpdateFixed: {
-        onUpdateFixedEvent(dynamic_cast<AppUpdateFixedEvent&>(e));
-        return false;
-      }
-      case AppEventType::Update: {
-        onUpdateEvent(dynamic_cast<AppUpdateEvent&>(e));
-        return false;
-      }
-      case AppEventType::Render: {
-        onRenderEvent(dynamic_cast<AppRenderEvent&>(e));
-        return false;
-      }
+      // case AppEventType::Start: {
+      //   //onStartEvent(dynamic_cast<AppStartEvent&>(e));
+      //   return false;
+      // }
       default: {
         return false;
       }
     }
   }
 
-  void Layer::onUpdateFixedEvent(AppUpdateFixedEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-  }
+  // void Layer::onStartEvent(AppStartEvent& e) {
+  //   //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
+  // }
 
-  void Layer::onUpdateEvent(AppUpdateEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-  }
+  // void Layer::onFixedUpdateEvent(AppFixedUpdateEvent& e) {
+  //   //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
+  // }
 
-  void Layer::onRenderEvent(AppRenderEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-  }
+  // void Layer::onUpdateEvent(AppUpdateEvent& e) {
+  //   //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
+  // }
+
+  // void Layer::onRenderEvent(AppRenderEvent& e) {
+  //   //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
+  // }
+
+  // void Layer::onEndEvent(AppEndEvent& e) {
+  //   //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
+  // }
 
   bool Layer::onWindowEvent(WindowEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
     
     return false;
   }
 
   bool Layer::onKeyboardEvent(KeyboardEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
 
     return false; // return false so event isn't marked handled from base app
   }
 
   bool Layer::onMouseEvent(MouseEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
     // custom dragging and close button
     
     return false; // return false so event isn't marked handled from base app
   }
 
   bool Layer::onCursorEvent(CursorEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
     
     return false; // return false so event isn't marked handled from base app
   }
 
   bool Layer::onScrollEvent(ScrollEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
     
     return false; // return false so event isn't marked handled from base app
   }

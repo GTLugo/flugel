@@ -6,13 +6,6 @@
 #include <glad/glad.h>
 
 namespace fge {
-  void EngineLayer::onRenderEvent(AppRenderEvent& e) {
-    glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    App::instance().window().context().swapBuffers();
-  }
-
   bool EngineLayer::onWindowEvent(WindowEvent& e) {
     //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     switch (e.type()) {
@@ -20,6 +13,50 @@ namespace fge {
         FGE_DEBUG_ENG("{0}: {1}", name_, e);
         App::instance().close();
         return true;
+      }
+      default: {
+        return false;
+      }
+    }
+  }
+
+  bool EngineLayer::onAppEvent(AppEvent& e) {
+    switch (e.type()) {
+      case AppEventType::RenderStart: {
+        // Vertex Array
+        glGenVertexArrays(1, &vertexArray_);
+        glBindVertexArray(vertexArray_);
+
+        // Vertex Buffer
+        glGenBuffers(1, &vertexBuffer_);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer_); // bind buffer to bound vertex array;
+        float verts[3 * 3]{
+          -.5, -.5,  0.,
+           .5, -.5,  0.,
+           0.,  .5,  0.
+        };
+        glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr);
+
+        // Index Buffer
+        glGenBuffers(1, &indexBuffer_);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer_); // bind buffer to bound vertex array;
+        uint32_t indices[3]{
+          0, 1, 2
+        };
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        return false;
+      }
+      case AppEventType::RenderUpdate: {  
+        glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glBindVertexArray(vertexArray_);
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+
+        App::instance().window().context().swapBuffers();
+        return false;
       }
       default: {
         return false;

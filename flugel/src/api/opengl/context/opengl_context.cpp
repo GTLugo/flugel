@@ -7,6 +7,7 @@ namespace fge {
   OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
     : windowHandle_{windowHandle} {
     FGE_ASSERT_ENG(windowHandle, "Window handle is nullptr!");
+    init();
   }
 
   void OpenGLContext::init() {

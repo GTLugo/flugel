@@ -10,6 +10,10 @@
 #include "core/callbacks/events/mouse_event.hpp"
 
 namespace fge {
+  struct AppState {
+    
+  };
+
   class FGE_API App {
   public:
     App(const WindowProperties& props = {});
@@ -29,23 +33,28 @@ namespace fge {
     // Util
     /// TODO: Handle multithreaded time. (Perhaps one time per thread?)
     Time time_{};
+    
     // Window
     Unique<Window> window_;
     bool shouldClose_{false};
+
     // Threads
     ThreadPool threadPool_{};
+    std::mutex renderMutex_;
+    std::condition_variable renderCondition_;
+    std::queue<AppRenderUpdateEvent> renderQueue_{};
+
     // Layers
     LayerStack layerStack_;
     EngineLayer* engineLayer_;
-    
-    void splitThreads();
-    void joinThreads();
 
     void gameLoop();
     void renderLoop();
+    
+    void waitForRenderJob();
+    void pushRenderJob(AppRenderUpdateEvent& event);
 
     void pollEvents();
-    
     void eventDispatch(Event& e);
   };
 
