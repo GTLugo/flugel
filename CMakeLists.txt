@@ -12,9 +12,9 @@ if(WIN32)
 endif()
 
 # RENDERING API
-# > OpenGL, Vulkan, D3D11
+# > OpenGL, (Planned: Vulkan, D3D11)
 # WINDOWING API
-# > GLFW, SDL2, Win32
+# > GLFW, SDL2, (Planned: Win32)
 if(WIN32)
   set(FLUGEL_RENDER_API "OpenGL")
   set(FLUGEL_WINDOW_API "GLFW")
