@@ -1,11 +1,13 @@
 #include "glfw_window.hpp"
 
+#if defined(FLUGEL_USE_OPENGL)
+  #include "api/opengl/context/opengl_context.hpp"
+#endif
+
+#include "core/input/input.hpp"
 #include "core/callbacks/events/window_event.hpp"
 #include "core/callbacks/events/mouse_event.hpp"
 #include "core/callbacks/events/keyboard_event.hpp"
-#include "core/input/input.hpp"
-
-#include <glad/glad.h>
 
 namespace fge {
   static uint8_t glfwWindowCount_s{0};
@@ -25,6 +27,7 @@ namespace fge {
   }
 
   void GlfwWindow::init() {
+
     FGE_TRACE_ENG("Creating window...");
     if (glfwWindowCount_s == 0) {
       int32_t glfwInitSuccess = glfwInit();
@@ -46,18 +49,29 @@ namespace fge {
     );
     ++glfwWindowCount_s;
 
-    FGE_TRACE_ENG("Setting up GLFW window data!");
-    setContextCurrent(true);
-
-    int32_t gladLoadSuccess = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    FGE_ASSERT_ENG(gladLoadSuccess, "Failed to initialize GLAD!");
+    switch (data_.renderApi) {
+      case RenderAPI::OpenGL: {
+        #if defined(FLUGEL_USE_OPENGL)
+          context_ = makeUnique<OpenGLContext>(glfwWindow_);
+        #else
+          FGE_ASSERT_ENG(false, "OpenGL not enabled in compilation!");
+        #endif
+        break;
+      }
+      default: {
+        FGE_ASSERT_ENG(false, "Unknown render api!");
+        break;
+      }
+    }
+    context_->init();
+    context_->setCurrent(true);
 
     glfwSetWindowUserPointer(glfwWindow_, &data_);
     setVSync(data_.vSync);
     setFullscreen(data_.fullScreen);
     setCallbacks();
 
-    setContextCurrent(false); // Prepare for context transfer to render thread
+    context_->setCurrent(false); // Prepare for context transfer to render thread
     FGE_DEBUG_ENG("Created window: {} ({}, {})", data_.title, data_.windowDims.x, data_.windowDims.y);
   }
 
@@ -153,9 +167,7 @@ namespace fge {
   }
   
   void GlfwWindow::render() {
-    glfwSwapBuffers(glfwWindow_);
-    glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    context_->swapBuffers();
   }
   
   void GlfwWindow::dragWindow(vector2_t windowCursorOffset) {
@@ -206,13 +218,7 @@ namespace fge {
     data_.fullScreen = enabled;
   }
 
-  void GlfwWindow::setContextCurrent(bool current) {
-    if (current) {
-      FGE_DEBUG_ENG("Making GL context current to thread: {}", std::this_thread::get_id());
-      glfwMakeContextCurrent(glfwWindow_);
-    } else {
-      FGE_DEBUG_ENG("Making GL context non-current to thread: {}", std::this_thread::get_id());
-      glfwMakeContextCurrent(nullptr);
-    }
-  }
+  //void GlfwWindow::setContextCurrent(bool isCurrent) {
+  //  context_->setContextCurrent(isCurrent);
+  //}
 }

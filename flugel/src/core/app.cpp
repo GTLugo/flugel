@@ -59,7 +59,7 @@ namespace fge {
   
   void App::renderLoop() {
     FGE_TRACE_ENG("Started render thread (ID: {})", std::this_thread::get_id());
-    window_->setContextCurrent(true);
+    window_->context().setCurrent(true);
     
     // RENDER THREAD
     while (!shouldClose_) {

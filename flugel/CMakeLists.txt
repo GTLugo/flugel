@@ -19,6 +19,7 @@ set(SOURCE_FILES
   src/core/layers/engine_layer.cpp
   src/core/layers/layer_stack.cpp
   src/core/layers/layer.cpp
+  src/core/renderer/render_context.cpp
   src/core/thread_pool/thread_pool.cpp
   src/core/window/window.cpp
   src/core/app.cpp
@@ -27,6 +28,18 @@ set(SOURCE_FILES
   src/util/logging/log.cpp
   src/util/time/time.cpp
   src/util/uuid.cpp)
+
+set(OPENGL_FILES
+  src/api/opengl/context/opengl_context.cpp
+)
+
+set(VULKAN_FILES
+
+)
+
+set(D3D11_FILES
+
+)
 
 set(GLFW_FILES
   src/api/glfw/input/glfw_input.cpp
@@ -170,16 +183,19 @@ target_link_libraries(${TARGET_NAME}
 # API SPECIFICS
 # ===================================================
 # RENDER API
-if(FLUGEL_RENDER_API STREQUAL "OpenGL")
+if(FLUGEL_OPENGL)
   message(STATUS "Using OPENGL!")
+  target_sources(${TARGET_NAME} PRIVATE ${OPENGL_FILES})
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_OPENGL=1)
   find_package(glad REQUIRED)
   target_link_libraries(${TARGET_NAME}
     PRIVATE
       glad::glad
   )
-elseif(FLUGEL_RENDER_API STREQUAL "Vulkan")
+endif()
+if(FLUGEL_VULKAN)
   message(STATUS "Using VULKAN!")
+  target_sources(${TARGET_NAME} PRIVATE ${VULKAN_FILES})
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_VULKAN=1)
   find_package(Vulkan REQUIRED)
   target_include_directories(${TARGET_NAME}
@@ -190,13 +206,15 @@ elseif(FLUGEL_RENDER_API STREQUAL "Vulkan")
     PRIVATE
       ${Vulkan_LIBRARIES}
   )
-elseif(FLUGEL_RENDER_API STREQUAL "D3D11")
+endif()
+if(FLUGEL_D3D11)
   message(STATUS "Using D3D11!")
+  target_sources(${TARGET_NAME} PRIVATE ${D3D11_FILES})
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_D3D11=1)
 endif()
 
 # WINDOW API
-if(FLUGEL_WINDOW_API STREQUAL "GLFW")
+if(FLUGEL_GLFW)
   message(STATUS "Using GLFW!")
   target_sources(${TARGET_NAME} PRIVATE ${GLFW_FILES})
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_GLFW=1 GLFW_INCLUDE_NONE=1)
@@ -209,7 +227,8 @@ if(FLUGEL_WINDOW_API STREQUAL "GLFW")
     PRIVATE
       glfw
   )
-elseif(FLUGEL_WINDOW_API STREQUAL "SDL2")
+endif()
+if(FLUGEL_SDL)
   message(STATUS "Using SDL2!")
   target_sources(${TARGET_NAME} PRIVATE ${SDL2_FILES})
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_SDL2=1)
@@ -222,7 +241,8 @@ elseif(FLUGEL_WINDOW_API STREQUAL "SDL2")
     PRIVATE
       SDL2::SDL2
   )
-elseif(FLUGEL_WINDOW_API STREQUAL "Win32")
+endif()
+if(FLUGEL_WIN32)
   message(STATUS "Using WIN32!")
   #target_sources(${TARGET_NAME} PRIVATE ${SDL2_FILES})
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_WIN32=1)

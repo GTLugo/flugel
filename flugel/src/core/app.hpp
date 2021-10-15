@@ -33,7 +33,6 @@ namespace fge {
     Unique<Window> window_;
     bool shouldClose_{false};
     // Threads
-    
     ThreadPool threadPool_{};
     // Layers
     LayerStack layerStack_;

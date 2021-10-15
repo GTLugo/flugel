@@ -1,8 +1,8 @@
 #pragma once
 
 #include "core/window/window.hpp"
+#include "core/renderer/render_context.hpp"
 #include "core/callbacks/events/event.hpp"
-#include "util/color/color.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -22,14 +22,13 @@ namespace fge {
     virtual void setPos(double xPos, double yPos) override;
     virtual void setVSync(bool enabled) override;
     virtual void setFullscreen(bool enabled) override;
-    virtual void setContextCurrent(bool current) override;
+    //virtual void setContextCurrent(bool isCurrent) override;
     
   private:
     GLFWwindow* glfwWindow_;
     const GLFWvidmode* vidMode_;
 
     GLFWimage icons_[1];
-    Color clearColor_{0x2D2A2AFF};
     
     void init();
     void setCallbacks();

@@ -11,16 +11,26 @@ if(WIN32)
   #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<OR:$<CONFIG:debug>,$<CONFIG:relwithdebinfo>>:Debug>")
 endif()
 
-# RENDERING API
+# RENDERING API - MULTIPLE CAN BE ON AT A TIME
 # > OpenGL, (Planned: Vulkan, D3D11)
-# WINDOWING API
-# > GLFW, SDL2, (Planned: Win32)
+# WINDOWING API - ONLY ONE SHOULD BE ON AT A TIME
+# > GLFW, (Planned: SDL2, Win32)
 if(WIN32)
-  set(FLUGEL_RENDER_API "OpenGL")
-  set(FLUGEL_WINDOW_API "GLFW")
+  set(FLUGEL_OPENGL ON)
+  set(FLUGEL_VULKAN OFF)
+  #set(FLUGEL_D3D11  OFF)
+
+  set(FLUGEL_GLFW  ON)
+  #set(FLUGEL_SDL   OFF)
+  #set(FLUGEL_WIN32 OFF)
 else()
-  set(FLUGEL_RENDER_API "OpenGL")
-  set(FLUGEL_WINDOW_API "GLFW")
+  set(FLUGEL_OPENGL ON)
+  set(FLUGEL_VULKAN OFF)
+  #set(FLUGEL_D3D11  OFF)
+
+  set(FLUGEL_GLFW  ON)
+  #set(FLUGEL_SDL   OFF)
+  #set(FLUGEL_WIN32 OFF)
 endif()
 
 add_subdirectory(flugel)

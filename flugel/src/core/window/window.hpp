@@ -1,11 +1,13 @@
 #pragma once
 
+#include "core/renderer/render_context.hpp"
 #include "core/callbacks/events/event.hpp"
 
 namespace fge {
   struct WindowProperties {
     std::string title;
     uint32_t width, height;
+    RenderAPI renderApi;
     bool vSync;
     bool fullScreen;
     bool borderless;
@@ -14,13 +16,15 @@ namespace fge {
     WindowProperties(const std::string& title = "FLUGEL ENGINE",
                      uint32_t width = 800,
                      uint32_t height = 450,
+                     RenderAPI renderApi = RenderAPI::OpenGL,
                      bool vSync = true,
                      bool fullScreen = false,
                      bool borderless = false,
                      bool customDecor = false)
       : title{title}, 
         width{width}, 
-        height{height}, 
+        height{height},
+        renderApi{renderApi},
         vSync{vSync}, 
         fullScreen{fullScreen}, 
         borderless{borderless}, 
@@ -36,6 +40,7 @@ namespace fge {
     virtual void pollEvents() = 0;
     virtual void render() = 0;
     
+    virtual RenderContext& context() { return *context_; }
     virtual void* nativeWindow() = 0;
     virtual void dragWindow(vector2_t windowCursorOffset) = 0;
 
@@ -43,7 +48,7 @@ namespace fge {
     virtual void setPos(double xPos, double yPos) = 0;
     virtual void setVSync(bool enabled) = 0;
     virtual void setFullscreen(bool enabled) = 0;
-    virtual void setContextCurrent(bool current) = 0;
+    //virtual void setContextCurrent(bool isCurrent) = 0;
 
     ivector2_t pos() const { return data_.windowPos; }
     uvector2_t dims() const { return data_.windowDims; }
@@ -62,6 +67,7 @@ namespace fge {
       ivector2_t windowPos, posBeforeFullscreen;
       uvector2_t windowDims, dimsBeforeFullscreen;
       vector2_t cursorPos, cursorPosOld, cursorDelta;
+      RenderAPI renderApi;
       bool vSync;
       bool fullScreen;
       bool borderless;
@@ -72,6 +78,7 @@ namespace fge {
         : title{props.title},
           windowPos{69, 69}, posBeforeFullscreen{windowPos},
           windowDims{props.width, props.height}, dimsBeforeFullscreen{windowDims}, 
+          renderApi{props.renderApi},
           vSync{props.vSync},
           fullScreen{props.fullScreen},
           borderless{props.borderless},
@@ -79,5 +86,6 @@ namespace fge {
     };
 
     WindowState data_;
+    Unique<RenderContext> context_;
   };
 }
