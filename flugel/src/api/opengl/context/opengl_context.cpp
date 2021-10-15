@@ -27,8 +27,6 @@ namespace fge {
   }
 
   void OpenGLContext::swapBuffers() {
-    glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
-    glClear(GL_COLOR_BUFFER_BIT);
     glfwSwapBuffers(windowHandle_);
   }
 }

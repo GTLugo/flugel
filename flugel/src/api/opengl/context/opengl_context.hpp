@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/renderer/render_context.hpp"
-#include "util/color/color.hpp"
 
 struct GLFWwindow;
 
@@ -16,7 +15,5 @@ namespace fge {
     virtual void swapBuffers() override;
   private:
     GLFWwindow* windowHandle_;
-
-    Color clearColor_{0x2D2A2AFF};
   };
 }

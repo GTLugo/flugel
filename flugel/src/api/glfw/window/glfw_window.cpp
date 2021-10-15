@@ -58,6 +58,22 @@ namespace fge {
         #endif
         break;
       }
+      case RenderAPI::Vulkan: {
+        #if defined(FLUGEL_USE_VULKAN)
+          FGE_ASSERT_ENG(false, "Vulkan not implemented!");
+        #else
+          FGE_ASSERT_ENG(false, "Vulkan not enabled in compilation!");
+        #endif
+        break;
+      }
+      case RenderAPI::D3D11: {
+        #if defined(FLUGEL_USE_D3D11)
+          FGE_ASSERT_ENG(false, "D3D11 not implemented!");
+        #else
+          FGE_ASSERT_ENG(false, "D3D11 not enabled in compilation!");
+        #endif
+        break;
+      }
       default: {
         FGE_ASSERT_ENG(false, "Unknown render api!");
         break;
@@ -164,10 +180,6 @@ namespace fge {
 
   void GlfwWindow::pollEvents() {
     glfwPollEvents();
-  }
-  
-  void GlfwWindow::render() {
-    context_->swapBuffers();
   }
   
   void GlfwWindow::dragWindow(vector2_t windowCursorOffset) {

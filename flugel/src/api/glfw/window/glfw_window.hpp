@@ -13,7 +13,6 @@ namespace fge {
     virtual ~GlfwWindow();
     
     virtual void pollEvents() override;
-    virtual void render() override;
     
     virtual void* nativeWindow() override { return glfwWindow_; }
     virtual void dragWindow(vector2_t windowCursorOffset);

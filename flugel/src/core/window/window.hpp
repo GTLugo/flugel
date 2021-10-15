@@ -38,7 +38,6 @@ namespace fge {
     virtual ~Window() = default;
     
     virtual void pollEvents() = 0;
-    virtual void render() = 0;
     
     virtual RenderContext& context() { return *context_; }
     virtual void* nativeWindow() = 0;

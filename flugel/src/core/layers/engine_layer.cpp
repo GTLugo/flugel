@@ -3,9 +3,14 @@
 #include "core/app.hpp"
 #include "core/input/input.hpp"
 
+#include <glad/glad.h>
+
 namespace fge {
   void EngineLayer::onRenderEvent(AppRenderEvent& e) {
-    App::instance().window().render();
+    glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    App::instance().window().context().swapBuffers();
   }
 
   bool EngineLayer::onWindowEvent(WindowEvent& e) {
