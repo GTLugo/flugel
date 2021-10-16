@@ -13,3 +13,7 @@
 [submodule "flugel/vendor/sdl"]
 	path = flugel/vendor/sdl
 	url = https://github.com/libsdl-org/SDL
+[submodule "flugel/vendor/glad2"]
+	path = flugel/vendor/glad2
+	url = https://github.com/Dav1dde/glad
+	branch = glad2

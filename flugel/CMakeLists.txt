@@ -122,7 +122,7 @@ target_link_directories(${TARGET_NAME}
 # We need a CMAKE_DIR with some code to find external dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-# PACKAGE
+# PACKAGES
 # boost
 find_package(Boost REQUIRED
   COMPONENTS
@@ -142,7 +142,7 @@ target_link_libraries(${TARGET_NAME}
     Boost::thread
 )
 
-# HEADER ONLY
+# HEADER-ONLYS
 # stb
 find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
 target_include_directories(${TARGET_NAME}
@@ -150,13 +150,13 @@ target_include_directories(${TARGET_NAME}
     ${STB_INCLUDE_DIRS}
 )
 
+# SUBMODULES
 # imgui
 target_include_directories(${TARGET_NAME}
   PRIVATE
     "vendor/imgui"
 )
 
-# SUBMODULE
 # glm
 add_subdirectory(vendor/glm)
 target_include_directories(${TARGET_NAME}
@@ -187,16 +187,30 @@ if(FLUGEL_OPENGL)
   message(STATUS "Using OPENGL!")
   target_sources(${TARGET_NAME} PRIVATE ${OPENGL_FILES})
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_OPENGL=1)
-  find_package(glad REQUIRED)
+  # glad
+  set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
+  add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
+  set(GLAD_LIBRARY glad_gl_core_46)
+  glad_add_library(${GLAD_LIBRARY} STATIC API gl:core=4.6)
   target_link_libraries(${TARGET_NAME}
     PRIVATE
-      glad::glad
+      ${GLAD_LIBRARY}
   )
 endif()
 if(FLUGEL_VULKAN)
   message(STATUS "Using VULKAN!")
   target_sources(${TARGET_NAME} PRIVATE ${VULKAN_FILES})
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_VULKAN=1)
+  # glad
+  set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
+  add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
+  set(GLAD_LIBRARY glad_vulkan_12)
+  glad_add_library(${GLAD_LIBRARY} STATIC API vulkan=1.2)
+  target_link_libraries(${TARGET_NAME}
+    PRIVATE
+      ${GLAD_LIBRARY}
+  )
+  # vulkan
   find_package(Vulkan REQUIRED)
   target_include_directories(${TARGET_NAME}
     PRIVATE

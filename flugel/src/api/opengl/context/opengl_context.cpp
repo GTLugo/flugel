@@ -1,7 +1,7 @@
 #include "opengl_context.hpp"
 
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <glad/glad.h>
 
 namespace fge {
   OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
@@ -12,8 +12,16 @@ namespace fge {
 
   void OpenGLContext::init() {
     setCurrent(true);
-    int32_t gladLoadSuccess = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    FGE_ASSERT_ENG(gladLoadSuccess, "Failed to initialize GLAD!");
+    
+    int32_t gladVersion = gladLoadGL(glfwGetProcAddress);
+    FGE_ASSERT_ENG(gladVersion, "Failed to initialize GLAD!");
+    FGE_INFO_ENG("Using OpenGL | Vendor: {} | Renderer: {} | Version: {}.{}", 
+      glGetString(GL_VENDOR), 
+      glGetString(GL_RENDERER),
+      GLAD_VERSION_MAJOR(gladVersion),
+      GLAD_VERSION_MINOR(gladVersion)
+    );
+
     setCurrent(false);
   }
 
