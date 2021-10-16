@@ -45,8 +45,8 @@ namespace fge {
   void App::run() {
     FGE_TRACE_ENG("Started main thread (ID: {})", std::this_thread::get_id());
     threadPool_.initialize();
-    threadPool_.pushJob(FGE_BIND(renderLoop));
     threadPool_.pushJob(FGE_BIND(gameLoop));
+    threadPool_.pushJob(FGE_BIND(renderLoop));
 
     // MAIN THREAD
     while (!shouldClose_) {
@@ -113,24 +113,22 @@ namespace fge {
 
   void App::waitForRenderJob() {
     AppRenderUpdateEvent event;
-    bool pulledEvent{false};
 
     {
       std::unique_lock<std::mutex> lock{renderMutex_};
       //FGE_DEBUG_ENG("Render thread waiting...");
-      renderCondition_.wait(lock, [&]{
+      renderCondition_.wait(lock, [this]{
         return !renderQueue_.empty() || shouldClose_;
       });
 
-      if (!renderQueue_.empty()) {
+      if (!shouldClose_) {
         event = renderQueue_.front();
         renderQueue_.pop();
-        pulledEvent = true;
       }
       //FGE_INFO_ENG("Render thread done waiting!");
     }
 
-    if (pulledEvent) {
+    if (!shouldClose_) {
       //FGE_TRACE_ENG("Starting render job!");
       eventDispatch(event);
     }
