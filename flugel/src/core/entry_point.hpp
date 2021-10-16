@@ -17,6 +17,6 @@ int32_t main(int32_t argCount = 0, char* args[] = nullptr) {
       HINSTANCE h_prev_instance, 
       LPSTR lp_cmd_line,
       int32_t n_cmd_show) {
-    return main();
+    return main(__argc, __argv);
   }
 #endif
