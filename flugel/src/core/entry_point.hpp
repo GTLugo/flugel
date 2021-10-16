@@ -6,7 +6,12 @@ int32_t main(int32_t argCount = 0, char* args[] = nullptr) {
   fge::Log::init();
 
   fge::Unique<fge::App> app{fge::createApp()};
-  app->run();
+  try {
+    app->run();
+  } catch(const std::exception& e) {
+    FGE_ERROR("EXCEPTION CAUGHT: {}", e.what());
+    return EXIT_FAILURE;
+  }
   
   return EXIT_SUCCESS;
 }

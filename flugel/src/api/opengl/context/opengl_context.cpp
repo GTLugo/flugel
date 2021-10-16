@@ -10,14 +10,19 @@ namespace fge {
     init();
   }
 
+  OpenGLContext::~OpenGLContext() {
+    delete context_;
+  }
+
   void OpenGLContext::init() {
     setCurrent(true);
     
-    int32_t gladVersion = gladLoadGL(glfwGetProcAddress);
+    context_ = new GladGLContext();
+    int32_t gladVersion = gladLoadGLContext(context_, glfwGetProcAddress);
     FGE_ASSERT_ENG(gladVersion, "Failed to initialize GLAD!");
     FGE_INFO_ENG("Using OpenGL | Vendor: {} | Renderer: {} | Version: {}.{}", 
-      glGetString(GL_VENDOR), 
-      glGetString(GL_RENDERER),
+      context_->GetString(GL_VENDOR),
+      context_->GetString(GL_RENDERER),
       GLAD_VERSION_MAJOR(gladVersion),
       GLAD_VERSION_MINOR(gladVersion)
     );

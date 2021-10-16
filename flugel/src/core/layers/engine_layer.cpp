@@ -3,7 +3,7 @@
 #include "core/app.hpp"
 #include "core/input/input.hpp"
 
-#include <glad/glad.h>
+#include <glad/gl.h>
 
 namespace fge {
   bool EngineLayer::onWindowEvent(WindowEvent& e) {
@@ -24,36 +24,38 @@ namespace fge {
     switch (e.type()) {
       case AppEventType::RenderStart: {
         // Vertex Array
-        glGenVertexArrays(1, &vertexArray_);
-        glBindVertexArray(vertexArray_);
+        auto gl = static_cast<GladGLContext*>(App::instance().window().context().nativeContext());
+        gl->GenVertexArrays(1, &vertexArray_);
+        gl->BindVertexArray(vertexArray_);
 
         // Vertex Buffer
-        glGenBuffers(1, &vertexBuffer_);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer_); // bind buffer to bound vertex array;
+        gl->GenBuffers(1, &vertexBuffer_);
+        gl->BindBuffer(GL_ARRAY_BUFFER, vertexBuffer_); // bind buffer to bound vertex array;
         float verts[3 * 3]{
           -.5, -.5,  0.,
            .5, -.5,  0.,
            0.,  .5,  0.
         };
-        glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr);
+        gl->BufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+        gl->EnableVertexAttribArray(0);
+        gl->VertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr);
 
         // Index Buffer
-        glGenBuffers(1, &indexBuffer_);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer_); // bind buffer to bound vertex array;
+        gl->GenBuffers(1, &indexBuffer_);
+        gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer_); // bind buffer to bound vertex array;
         uint32_t indices[3]{
           0, 1, 2
         };
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        gl->BufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
         return false;
       }
       case AppEventType::RenderUpdate: {  
-        glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
-        glClear(GL_COLOR_BUFFER_BIT);
+        auto gl = static_cast<GladGLContext*>(App::instance().window().context().nativeContext());
+        gl->ClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
+        gl->Clear(GL_COLOR_BUFFER_BIT);
 
-        glBindVertexArray(vertexArray_);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+        gl->BindVertexArray(vertexArray_);
+        gl->DrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
         App::instance().window().context().swapBuffers();
         return false;
