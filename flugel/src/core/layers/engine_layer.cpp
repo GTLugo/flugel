@@ -2,6 +2,7 @@
 
 #include "core/app.hpp"
 #include "core/input/input.hpp"
+#include "core/renderer/shader.hpp"
 
 #include <glad/gl.h>
 
@@ -47,15 +48,46 @@ namespace fge {
           0, 1, 2
         };
         gl->BufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+        std::string vertSrc = R"(
+          #version 460 core
+
+          layout (location = 0) in vec4 pos;
+
+          out vec3 vertPos;
+
+          void main() {
+            vertPos = vec3(pos.x, pos.y, pos.z);
+            gl_Position = pos;
+          }
+        )";
+
+        std::string fragSrc = R"(
+          #version 460 core
+
+          in vec3 vertPos;
+
+          layout (location = 0) out vec4 fragColor;
+
+          void main() {
+            fragColor = vec4(vertPos * 0.5 + 0.5, 1.0);
+            //fragColor = vec4(0.94, 0.24, 0.18, 1.0);
+          }
+        )";
+
+        shader_.reset(new Shader{vertSrc, fragSrc});
+
         return false;
       }
       case AppEventType::RenderUpdate: {  
         auto gl = static_cast<GladGLContext*>(App::instance().window().context().nativeContext());
         gl->ClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
         gl->Clear(GL_COLOR_BUFFER_BIT);
-
+        
+        shader_->bind();
         gl->BindVertexArray(vertexArray_);
         gl->DrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+        shader_->unbind();
 
         App::instance().window().context().swapBuffers();
         return false;

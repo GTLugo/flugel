@@ -1,5 +1,7 @@
 #include "opengl_context.hpp"
 
+#include "util/color/color.hpp"
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
@@ -26,6 +28,9 @@ namespace fge {
       GLAD_VERSION_MAJOR(gladVersion),
       GLAD_VERSION_MINOR(gladVersion)
     );
+
+    context_->Enable(GL_FRAMEBUFFER_SRGB);
+    Color::using_srgb_color_space = true;
 
     setCurrent(false);
   }

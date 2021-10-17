@@ -20,6 +20,7 @@ set(SOURCE_FILES
   src/core/layers/layer_stack.cpp
   src/core/layers/layer.cpp
   src/core/renderer/render_context.cpp
+  src/core/renderer/shader.cpp
   src/core/thread_pool/thread_pool.cpp
   src/core/window/window.cpp
   src/core/app.cpp
