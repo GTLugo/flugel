@@ -2,6 +2,7 @@
 
 #include "layer.hpp"
 #include "util/color/color.hpp"
+#include "core/renderer/buffer.hpp"
 #include "core/renderer/shader.hpp"
 
 namespace fge {
@@ -16,7 +17,9 @@ namespace fge {
 
     // Rendering
     Color clearColor_{0x2D2A2AFF};
-    uint32_t vertexArray_, vertexBuffer_, indexBuffer_;
+    uint32_t vertexArray_;
+    Unique<VertexBuffer> vertexBuffer_;
+    Unique<IndexBuffer> indexBuffer_;
     Unique<Shader> shader_;
     
     virtual bool onAppEvent(AppEvent& e) override;

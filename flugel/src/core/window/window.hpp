@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/renderer/renderer.hpp"
 #include "core/renderer/render_context.hpp"
 #include "core/callbacks/events/event.hpp"
 
@@ -7,7 +8,7 @@ namespace fge {
   struct WindowProperties {
     std::string title;
     uint32_t width, height;
-    RenderAPI renderApi;
+    Renderer::API renderApi;
     bool vSync;
     bool fullScreen;
     bool borderless;
@@ -16,7 +17,7 @@ namespace fge {
     WindowProperties(const std::string& title = "FLUGEL ENGINE",
                      uint32_t width = 800,
                      uint32_t height = 450,
-                     RenderAPI renderApi = RenderAPI::OpenGL,
+                     Renderer::API renderApi = Renderer::API::OpenGL,
                      bool vSync = true,
                      bool fullScreen = false,
                      bool borderless = false,
@@ -59,14 +60,15 @@ namespace fge {
     static Unique<Window> create(const WindowProperties& props = {});
   protected:
     Window(const WindowProperties& props)
-      : data_{props} {}
+      : data_{props} {
+      Renderer::setApi(props.renderApi);
+    }
 
     struct WindowState {
       std::string title;
       ivector2_t windowPos, posBeforeFullscreen;
       uvector2_t windowDims, dimsBeforeFullscreen;
       vector2_t cursorPos, cursorPosOld, cursorDelta;
-      RenderAPI renderApi;
       bool vSync;
       bool fullScreen;
       bool borderless;
@@ -76,8 +78,7 @@ namespace fge {
       WindowState(const WindowProperties& props) 
         : title{props.title},
           windowPos{69, 69}, posBeforeFullscreen{windowPos},
-          windowDims{props.width, props.height}, dimsBeforeFullscreen{windowDims}, 
-          renderApi{props.renderApi},
+          windowDims{props.width, props.height}, dimsBeforeFullscreen{windowDims},
           vSync{props.vSync},
           fullScreen{props.fullScreen},
           borderless{props.borderless},
@@ -85,6 +86,7 @@ namespace fge {
     };
 
     WindowState data_;
+    Unique<Renderer> renderer_;
     Unique<RenderContext> context_;
   };
 }

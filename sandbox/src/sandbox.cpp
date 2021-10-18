@@ -10,7 +10,7 @@ namespace sbx {
           "SANDBOX", // title
           800, // width
           450, // height
-          fge::RenderAPI::OpenGL,
+          fge::Renderer::OpenGL,
           false, // vsync
           false, // fullscreen
           false, // borderless

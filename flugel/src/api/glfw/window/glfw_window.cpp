@@ -49,28 +49,32 @@ namespace fge {
     );
     ++glfwWindowCount_s;
 
-    switch (data_.renderApi) {
-      case RenderAPI::OpenGL: {
+    switch (Renderer::api()) {
+      case Renderer::None: {
+        FGE_ASSERT_ENG(false, "Running with no API not implemented!");
+        break;
+      }
+      case Renderer::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
           context_ = makeUnique<OpenGLContext>(glfwWindow_);
         #else
-          FGE_ASSERT_ENG(false, "OpenGL not enabled in compilation!");
+          FGE_ASSERT_ENG(false, "OpenGL not supported!");
         #endif
         break;
       }
-      case RenderAPI::Vulkan: {
+      case Renderer::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
           FGE_ASSERT_ENG(false, "Vulkan not implemented!");
         #else
-          FGE_ASSERT_ENG(false, "Vulkan not enabled in compilation!");
+          FGE_ASSERT_ENG(false, "Vulkan not supported!");
         #endif
         break;
       }
-      case RenderAPI::D3D11: {
+      case Renderer::D3D11: {
         #if defined(FLUGEL_USE_D3D11)
           FGE_ASSERT_ENG(false, "D3D11 not implemented!");
         #else
-          FGE_ASSERT_ENG(false, "D3D11 not enabled in compilation!");
+          FGE_ASSERT_ENG(false, "D3D11 not supported!");
         #endif
         break;
       }

@@ -11,7 +11,7 @@ namespace fge {
     OpenGLContext(GLFWwindow* windowHandle);
     ~OpenGLContext();
 
-    virtual void* nativeContext() override { return context_; }
+    //virtual void* nativeContext() override { return context_; }
     virtual void setCurrent(bool isCurrent) override;
     virtual void swapBuffers() override;
   private:

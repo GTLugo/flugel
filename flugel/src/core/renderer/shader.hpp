@@ -3,12 +3,11 @@
 namespace fge {
   class Shader {
   public:
-    Shader(const std::string& vertSrc, const std::string& fragSrc);
-    virtual ~Shader();
+    virtual ~Shader() {}
 
-    void bind() const;
-    void unbind() const;
-  private:
-    uint32_t shaderId_;
+    virtual void bind() const = 0;
+    virtual void unbind() const = 0;
+
+    static Shader* create(const std::string& vertSrc, const std::string& fragSrc);
   };
 }

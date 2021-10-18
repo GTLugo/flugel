@@ -2,7 +2,6 @@
 
 #include "core/app.hpp"
 #include "core/input/input.hpp"
-#include "core/renderer/shader.hpp"
 
 #include <glad/gl.h>
 
@@ -25,29 +24,28 @@ namespace fge {
     switch (e.type()) {
       case AppEventType::RenderStart: {
         // Vertex Array
-        auto gl = static_cast<GladGLContext*>(App::instance().window().context().nativeContext());
+        auto gl = gladGetGLContext();
         gl->GenVertexArrays(1, &vertexArray_);
         gl->BindVertexArray(vertexArray_);
 
         // Vertex Buffer
-        gl->GenBuffers(1, &vertexBuffer_);
-        gl->BindBuffer(GL_ARRAY_BUFFER, vertexBuffer_); // bind buffer to bound vertex array;
-        float verts[3 * 3]{
-          -.5, -.5,  0.,
-           .5, -.5,  0.,
-           0.,  .5,  0.
+        std::vector<vector3_t> verts{
+          {-.5, -.5,  0.},
+          { .5, -.5,  0.},
+          { 0.,  .5,  0.}
         };
-        gl->BufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+        vertexBuffer_.reset(VertexBuffer::create(verts));
+        //vertexBuffer_.bind();
+
         gl->EnableVertexAttribArray(0);
-        gl->VertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr);
+        gl->VertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, sizeof(double) * 3, nullptr);
 
         // Index Buffer
-        gl->GenBuffers(1, &indexBuffer_);
-        gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer_); // bind buffer to bound vertex array;
-        uint32_t indices[3]{
+        std::vector<uint32_t> indices{
           0, 1, 2
         };
-        gl->BufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        indexBuffer_.reset(IndexBuffer::create(indices.data(), indices.size()));
+        //indexBuffer_.bind();
 
         std::string vertSrc = R"(
           #version 460 core
@@ -75,18 +73,18 @@ namespace fge {
           }
         )";
 
-        shader_.reset(new Shader{vertSrc, fragSrc});
+        shader_.reset(Shader::create(vertSrc, fragSrc));
 
         return false;
       }
       case AppEventType::RenderUpdate: {  
-        auto gl = static_cast<GladGLContext*>(App::instance().window().context().nativeContext());
+        auto gl = gladGetGLContext();
         gl->ClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
         gl->Clear(GL_COLOR_BUFFER_BIT);
         
         shader_->bind();
         gl->BindVertexArray(vertexArray_);
-        gl->DrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+        gl->DrawElements(GL_TRIANGLES, indexBuffer_->count(), GL_UNSIGNED_INT, nullptr);
         shader_->unbind();
 
         App::instance().window().context().swapBuffers();

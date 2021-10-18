@@ -19,7 +19,9 @@ set(SOURCE_FILES
   src/core/layers/engine_layer.cpp
   src/core/layers/layer_stack.cpp
   src/core/layers/layer.cpp
+  src/core/renderer/buffer.cpp
   src/core/renderer/render_context.cpp
+  src/core/renderer/renderer.cpp
   src/core/renderer/shader.cpp
   src/core/thread_pool/thread_pool.cpp
   src/core/window/window.cpp
@@ -32,6 +34,8 @@ set(SOURCE_FILES
 
 set(OPENGL_FILES
   src/api/opengl/context/opengl_context.cpp
+  src/api/opengl/opengl_buffer.cpp
+  src/api/opengl/opengl_shader.cpp
 )
 
 set(VULKAN_FILES
@@ -192,7 +196,7 @@ if(FLUGEL_OPENGL)
   set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
   add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
   set(GLAD_LIBRARY glad_gl_core_46)
-  glad_add_library(${GLAD_LIBRARY} STATIC MX API gl:core=4.6)
+  glad_add_library(${GLAD_LIBRARY} STATIC MX MXGLOBAL API gl:core=4.6)
   target_link_libraries(${TARGET_NAME}
     PRIVATE
       ${GLAD_LIBRARY}
@@ -206,7 +210,7 @@ if(FLUGEL_VULKAN)
   set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
   add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
   set(GLAD_LIBRARY glad_vulkan_12)
-  glad_add_library(${GLAD_LIBRARY} STATIC MX API vulkan=1.2)
+  glad_add_library(${GLAD_LIBRARY} STATIC MX MXGLOBAL API vulkan=1.2)
   target_link_libraries(${TARGET_NAME}
     PRIVATE
       ${GLAD_LIBRARY}
