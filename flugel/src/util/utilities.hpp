@@ -71,7 +71,13 @@ namespace fge {
   template<typename T>
   using Weak = std::weak_ptr<T>;
 
-  // Floating point
+  // Floating point single precision
+  using fvector2_t = glm::vec2;
+  using fvector3_t = glm::vec3;
+  using fvector4_t = glm::vec4;
+  using fmatrix3_t = glm::mat3;
+  using fmatrix4_t = glm::mat4;
+  // Floating point double precision
   using vector2_t = glm::dvec2;
   using vector3_t = glm::dvec3;
   using vector4_t = glm::dvec4;

@@ -6,7 +6,7 @@
 
 namespace fge {
   OpenGLShader::OpenGLShader(const std::string& vertSrc, const std::string& fragSrc) {
-    auto gl = gladGetGLContext();
+    auto gl{gladGetGLContext()};
 
     // Create an empty vertex shader handle
     uint32_t vertexShader = gl->CreateShader(GL_VERTEX_SHADER);
@@ -33,7 +33,7 @@ namespace fge {
     	gl->DeleteShader(vertexShader);
 
     	// Use the infoLog as you see fit.
-      FGE_ERROR_ENG("SHADER ERROR | ", infoLog.data());
+      FGE_ERROR_ENG("SHADER ERROR | {}", infoLog.data());
       FGE_ASSERT_ENG(false, "Failed to compile vertex shader!");
 
     	// In this simple program, we'll just leave
@@ -66,7 +66,7 @@ namespace fge {
     	gl->DeleteShader(vertexShader);
 
     	// Use the infoLog as you see fit.
-      FGE_ERROR_ENG("SHADER ERROR | ", infoLog.data());
+      FGE_ERROR_ENG("SHADER ERROR | {}", infoLog.data());
       FGE_ASSERT_ENG(false, "Failed to compile fragment shader!");
 
     	// In this simple program, we'll just leave
@@ -103,7 +103,7 @@ namespace fge {
     	gl->DeleteShader(fragmentShader);
 
     	// Use the infoLog as you see fit.
-      FGE_ERROR_ENG("SHADER ERROR | ", infoLog.data());
+      FGE_ERROR_ENG("SHADER ERROR | {}", infoLog.data());
       FGE_ASSERT_ENG(false, "Failed to link shader!");
 
     	// In this simple program, we'll just leave
