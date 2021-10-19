@@ -9,7 +9,7 @@
 #include "core/renderer/renderer.hpp"
 
 namespace fge {
-  Shader* Shader::create(const std::string& vertSrc, const std::string& fragSrc) {
+  Shared<Shader> Shader::create(const std::string& vertSrc, const std::string& fragSrc) {
     switch (Renderer::api()) {
       case Renderer::None: {
         FGE_ASSERT_ENG(false, "Running with no API not implemented!");
@@ -17,7 +17,7 @@ namespace fge {
       }
       case Renderer::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
-          return new OpenGLShader{vertSrc, fragSrc};
+          return makeShared<OpenGLShader>(vertSrc, fragSrc);
         #else
           FGE_ASSERT_ENG(false, "OpenGL not supported!");
           return nullptr;

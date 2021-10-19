@@ -1,11 +1,6 @@
 #pragma once
 
 namespace fge {
-  struct Vertex {
-    fvector3_t position;
-    fvector4_t color;
-  };
-
   enum class ShaderDataType {
     None = 0,
     Bool,
@@ -101,9 +96,9 @@ namespace fge {
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
 
-    static VertexBuffer* create(float* verts, uint32_t bitSize);
-    static VertexBuffer* create(const std::initializer_list<Vertex>& verts);
-    static VertexBuffer* create(std::vector<Vertex>& verts);
+    static Shared<VertexBuffer> create(float* vertices, uint32_t bitSize);
+    static Shared<VertexBuffer> create(std::vector<float>& vertices);
+    static Shared<VertexBuffer> create(const std::initializer_list<float>& vertices);
   };
 
   class IndexBuffer {
@@ -115,8 +110,8 @@ namespace fge {
 
     virtual uint32_t count() const = 0;
 
-    static IndexBuffer* create(uint32_t* indices, uint32_t count);
-    static IndexBuffer* create(const std::initializer_list<uint32_t>& indices);
-    static IndexBuffer* create(std::vector<uint32_t>& indices);
+    static Shared<IndexBuffer> create(uint32_t* indices, uint32_t count);
+    static Shared<IndexBuffer> create(std::vector<uint32_t>& indices);
+    static Shared<IndexBuffer> create(const std::initializer_list<uint32_t>& indices);
   };
 }

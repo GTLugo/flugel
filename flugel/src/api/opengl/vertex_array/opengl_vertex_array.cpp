@@ -20,6 +20,12 @@ namespace fge {
     }
   }
 
+  OpenGLVertexArray::~OpenGLVertexArray() {
+    auto gl{gladGetGLContext()};
+    
+    gl->DeleteVertexArrays(1, &vertexArrayId_);
+  }
+
   OpenGLVertexArray::OpenGLVertexArray(Shared<VertexBuffer> vertexBuffer, Shared<IndexBuffer> indexBuffer) {
     auto gl{gladGetGLContext()};
 
@@ -39,6 +45,8 @@ namespace fge {
   }
 
   void OpenGLVertexArray::addVertexBuffer(Shared<VertexBuffer> vertexBuffer) {
+    FGE_ASSERT_ENG(vertexBuffer->layout().elements().size(), "Vertex buffer has no layout!");
+
     auto gl{gladGetGLContext()};
     gl->BindVertexArray(vertexArrayId_);
 
@@ -58,15 +66,17 @@ namespace fge {
     vertexBuffers_.push_back(vertexBuffer);
 
     gl->BindVertexArray(0);
+    vertexBuffer->unbind();
   }
 
   void OpenGLVertexArray::setIndexBuffer(Shared<IndexBuffer> indexBuffer) {
     auto gl{gladGetGLContext()};
     gl->BindVertexArray(vertexArrayId_);
-    
+
     indexBuffer->bind();
     indexBuffer_ = indexBuffer;
 
     gl->BindVertexArray(0);
+    indexBuffer->unbind();
   }
 }

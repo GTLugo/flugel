@@ -13,6 +13,7 @@ namespace fge {
     gl->CreateBuffers(1, &bufferId_);
     gl->BindBuffer(GL_ARRAY_BUFFER, bufferId_);
     gl->BufferData(GL_ARRAY_BUFFER, bitSize, verts, GL_STATIC_DRAW);
+    gl->BindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
   OpenGLVertexBuffer::~OpenGLVertexBuffer() {
@@ -38,6 +39,7 @@ namespace fge {
     gl->CreateBuffers(1, &bufferId_);
     gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferId_);
     gl->BufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(indices[0]), indices, GL_STATIC_DRAW);
+    gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
 
   OpenGLIndexBuffer::~OpenGLIndexBuffer() {

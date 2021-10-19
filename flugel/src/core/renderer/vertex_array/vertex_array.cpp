@@ -7,7 +7,8 @@
 #include "core/renderer/renderer.hpp"
 
 namespace fge {
-  VertexArray* VertexArray::create(Shared<VertexBuffer> vertexBuffer, Shared<IndexBuffer> indexBuffer) {
+  Shared<VertexArray> VertexArray::create(Shared<VertexBuffer> vertexBuffer, Shared<IndexBuffer> indexBuffer) {
+    
     switch (Renderer::api()) {
       case Renderer::None: {
         FGE_ASSERT_ENG(false, "Running with no API not implemented!");
@@ -15,7 +16,7 @@ namespace fge {
       }
       case Renderer::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
-          return new OpenGLVertexArray{vertexBuffer, indexBuffer};
+          return makeShared<OpenGLVertexArray>(vertexBuffer, indexBuffer);
         #else
           FGE_ASSERT_ENG(false, "OpenGL not supported!");
           return nullptr;
@@ -46,36 +47,45 @@ namespace fge {
     }
   }
 
-  VertexArray* VertexArray::create(float* verts, uint32_t vertBitSize,
-                                   const BufferLayout& layout,
-                                   uint32_t* indices, uint32_t count) {
-    auto vbo = Shared<VertexBuffer>(VertexBuffer::create(verts, vertBitSize));
+  Shared<VertexArray> VertexArray::create(float* vertices, uint32_t vertBitSize,
+                                          const BufferLayout& layout,
+                                          uint32_t* indices, uint32_t count) {
+    FGE_ASSERT_ENG(vertices, "No vertices found for vertex array!");
+    auto vbo = VertexBuffer::create(vertices, vertBitSize);
+    vbo->bind();
     vbo->setLayout(layout);
+    vbo->unbind();
     return create(
       vbo,
-      Shared<IndexBuffer>(IndexBuffer::create(indices, count))
+      IndexBuffer::create(indices, count)
     );
   }
 
-  VertexArray* VertexArray::create(const std::initializer_list<Vertex>& verts,
-                                   const BufferLayout& layout,
-                                   const std::initializer_list<uint32_t>& indices) {
-    auto vbo = Shared<VertexBuffer>(VertexBuffer::create(verts));
+  Shared<VertexArray> VertexArray::create(std::vector<float>& vertices,
+                                          const BufferLayout& layout,
+                                          std::vector<uint32_t>& indices) {
+    FGE_ASSERT_ENG(vertices.size(), "No vertices found for vertex array!");
+    auto vbo = VertexBuffer::create(vertices);
+    vbo->bind();
     vbo->setLayout(layout);
+    vbo->unbind();
     return create(
       vbo,
-      Shared<IndexBuffer>(IndexBuffer::create(indices))
+      IndexBuffer::create(indices)
     );
   }
 
-  VertexArray* VertexArray::create(std::vector<Vertex>& verts,
-                                   const BufferLayout& layout,
-                                   std::vector<uint32_t>& indices) {
-    auto vbo = Shared<VertexBuffer>(VertexBuffer::create(verts));
+  Shared<VertexArray> VertexArray::create(const std::initializer_list<float>& vertices,
+                                          const BufferLayout& layout,
+                                          const std::initializer_list<uint32_t>& indices) {
+    FGE_ASSERT_ENG(vertices.size(), "No vertices found for vertex array!");
+    auto vbo = VertexBuffer::create(vertices);
+    vbo->bind();
     vbo->setLayout(layout);
+    vbo->unbind();
     return create(
       vbo,
-      Shared<IndexBuffer>(IndexBuffer::create(indices))
+      IndexBuffer::create(indices)
     );
   }
 }

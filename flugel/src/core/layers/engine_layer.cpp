@@ -23,45 +23,55 @@ namespace fge {
   bool EngineLayer::onAppEvent(AppEvent& e) {
     switch (e.type()) {
       case AppEventType::RenderStart: {
-        auto gl{gladGetGLContext()};
-
-        vao_.reset(VertexArray::create(
+        vao_ = VertexArray::create(
           // Vertices
-          {{{-.5, -.5,  0.}, {.9, .1, .1, 1.}},
-           {{ .5, -.5,  0.}, {.1, .9, .1, 1.}},
-           {{ 0.,  .5,  0.}, {.1, .1, .9, 1.}}},
+          {-.5, -.5,  0., /**/ .9, .9, .9, 1.,
+            .5, -.5,  0., /**/ .9, .9, .9, 1.,
+            0.,  .5,  0., /**/ .9, .9, .9, 1.},
           // Layout
           {{ShaderDataType::Float3, "pos"},
            {ShaderDataType::Float4, "color"}},
           // Indices
           {0, 1, 2}
-        ));
+        );
 
-        std::string vertSrc = R"(#version 460 core
+        vaoSqr_ = VertexArray::create(
+          // Vertices
+          {-.75, -.75, .1, /**/ .9, .1, .1, 1.,
+            .75, -.75, .1, /**/ .1, .9, .1, 1.,
+            .75,  .75, .1, /**/ .1, .1, .9, 1.,
+           -.75,  .75, .1, /**/ .9, .9, .1, 1.},
+          // Layout
+          {{ShaderDataType::Float3, "pos"},
+           {ShaderDataType::Float4, "color"}},
+          // Indices
+          {0, 1, 2, 2, 3, 0}
+        );
 
-          layout (location = 0) in vec4 pos;
-          layout (location = 1) in vec4 color;
-
-          out vec4 vertColor;
-
-          void main() {
-            vertColor = color;
-            gl_Position = pos;
-          }
-        )";
-
-        std::string fragSrc = R"(#version 460 core
-          
-          in vec4 vertColor;
-
-          layout (location = 0) out vec4 fragColor;
-
-          void main() {
-            fragColor = vertColor;
-          }
-        )";
-
-        shader_.reset(Shader::create(vertSrc, fragSrc));
+        shader_ = Shader::create(
+          // Vertex
+          R"(#version 460 core
+   
+             layout (location = 0) in vec4 pos;
+             layout (location = 1) in vec4 color;
+   
+             out vec4 vertColor;
+   
+             void main() {
+               vertColor = color;
+               gl_Position = pos;
+             })",
+          // Fragment
+          R"(#version 460 core
+             
+             in vec4 vertColor;
+   
+             layout (location = 0) out vec4 fragColor;
+   
+             void main() {
+               fragColor = vertColor;
+             })"
+        );
 
         return false;
       }
@@ -71,9 +81,15 @@ namespace fge {
         gl->Clear(GL_COLOR_BUFFER_BIT);
         
         shader_->bind();
+        
+        vaoSqr_->bind();
+        gl->DrawElements(GL_TRIANGLES, vaoSqr_->indexCount(), GL_UNSIGNED_INT, nullptr);
+        vaoSqr_->unbind();
+
         vao_->bind();
         gl->DrawElements(GL_TRIANGLES, vao_->indexCount(), GL_UNSIGNED_INT, nullptr);
         vao_->unbind();
+      
         shader_->unbind();
 
         App::instance().window().context().swapBuffers();

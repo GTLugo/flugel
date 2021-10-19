@@ -6,7 +6,7 @@ namespace fge {
   class OpenGLVertexArray : public VertexArray {
   public:
     OpenGLVertexArray(Shared<VertexBuffer> vertexBuffer, Shared<IndexBuffer> indexBuffer);
-    virtual ~OpenGLVertexArray() {}
+    virtual ~OpenGLVertexArray();
 
     virtual void bind() const override;
     virtual void unbind() const override;

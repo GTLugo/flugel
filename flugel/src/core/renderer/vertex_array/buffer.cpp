@@ -7,7 +7,8 @@
 #include "core/renderer/renderer.hpp"
 
 namespace fge {
-  VertexBuffer* VertexBuffer::create(float* verts, uint32_t bitSize) {
+  Shared<VertexBuffer> VertexBuffer::create(float* vertices, uint32_t bitSize) {
+    FGE_ASSERT_ENG(vertices, "No vertices found for vertex buffer!");
     switch (Renderer::api()) {
       case Renderer::None: {
         FGE_ASSERT_ENG(false, "Running with no API not implemented!");
@@ -15,7 +16,7 @@ namespace fge {
       }
       case Renderer::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
-          return new OpenGLVertexBuffer{verts, bitSize};
+          return makeShared<OpenGLVertexBuffer>(vertices, bitSize);
         #else
           FGE_ASSERT_ENG(false, "OpenGL not supported!");
           return nullptr;
@@ -46,26 +47,16 @@ namespace fge {
     }
   }
 
-  VertexBuffer* VertexBuffer::create(std::vector<Vertex>& verts) {
-    std::vector<float> v;
-    for (auto& vert : verts) {
-      v.push_back(vert.position.x);
-      v.push_back(vert.position.y);
-      v.push_back(vert.position.z);
-      v.push_back(vert.color.r);
-      v.push_back(vert.color.g);
-      v.push_back(vert.color.b);
-      v.push_back(vert.color.a);
-    }
-    return create(v.data(), v.size() * sizeof(v[0]));
+  Shared<VertexBuffer> VertexBuffer::create(std::vector<float>& vertices) {
+    return create(vertices.data(), vertices.size() * sizeof(vertices[0]));
   }
 
-  VertexBuffer* VertexBuffer::create(const std::initializer_list<Vertex>& verts) {
-    std::vector<Vertex> v{verts};
-    return create(v);
+  Shared<VertexBuffer> VertexBuffer::create(const std::initializer_list<float>& vertices) {
+    std::vector<float> verts{vertices};
+    return create(verts);
   }
 
-  IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count) {
+  Shared<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t count) {
     switch (Renderer::api()) {
       case Renderer::None: {
         FGE_ASSERT_ENG(false, "Running with no API not implemented!");
@@ -73,7 +64,7 @@ namespace fge {
       }
       case Renderer::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
-          return new OpenGLIndexBuffer{indices, count};
+          return makeShared<OpenGLIndexBuffer>(indices, count);
         #else
           FGE_ASSERT_ENG(false, "OpenGL not supported!");
           return nullptr;
@@ -104,12 +95,12 @@ namespace fge {
     }
   }
   
-  IndexBuffer* IndexBuffer::create(const std::initializer_list<uint32_t>& indices) {
+  Shared<IndexBuffer> IndexBuffer::create(const std::initializer_list<uint32_t>& indices) {
     std::vector<uint32_t> i{indices};
     return create(i);
   }
   
-  IndexBuffer* IndexBuffer::create(std::vector<uint32_t>& indices) {
+  Shared<IndexBuffer> IndexBuffer::create(std::vector<uint32_t>& indices) {
     return create(indices.data(), indices.size());
   }
 }

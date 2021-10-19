@@ -8,6 +8,6 @@ namespace fge {
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
 
-    static Shader* create(const std::string& vertSrc, const std::string& fragSrc);
+    static Shared<Shader> create(const std::string& vertSrc, const std::string& fragSrc);
   };
 }

@@ -18,7 +18,8 @@ namespace fge {
     // Rendering
     Color clearColor_{0x2D2A2AFF};
     Shared<VertexArray> vao_;
-    Unique<Shader> shader_;
+    Shared<VertexArray> vaoSqr_;
+    Shared<Shader> shader_;
     
     virtual bool onAppEvent(AppEvent& e) override;
     virtual bool onWindowEvent(WindowEvent& e) override;
