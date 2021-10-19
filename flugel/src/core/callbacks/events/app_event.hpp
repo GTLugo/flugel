@@ -5,7 +5,9 @@
 namespace fge {
   enum class AppEventType {
     None = 0,
-    Start, RenderStart, Poll, FixedUpdate, Update, RenderUpdate, Tick, End,
+    Start, MainStart, RenderStart,
+    Poll, FixedUpdate, MainUpdate, Update, RenderUpdate, Tick,
+    End, MainEnd, RenderEnd,
   };
 
   class FGE_API AppEvent : public Event {
@@ -28,6 +30,18 @@ namespace fge {
     std::string toString() const override {
       std::stringstream ss;
       ss << "Event <App> (START)";
+      return ss.str();
+    }
+  };
+
+  class FGE_API AppMainStartEvent : public AppEvent {
+  public:
+    AppMainStartEvent()
+      : AppEvent{AppEventType::MainStart} {}
+
+    std::string toString() const override {
+      std::stringstream ss;
+      ss << "Event <App> (MAIN_START)";
       return ss.str();
     }
   };
@@ -80,6 +94,18 @@ namespace fge {
     }
   };
 
+  class FGE_API AppMainUpdateEvent : public AppEvent {
+  public:
+    AppMainUpdateEvent()
+      : AppEvent{AppEventType::MainUpdate} {}
+
+    std::string toString() const override {
+      std::stringstream ss;
+      ss << "Event <App> (MAIN_UPDATE)";
+      return ss.str();
+    }
+  };
+
   class FGE_API AppRenderUpdateEvent : public AppEvent {
   public:
     AppRenderUpdateEvent()
@@ -122,6 +148,30 @@ namespace fge {
     std::string toString() const override {
       std::stringstream ss;
       ss << "Event <App> (END)";
+      return ss.str();
+    }
+  };
+
+  class FGE_API AppRenderEndEvent : public AppEvent {
+  public:
+    AppRenderEndEvent()
+      : AppEvent{AppEventType::RenderEnd} {}
+
+    std::string toString() const override {
+      std::stringstream ss;
+      ss << "Event <App> (RENDER_END)";
+      return ss.str();
+    }
+  };
+
+  class FGE_API AppMainEndEvent : public AppEvent {
+  public:
+    AppMainEndEvent()
+      : AppEvent{AppEventType::MainEnd} {}
+
+    std::string toString() const override {
+      std::stringstream ss;
+      ss << "Event <App> (MAIN_END)";
       return ss.str();
     }
   };

@@ -8,9 +8,9 @@ namespace fge {
     ImGuiLayer();
     ~ImGuiLayer();
 
-    void attach();
-    void detach();
-  
-    void render();
+    virtual bool onAppEvent(AppEvent& e) override;
+    
+  private:
+    void setDarkThemeColors();
   };
 }

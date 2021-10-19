@@ -163,6 +163,34 @@ target_include_directories(${TARGET_NAME}
   PRIVATE
     "vendor/imgui"
 )
+target_sources(${TARGET_NAME} 
+  PRIVATE 
+    vendor/imgui/imgui_demo.cpp
+    vendor/imgui/imgui_draw.cpp
+    vendor/imgui/imgui_tables.cpp
+    vendor/imgui/imgui_widgets.cpp
+    vendor/imgui/imgui.cpp
+)
+# IMGUI RENDER
+if(FLUGEL_OPENGL)
+  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_opengl3.cpp)
+endif()
+if(FLUGEL_VULKAN)
+  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_vulkan.cpp)
+endif()
+if(FLUGEL_D3D11)
+  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_dx11.cpp)
+endif()
+# IMGUI WINDOW
+if(FLUGEL_GLFW)
+  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_glfw.cpp)
+endif()
+if(FLUGEL_SDL)
+  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_sdl.cpp)
+endif()
+if(FLUGEL_WIN32)
+  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_win32.cpp)
+endif()
 
 # glm
 add_subdirectory(vendor/glm)

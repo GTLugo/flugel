@@ -54,7 +54,6 @@ namespace fge {
     void waitForRenderJob();
     void pushRenderJob(AppRenderUpdateEvent& event);
 
-    void pollEvents();
     void eventDispatch(Event& e);
   };
 

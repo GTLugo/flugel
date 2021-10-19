@@ -95,6 +95,9 @@ namespace fge {
         App::instance().window().context().swapBuffers();
         return false;
       }
+      case AppEventType::MainUpdate: {
+        App::instance().window().pollEvents();
+      }
       default: {
         return false;
       }

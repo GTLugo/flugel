@@ -117,7 +117,7 @@ namespace fge {
     const Stopwatch stopwatch_;
     TimePoint gameLast_{}; // when last frame started
     TimePoint gameCurrent_{}; // when this frame started
-    Seconds delta_{Seconds::zero()}; // how much time last frame took
+    Seconds delta_{Seconds{1. / 60.}}; // how much time last frame took
     Seconds lag_{Seconds::zero()}; // how far behind the game is from real world
     uint32_t stepCount_{0U};
   };

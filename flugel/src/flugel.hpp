@@ -13,6 +13,8 @@
 #include "core/input/mouse_codes.hpp"
 #include "core/input/key_codes.hpp"
 
+#include "core/imgui/imgui_layer.hpp"
+
 #include "core/callbacks/events/event.hpp"
 #include "core/callbacks/events/app_event.hpp"
 #include "core/callbacks/events/window_event.hpp"

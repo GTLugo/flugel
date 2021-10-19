@@ -10,10 +10,12 @@ namespace fge {
 
   void LayerStack::pushLayer(Layer* layer) {
     layers_.emplace(begin() + layerInsertIndex_++, layer);
+    layer->attach();
   }
 
   void LayerStack::pushOverlay(Layer* overlay) {
     layers_.emplace_back(overlay);
+    overlay->attach();
   }
 
   void LayerStack::popLayer(Layer* layer) {

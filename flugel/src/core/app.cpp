@@ -49,9 +49,14 @@ namespace fge {
     threadPool_.pushJob(FGE_BIND(renderLoop));
 
     // MAIN THREAD
+    AppMainStartEvent mainStartEvent{};
+    eventDispatch(mainStartEvent);
     while (!shouldClose_) {
-      pollEvents();
+      AppMainUpdateEvent mainUpdateEvent{};
+      eventDispatch(mainUpdateEvent);
     }
+    AppMainEndEvent mainEndEvent{};
+    eventDispatch(mainEndEvent);
 
     renderCondition_.notify_all();
     threadPool_.shutdown();
@@ -72,6 +77,8 @@ namespace fge {
     while (!shouldClose_) {
       waitForRenderJob();
     }
+    AppRenderEndEvent renderEndEvent{};
+    eventDispatch(renderEndEvent);
 
     FGE_TRACE_ENG("Ended render thread");
   }
@@ -143,10 +150,6 @@ namespace fge {
     } // Unlock mutex
 
     renderCondition_.notify_all();
-  }
-
-  void App::pollEvents() {
-    window_->pollEvents();
   }
   
   void App::eventDispatch(Event& e) {
