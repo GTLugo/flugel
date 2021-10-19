@@ -19,8 +19,9 @@ set(SOURCE_FILES
   src/core/layers/engine_layer.cpp
   src/core/layers/layer_stack.cpp
   src/core/layers/layer.cpp
-  src/core/renderer/buffer.cpp
-  src/core/renderer/render_context.cpp
+  src/core/renderer/vertex_array/buffer.cpp
+  src/core/renderer/vertex_array/vertex_array.cpp
+  src/core/renderer/context.cpp
   src/core/renderer/renderer.cpp
   src/core/renderer/shader.cpp
   src/core/thread_pool/thread_pool.cpp
@@ -34,7 +35,8 @@ set(SOURCE_FILES
 
 set(OPENGL_FILES
   src/api/opengl/context/opengl_context.cpp
-  src/api/opengl/opengl_buffer.cpp
+  src/api/opengl/vertex_array/opengl_buffer.cpp
+  src/api/opengl/vertex_array/opengl_vertex_array.cpp
   src/api/opengl/opengl_shader.cpp
 )
 

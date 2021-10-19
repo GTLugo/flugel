@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/renderer/render_context.hpp"
+#include "core/renderer/context.hpp"
 
 struct GLFWwindow;
 struct GladGLContext;

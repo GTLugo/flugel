@@ -11,7 +11,7 @@ namespace fge {
   OpenGLVertexBuffer::OpenGLVertexBuffer(float* verts, uint32_t bitSize) {
     auto gl{gladGetGLContext()};
     gl->CreateBuffers(1, &bufferId_);
-    bind();
+    gl->BindBuffer(GL_ARRAY_BUFFER, bufferId_);
     gl->BufferData(GL_ARRAY_BUFFER, bitSize, verts, GL_STATIC_DRAW);
   }
 
@@ -36,7 +36,7 @@ namespace fge {
     : count_{count} {
     auto gl{gladGetGLContext()};
     gl->CreateBuffers(1, &bufferId_);
-    bind();
+    gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferId_);
     gl->BufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(indices[0]), indices, GL_STATIC_DRAW);
   }
 

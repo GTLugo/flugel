@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/window/window.hpp"
-#include "core/renderer/render_context.hpp"
 #include "core/callbacks/events/event.hpp"
 
 #include <GLFW/glfw3.h>

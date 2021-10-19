@@ -1,7 +1,7 @@
 #include "buffer.hpp"
 
 #if defined(FLUGEL_USE_OPENGL)
-  #include "api/opengl/opengl_buffer.hpp"
+  #include "api/opengl/vertex_array/opengl_buffer.hpp"
 #endif
 
 #include "core/renderer/renderer.hpp"
@@ -60,6 +60,11 @@ namespace fge {
     return create(v.data(), v.size() * sizeof(v[0]));
   }
 
+  VertexBuffer* VertexBuffer::create(const std::initializer_list<Vertex>& verts) {
+    std::vector<Vertex> v{verts};
+    return create(v);
+  }
+
   IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count) {
     switch (Renderer::api()) {
       case Renderer::None: {
@@ -97,6 +102,11 @@ namespace fge {
         return nullptr;
       }
     }
+  }
+  
+  IndexBuffer* IndexBuffer::create(const std::initializer_list<uint32_t>& indices) {
+    std::vector<uint32_t> i{indices};
+    return create(i);
   }
   
   IndexBuffer* IndexBuffer::create(std::vector<uint32_t>& indices) {

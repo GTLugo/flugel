@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/renderer/renderer.hpp"
-#include "core/renderer/render_context.hpp"
+#include "core/renderer/context.hpp"
 #include "core/callbacks/events/event.hpp"
 
 namespace fge {

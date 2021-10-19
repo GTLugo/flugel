@@ -94,7 +94,7 @@ namespace fge {
     virtual ~VertexBuffer() {}
 
     // set vertex data?
-
+    // virtual uint32_t id() const = 0;
     virtual const BufferLayout& layout() const = 0;
     virtual void setLayout(const BufferLayout& layout) = 0;
 
@@ -102,6 +102,7 @@ namespace fge {
     virtual void unbind() const = 0;
 
     static VertexBuffer* create(float* verts, uint32_t bitSize);
+    static VertexBuffer* create(const std::initializer_list<Vertex>& verts);
     static VertexBuffer* create(std::vector<Vertex>& verts);
   };
 
@@ -115,6 +116,7 @@ namespace fge {
     virtual uint32_t count() const = 0;
 
     static IndexBuffer* create(uint32_t* indices, uint32_t count);
+    static IndexBuffer* create(const std::initializer_list<uint32_t>& indices);
     static IndexBuffer* create(std::vector<uint32_t>& indices);
   };
 }

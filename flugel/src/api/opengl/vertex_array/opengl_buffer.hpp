@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/renderer/buffer.hpp"
+#include "core/renderer/vertex_array/buffer.hpp"
 
 namespace fge {
   class OpenGLVertexBuffer : public VertexBuffer {
@@ -10,6 +10,7 @@ namespace fge {
 
     // set vertex data?
 
+    // virtual uint32_t id() const override { return bufferId_; }
     virtual const BufferLayout& layout() const override { return layout_; }
     virtual void setLayout(const BufferLayout& layout) override { layout_ = layout; }
 
