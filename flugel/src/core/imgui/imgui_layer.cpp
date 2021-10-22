@@ -40,7 +40,7 @@ namespace fge {
 
   bool ImGuiLayer::onAppEvent(AppEvent& e) {
     switch (e.type()) {
-      case AppEventType::RenderStart: {
+      case AppEventType::StartRender: {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -80,7 +80,7 @@ namespace fge {
         ImGui_ImplOpenGL3_Init("#version 410");
         return false;
       }
-      case AppEventType::RenderUpdate: {
+      case AppEventType::UpdateRender: {
         App& app = App::instance();
 
         ImGuiIO& io = ImGui::GetIO();
@@ -98,7 +98,7 @@ namespace fge {
         
         return false;
       }
-      case AppEventType::RenderEnd: {
+      case AppEventType::EndRender: {
 		    ImGui_ImplOpenGL3_Shutdown();
 		    //ImGui_ImplGlfw_Shutdown();
 		    ImGui::DestroyContext();

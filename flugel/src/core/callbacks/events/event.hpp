@@ -41,12 +41,8 @@ namespace fge {
       : event_{e} {}
     
     template<typename Event_t>
-    bool tryDispatch(EventHandlerFn<Event_t> handlerFn) {
-      if (event_.category() == Event_t::categoryStatic()) {
-        event_.wasHandled_ = handlerFn(dynamic_cast<Event_t&>(event_));
-        return true;
-      }
-      return false;
+    void dispatch(EventHandlerFn<Event_t> handlerFn) {
+      event_.wasHandled_ = handlerFn(dynamic_cast<Event_t&>(event_));
     }
   private:
     Event& event_;

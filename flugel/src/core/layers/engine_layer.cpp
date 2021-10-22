@@ -22,7 +22,7 @@ namespace fge {
 
   bool EngineLayer::onAppEvent(AppEvent& e) {
     switch (e.type()) {
-      case AppEventType::RenderStart: {
+      case AppEventType::StartRender: {
         vao_ = VertexArray::create(
           // Vertices
           {-.5, -.5,  0., /**/ .9, .9, .9, 1.,
@@ -75,7 +75,7 @@ namespace fge {
 
         return false;
       }
-      case AppEventType::RenderUpdate: {  
+      case AppEventType::UpdateRender: {  
         auto gl{gladGetGLContext()};
         gl->ClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
         gl->Clear(GL_COLOR_BUFFER_BIT);
@@ -95,7 +95,7 @@ namespace fge {
         App::instance().window().context().swapBuffers();
         return false;
       }
-      case AppEventType::MainUpdate: {
+      case AppEventType::Poll: {
         App::instance().window().pollEvents();
       }
       default: {

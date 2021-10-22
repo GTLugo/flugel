@@ -49,13 +49,16 @@ namespace fge {
     threadPool_.pushJob(FGE_BIND(renderLoop));
 
     // MAIN THREAD
-    AppMainStartEvent mainStartEvent{};
+    AppStartMainEvent mainStartEvent{};
     eventDispatch(mainStartEvent);
     while (!shouldClose_) {
-      AppMainUpdateEvent mainUpdateEvent{};
+      AppPollEvent pollEvent{};
+      eventDispatch(pollEvent);
+
+      AppUpdateMainEvent mainUpdateEvent{};
       eventDispatch(mainUpdateEvent);
     }
-    AppMainEndEvent mainEndEvent{};
+    AppEndMainEvent mainEndEvent{};
     eventDispatch(mainEndEvent);
 
     renderCondition_.notify_all();
@@ -72,12 +75,12 @@ namespace fge {
     window_->context().setCurrent(true);
     
     // RENDER THREAD
-    AppRenderStartEvent renderStartEvent{};
+    AppStartRenderEvent renderStartEvent{};
     eventDispatch(renderStartEvent);
     while (!shouldClose_) {
       waitForRenderJob();
     }
-    AppRenderEndEvent renderEndEvent{};
+    AppEndRenderEvent renderEndEvent{};
     eventDispatch(renderEndEvent);
 
     FGE_TRACE_ENG("Ended render thread");
@@ -87,39 +90,39 @@ namespace fge {
     FGE_TRACE_ENG("Started game thread (ID: {})", std::this_thread::get_id());
 
     // GAME THREAD
-    AppStartEvent startEvent{};
+    AppStartGameEvent startEvent{};
     eventDispatch(startEvent);
     while (!shouldClose_) {
-      time_.tick();
-
       // This loop will only occur once every fixedTimeStep, being skipped for every
       // frame which happens between each timestep. If the deltaTime per frame is too
       // long, then for each frame, this loop will occur more than once in order to
       // "catch up" with the proper pacing of physics.
       // Source: https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
       //FGE_TRACE_ENG("UPDATE");
-      while (time_.shouldDoFixedStep()) {
-        time_.tickLag();
-        
+      while (time_.shouldDoTick()) {
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
-        AppFixedUpdateEvent fixedUpdateEvent{};
-        eventDispatch(fixedUpdateEvent);
+        AppTickGameEvent tickEvent{};
+        eventDispatch(tickEvent);
+
+        time_.tick();
       }
       // Timestep INSENSITIVE stuff happens out here, where pacing goes as fast as possible
-      AppUpdateEvent updateEvent{};
+      AppUpdateGameEvent updateEvent{};
       eventDispatch(updateEvent);
 
-      AppRenderUpdateEvent renderUpdateEvent{};
+      AppUpdateRenderEvent renderUpdateEvent{};
       pushRenderJob(renderUpdateEvent);
+
+      time_.update();
     }
-    AppEndEvent endEvent{};
+    AppEndGameEvent endEvent{};
     eventDispatch(endEvent);
 
     FGE_TRACE_ENG("Ended game thread");
   }
 
   void App::waitForRenderJob() {
-    AppRenderUpdateEvent event;
+    AppUpdateRenderEvent event;
 
     {
       std::unique_lock<std::mutex> lock{renderMutex_};
@@ -141,7 +144,7 @@ namespace fge {
     }
   }
 
-  void App::pushRenderJob(AppRenderUpdateEvent& event) {
+  void App::pushRenderJob(AppUpdateRenderEvent& event) {
     { // Mutex lock scope
       std::unique_lock<std::mutex> lock{renderMutex_};
       if (renderQueue_.size() < 2) {
@@ -156,6 +159,16 @@ namespace fge {
     //EventDispatcher dispatcher{e};
     
     // LAYER EVENT FNs
+    // for (LayerStack::reverse_iterator ritr = layerStack_.rbegin();
+    //      ritr != layerStack_.rend() - 1; 
+    //      ++ritr) {
+    //   (*ritr)->onEvent(e);
+    //   if (e.wasHandled()) {
+    //     break;
+    //   }
+    // }
+    // (*layerStack_.begin())->onEvent(e);
+
     for (auto& layer : boost::adaptors::reverse(layerStack_)) {
       layer->onEvent(e);
       //FGE_DEBUG_ENG("{0}: {1}", layer->name(), e);

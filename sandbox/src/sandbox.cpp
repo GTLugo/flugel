@@ -20,7 +20,7 @@ namespace sbx {
 
         
         pushLayer(new TestLayer{});
-        //pushOverlay(new fge::ImGuiLayer());
+        pushOverlay(new fge::ImGuiLayer());
       }
 
       virtual ~Sandbox() override {

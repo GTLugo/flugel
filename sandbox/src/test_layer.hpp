@@ -4,17 +4,19 @@
 
 namespace sbx {
   class TestLayer : public fge::Layer {
+    using Input = fge::Input;
+    using Key = fge::Key;
   public:
     TestLayer()
       : Layer{"test_layer"} {}
 
     virtual bool onAppEvent(fge::AppEvent& e) override {
       switch (e.type()) {
-        case fge::AppEventType::FixedUpdate: {
-          if (fge::Input::isPressed(fge::Key::Space) && !fge::Input::isPressed(fge::Key::LeftShift)) {
+        case fge::AppEventType::TickGame: {
+          if (Input::isPressed(Key::Space) && !Input::isPressed(Key::LeftShift)) {
             FGE_TRACE("UwU");
           }
-          if (fge::Input::isPressed(fge::Key::Space) && fge::Input::isPressed(fge::Key::LeftShift)) {
+          if (Input::isPressed(Key::Space) && Input::isPressed(Key::LeftShift)) {
             FGE_TRACE("OwO");
           }
           return false;

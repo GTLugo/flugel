@@ -57,8 +57,8 @@ namespace fge {
     }
     ~Time() = default;
 
-    void tick() {
-      // FLUGEL_ENGINE_TRACE("Tick!");
+    void update() {
+      // FLUGEL_ENGINE_TRACE("Update!");
       gameCurrent_ = ClockSteady::now();
       delta_ = std::chrono::duration_cast<Seconds>(gameCurrent_ - gameLast_);
       gameLast_ = gameCurrent_;
@@ -66,8 +66,8 @@ namespace fge {
       stepCount_ = 0U;
     }
 
-    void tickLag() {
-      // FLUGEL_ENGINE_TRACE("Tock!");
+    void tick() {
+      // FLUGEL_ENGINE_TRACE("Tick!");
       lag_ -= fixedTimeStep_;
       ++stepCount_;
     }
@@ -97,7 +97,7 @@ namespace fge {
       return std::chrono::duration_cast<Duration>(fixedTimeStep_).count();
     }
 
-    bool shouldDoFixedStep() const {
+    bool shouldDoTick() const {
       #if defined(DEBUG) || defined(RELDEB)
         if (stepCount_ >= bailCount_) {
           FGE_WARN_ENG("Struggling to catch up with physics rate!");

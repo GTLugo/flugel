@@ -5,9 +5,9 @@
 namespace fge {
   enum class AppEventType {
     None = 0,
-    Start, MainStart, RenderStart,
-    Poll, FixedUpdate, MainUpdate, Update, RenderUpdate, Tick,
-    End, MainEnd, RenderEnd,
+    StartMain, Poll,     UpdateMain,   EndMain,   // Main thread
+    StartRender,         UpdateRender, EndRender, // Render thread
+    StartGame, TickGame, UpdateGame,   EndGame,   // Game thread
   };
 
   class FGE_API AppEvent : public Event {
@@ -22,38 +22,38 @@ namespace fge {
       : type_{type} {}
   };
 
-  class FGE_API AppStartEvent : public AppEvent {
+  class FGE_API AppStartGameEvent : public AppEvent {
   public:
-    AppStartEvent()
-      : AppEvent{AppEventType::Start} {}
+    AppStartGameEvent()
+      : AppEvent{AppEventType::StartGame} {}
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <App> (START)";
+      ss << "Event <App> (START_GAME)";
       return ss.str();
     }
   };
 
-  class FGE_API AppMainStartEvent : public AppEvent {
+  class FGE_API AppStartMainEvent : public AppEvent {
   public:
-    AppMainStartEvent()
-      : AppEvent{AppEventType::MainStart} {}
+    AppStartMainEvent()
+      : AppEvent{AppEventType::StartMain} {}
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <App> (MAIN_START)";
+      ss << "Event <App> (START_MAIN)";
       return ss.str();
     }
   };
 
-  class FGE_API AppRenderStartEvent : public AppEvent {
+  class FGE_API AppStartRenderEvent : public AppEvent {
   public:
-    AppRenderStartEvent()
-      : AppEvent{AppEventType::RenderStart} {}
+    AppStartRenderEvent()
+      : AppEvent{AppEventType::StartRender} {}
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <App> (RENDER_START)";
+      ss << "Event <App> (START_RENDER)";
       return ss.str();
     }
   };
@@ -70,108 +70,108 @@ namespace fge {
     }
   };
 
-  class FGE_API AppFixedUpdateEvent : public AppEvent {
+  class FGE_API AppTickGameEvent : public AppEvent {
   public:
-    AppFixedUpdateEvent()
-      : AppEvent{AppEventType::FixedUpdate} {}
+    AppTickGameEvent()
+      : AppEvent{AppEventType::TickGame} {}
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <App> (FIXED_UPDATE)";
+      ss << "Event <App> (TICK_GAME)";
       return ss.str();
     }
   };
 
-  class FGE_API AppUpdateEvent : public AppEvent {
+  class FGE_API AppUpdateGameEvent : public AppEvent {
   public:
-    AppUpdateEvent()
-      : AppEvent{AppEventType::Update} {}
+    AppUpdateGameEvent()
+      : AppEvent{AppEventType::UpdateGame} {}
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <App> (UPDATE)";
+      ss << "Event <App> (UPDATE_GAME)";
       return ss.str();
     }
   };
 
-  class FGE_API AppMainUpdateEvent : public AppEvent {
+  class FGE_API AppUpdateMainEvent : public AppEvent {
   public:
-    AppMainUpdateEvent()
-      : AppEvent{AppEventType::MainUpdate} {}
+    AppUpdateMainEvent()
+      : AppEvent{AppEventType::UpdateMain} {}
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <App> (MAIN_UPDATE)";
+      ss << "Event <App> (UPDATE_MAIN)";
       return ss.str();
     }
   };
 
-  class FGE_API AppRenderUpdateEvent : public AppEvent {
+  class FGE_API AppUpdateRenderEvent : public AppEvent {
   public:
-    AppRenderUpdateEvent()
-      : AppEvent{AppEventType::RenderUpdate} {}
+    AppUpdateRenderEvent()
+      : AppEvent{AppEventType::UpdateRender} {}
 
-    AppRenderUpdateEvent(const AppRenderUpdateEvent& e)
-      : AppEvent{AppEventType::RenderUpdate} {
+    AppUpdateRenderEvent(const AppUpdateRenderEvent& e)
+      : AppEvent{AppEventType::UpdateRender} {
       /// TODO: Complete copy constructor
     }
 
-    AppRenderUpdateEvent& operator=(const AppRenderUpdateEvent& e) {
+    AppUpdateRenderEvent& operator=(const AppUpdateRenderEvent& e) {
       /// TODO: Complete copy assignment
       return *this;
     }
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <App> (RENDER_UPDATE)";
+      ss << "Event <App> (UPDATE_RENDER)";
       return ss.str();
     }
   };
 
-  class FGE_API AppTickEvent : public AppEvent {
+  // class FGE_API AppTickEvent : public AppEvent {
+  // public:
+  //   AppTickEvent()
+  //     : AppEvent{AppEventType::Tick} {}
+
+  //   std::string toString() const override {
+  //     std::stringstream ss;
+  //     ss << "Event <App> (TICK)";
+  //     return ss.str();
+  //   }
+  // };
+
+  class FGE_API AppEndGameEvent : public AppEvent {
   public:
-    AppTickEvent()
-      : AppEvent{AppEventType::Tick} {}
+    AppEndGameEvent()
+      : AppEvent{AppEventType::EndGame} {}
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <App> (TICK)";
+      ss << "Event <App> (END_GAME)";
       return ss.str();
     }
   };
 
-  class FGE_API AppEndEvent : public AppEvent {
+  class FGE_API AppEndRenderEvent : public AppEvent {
   public:
-    AppEndEvent()
-      : AppEvent{AppEventType::End} {}
+    AppEndRenderEvent()
+      : AppEvent{AppEventType::EndRender} {}
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <App> (END)";
+      ss << "Event <App> (END_RENDER)";
       return ss.str();
     }
   };
 
-  class FGE_API AppRenderEndEvent : public AppEvent {
+  class FGE_API AppEndMainEvent : public AppEvent {
   public:
-    AppRenderEndEvent()
-      : AppEvent{AppEventType::RenderEnd} {}
+    AppEndMainEvent()
+      : AppEvent{AppEventType::EndMain} {}
 
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <App> (RENDER_END)";
-      return ss.str();
-    }
-  };
-
-  class FGE_API AppMainEndEvent : public AppEvent {
-  public:
-    AppMainEndEvent()
-      : AppEvent{AppEventType::MainEnd} {}
-
-    std::string toString() const override {
-      std::stringstream ss;
-      ss << "Event <App> (MAIN_END)";
+      ss << "Event <App> (END_MAIN)";
       return ss.str();
     }
   };

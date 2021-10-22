@@ -33,7 +33,7 @@ namespace fge {
     // Util
     /// TODO: Handle multithreaded time. (Perhaps one time per thread?)
     Time time_{};
-    
+    AppState state_[2]{}; // double buffered app state
     // Window
     Unique<Window> window_;
     bool shouldClose_{false};
@@ -42,7 +42,7 @@ namespace fge {
     ThreadPool threadPool_{};
     std::mutex renderMutex_;
     std::condition_variable renderCondition_;
-    std::queue<AppRenderUpdateEvent> renderQueue_{};
+    std::queue<AppUpdateRenderEvent> renderQueue_{};
 
     // Layers
     LayerStack layerStack_;
@@ -52,7 +52,7 @@ namespace fge {
     void renderLoop();
     
     void waitForRenderJob();
-    void pushRenderJob(AppRenderUpdateEvent& event);
+    void pushRenderJob(AppUpdateRenderEvent& event);
 
     void eventDispatch(Event& e);
   };

@@ -12,63 +12,41 @@ namespace fge {
     //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
     switch (e.type()) {
       // case AppEventType::Start: {
-      //   //onStartEvent(dynamic_cast<AppStartEvent&>(e));
-      //   return false;
+      //   return onStartEvent(dynamic_cast<AppStartEvent&>(e));
+      // }
+      // case AppEventType::MainStart: {
+      //   return onMainStartEvent(dynamic_cast<AppMainStartEvent&>(e));
+      // }
+      // case AppEventType::RenderStart: {
+      //   return onRenderStartEvent(dynamic_cast<AppRenderStartEvent&>(e));
+      // }
+      // case AppEventType::Poll: {
+      //   return onPollEvent(dynamic_cast<AppPollEvent&>(e));
+      // }
+      // case AppEventType::FixedUpdate: {
+      //   return onFixedUpdateEvent(dynamic_cast<AppFixedUpdateEvent&>(e));
+      // }
+      // case AppEventType::Update: {
+      //   return onUpdateEvent(dynamic_cast<AppUpdateEvent&>(e));
+      // }
+      // case AppEventType::MainUpdate: {
+      //   return onMainUpdateEvent(dynamic_cast<AppMainUpdateEvent&>(e));
+      // }
+      // case AppEventType::RenderUpdate: {
+      //   return onRenderUpdateEvent(dynamic_cast<AppRenderUpdateEvent&>(e));
+      // }
+      // case AppEventType::End: {
+      //   return onEndEvent(dynamic_cast<AppEndEvent&>(e));
+      // }
+      // case AppEventType::MainEnd: {
+      //   return onMainEndEvent(dynamic_cast<AppMainEndEvent&>(e));
+      // }
+      // case AppEventType::RenderEnd: {
+      //   return onRenderEndEvent(dynamic_cast<AppRenderEndEvent&>(e));
       // }
       default: {
         return false;
       }
     }
-  }
-
-  // void Layer::onStartEvent(AppStartEvent& e) {
-  //   //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
-  // }
-
-  // void Layer::onFixedUpdateEvent(AppFixedUpdateEvent& e) {
-  //   //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
-  // }
-
-  // void Layer::onUpdateEvent(AppUpdateEvent& e) {
-  //   //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
-  // }
-
-  // void Layer::onRenderEvent(AppRenderEvent& e) {
-  //   //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
-  // }
-
-  // void Layer::onEndEvent(AppEndEvent& e) {
-  //   //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
-  // }
-
-  bool Layer::onWindowEvent(WindowEvent& e) {
-    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
-    
-    return false;
-  }
-
-  bool Layer::onKeyboardEvent(KeyboardEvent& e) {
-    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
-
-    return false; // return false so event isn't marked handled from base app
-  }
-
-  bool Layer::onMouseEvent(MouseEvent& e) {
-    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
-    // custom dragging and close button
-    
-    return false; // return false so event isn't marked handled from base app
-  }
-
-  bool Layer::onCursorEvent(CursorEvent& e) {
-    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
-    
-    return false; // return false so event isn't marked handled from base app
-  }
-
-  bool Layer::onScrollEvent(ScrollEvent& e) {
-    //FGE_DEBUG_ENG("Layer: {0} | {1}", name_, e);
-    
-    return false; // return false so event isn't marked handled from base app
   }
 }
