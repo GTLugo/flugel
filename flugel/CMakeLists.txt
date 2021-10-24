@@ -226,7 +226,10 @@ if(FLUGEL_OPENGL)
   set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
   add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
   set(GLAD_LIBRARY glad_gl_core_46)
-  glad_add_library(${GLAD_LIBRARY} STATIC MX MXGLOBAL API gl:core=4.6)
+  glad_add_library(${GLAD_LIBRARY} 
+    STATIC API # MX MXGLOBAL
+    gl:core=4.6
+  )
   target_link_libraries(${TARGET_NAME}
     PRIVATE
       ${GLAD_LIBRARY}
@@ -240,7 +243,10 @@ if(FLUGEL_VULKAN)
   set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
   add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
   set(GLAD_LIBRARY glad_vulkan_12)
-  glad_add_library(${GLAD_LIBRARY} STATIC MX MXGLOBAL API vulkan=1.2)
+  glad_add_library(${GLAD_LIBRARY} 
+    STATIC API # MX MXGLOBAL
+    vulkan=1.2
+  )
   target_link_libraries(${TARGET_NAME}
     PRIVATE
       ${GLAD_LIBRARY}

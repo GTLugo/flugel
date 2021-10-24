@@ -9,6 +9,7 @@ namespace fge {
     ~ImGuiLayer();
 
     virtual bool onAppEvent(AppEvent& e) override;
+    virtual bool onRenderEvent(RenderEvent& e) override;
     
   private:
     void setDarkThemeColors();

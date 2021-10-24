@@ -1,7 +1,5 @@
 #include "opengl_context.hpp"
 
-#include "util/color/color.hpp"
-
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
@@ -14,49 +12,22 @@ namespace fge {
                                   const GLchar* message,
                                   const void* userParam ) {
     switch (type) {
-      case GL_DEBUG_TYPE_ERROR: {
-        FGE_ERROR_ENG("OPENGL ERROR | Type: {0} | Severity: {1} | {2}",
-          type,
-          severity,
-          message
-        );
-        break;
+      case GL_DEBUG_TYPE_ERROR: { 
+        return FGE_ERROR_ENG("OPENGL ERROR | Type: {0} | Severity: {1} | {2}", type, severity, message);
       }
       case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: {
-        FGE_WARN_ENG("OPENGL DEPRECATED BEHAVIOR | Type: {0} | Severity: {1} | {2}",
-          type,
-          severity,
-          message
-        );
-        break;
+        return FGE_ERROR_ENG("OPENGL DEPRECATED BEHAVIOR | Type: {0} | Severity: {1} | {2}", type, severity, message);
       }
       case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: {
-        FGE_WARN_ENG("OPENGL UNDEFINED BEHAVIOR | Type: {0} | Severity: {1} | {2}",
-          type,
-          severity,
-          message
-        );
-        break;
+        return FGE_ERROR_ENG("OPENGL UNDEFINED BEHAVIOR | Type: {0} | Severity: {1} | {2}", type, severity, message);
       }
       case GL_DEBUG_TYPE_PORTABILITY: {
-        FGE_WARN_ENG("OPENGL PORTABILITY | Type: {0} | Severity: {1} | {2}",
-          type,
-          severity,
-          message
-        );
-        break;
+        return FGE_ERROR_ENG("OPENGL PORTABILITY | Type: {0} | Severity: {1} | {2}", type, severity, message);
       }
       case GL_DEBUG_TYPE_PERFORMANCE: {
-        FGE_WARN_ENG("OPENGL PERFORMANCE | Type: {0} | Severity: {1} | {2}",
-          type,
-          severity,
-          message
-        );
-        break;
+        return FGE_ERROR_ENG("OPENGL PERFORMANCE | Type: {0} | Severity: {1} | {2}", type, severity, message);
       }
-      default: {
-        break;
-      }
+      default: { return; }
     };
   }
 
@@ -67,29 +38,29 @@ namespace fge {
   }
 
   OpenGLContext::~OpenGLContext() {
-    delete context_;
+    //delete context_;
   }
 
   void OpenGLContext::init() {
     setCurrent(true);
     
-    context_ = new GladGLContext();
-    int32_t gladVersion = gladLoadGLContext(context_, glfwGetProcAddress);
+    //context_ = new GladGLContext();
+    //int32_t gladVersion = gladLoadGLContext(context_, glfwGetProcAddress);
+    int32_t gladVersion = gladLoadGL(glfwGetProcAddress);
     FGE_ASSERT_ENG(gladVersion, "Failed to initialize GLAD!");
     FGE_INFO_ENG("Using OpenGL | Vendor: {} | Renderer: {} | Version: {}.{}", 
-      context_->GetString(GL_VENDOR),
-      context_->GetString(GL_RENDERER),
+      glGetString(GL_VENDOR),
+      glGetString(GL_RENDERER),
       GLAD_VERSION_MAJOR(gladVersion),
       GLAD_VERSION_MINOR(gladVersion)
     );
-    gladSetGLContext(context_);
+    //gladSetGLContext(context_);
 
-    context_->Enable(GL_FRAMEBUFFER_SRGB);
+    glEnable(GL_FRAMEBUFFER_SRGB);
     #if defined(DEBUG) || defined(RELDEB)
-      context_->Enable(GL_DEBUG_OUTPUT);
-      context_->DebugMessageCallback(messageCallback, 0);
+      glEnable(GL_DEBUG_OUTPUT);
+      glDebugMessageCallback(messageCallback, 0);
     #endif
-    Color::using_srgb_color_space = true;
 
     setCurrent(false);
   }

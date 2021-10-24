@@ -17,6 +17,8 @@
 
 #include "core/callbacks/events/event.hpp"
 #include "core/callbacks/events/app_event.hpp"
+#include "core/callbacks/events/render_event.hpp"
+#include "core/callbacks/events/logic_event.hpp"
 #include "core/callbacks/events/window_event.hpp"
 #include "core/callbacks/events/keyboard_event.hpp"
 #include "core/callbacks/events/mouse_event.hpp"

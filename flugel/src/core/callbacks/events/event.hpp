@@ -6,7 +6,7 @@
 namespace fge {
   enum class EventCategory {
     None = 0,
-    App, Window, Keyboard, Mouse, Cursor, Scroll
+    App, Render, Logic, Window, Keyboard, Mouse, Cursor, Scroll
   };
 
   /// TODO: Remove this macro! It's unnecesary!

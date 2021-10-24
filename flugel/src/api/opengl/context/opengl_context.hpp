@@ -16,7 +16,7 @@ namespace fge {
     virtual void swapBuffers() override;
   private:
     GLFWwindow* windowHandle_;
-    GladGLContext* context_;
+    //GladGLContext* context_;
 
     virtual void init() override;
   };

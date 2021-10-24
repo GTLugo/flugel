@@ -10,9 +10,9 @@ namespace sbx {
     TestLayer()
       : Layer{"test_layer"} {}
 
-    virtual bool onAppEvent(fge::AppEvent& e) override {
+    virtual bool onLogicEvent(fge::LogicEvent& e) override {
       switch (e.type()) {
-        case fge::AppEventType::TickGame: {
+        case fge::LogicEventType::Tick: {
           if (Input::isPressed(Key::Space) && !Input::isPressed(Key::LeftShift)) {
             FGE_TRACE("UwU");
           }

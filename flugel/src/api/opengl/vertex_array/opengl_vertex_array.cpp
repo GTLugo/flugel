@@ -21,40 +21,40 @@ namespace fge {
   }
 
   OpenGLVertexArray::~OpenGLVertexArray() {
-    auto gl{gladGetGLContext()};
+    //auto gl{gladGetGLContext()};
     
-    gl->DeleteVertexArrays(1, &vertexArrayId_);
+    glDeleteVertexArrays(1, &vertexArrayId_);
   }
 
   OpenGLVertexArray::OpenGLVertexArray(Shared<VertexBuffer> vertexBuffer, Shared<IndexBuffer> indexBuffer) {
-    auto gl{gladGetGLContext()};
+    //auto gl{gladGetGLContext()};
 
-    gl->CreateVertexArrays(1, &vertexArrayId_);
+    glCreateVertexArrays(1, &vertexArrayId_);
     addVertexBuffer(vertexBuffer);
     setIndexBuffer(indexBuffer);
   }
 
   void OpenGLVertexArray::bind() const {
-    auto gl{gladGetGLContext()};
-    gl->BindVertexArray(vertexArrayId_);
+    //auto gl{gladGetGLContext()};
+    glBindVertexArray(vertexArrayId_);
   }
 
   void OpenGLVertexArray::unbind() const {
-    auto gl{gladGetGLContext()};
-    gl->BindVertexArray(0);
+    //auto gl{gladGetGLContext()};
+    glBindVertexArray(0);
   }
 
   void OpenGLVertexArray::addVertexBuffer(Shared<VertexBuffer> vertexBuffer) {
     FGE_ASSERT_ENG(vertexBuffer->layout().elements().size(), "Vertex buffer has no layout!");
 
-    auto gl{gladGetGLContext()};
-    gl->BindVertexArray(vertexArrayId_);
+    //auto gl{gladGetGLContext()};
+    glBindVertexArray(vertexArrayId_);
 
     vertexBuffer->bind();
     uint32_t i{0};
     for (const auto& element : vertexBuffer->layout()) {
-      gl->EnableVertexAttribArray(i);
-      gl->VertexAttribPointer(i, 
+      glEnableVertexAttribArray(i);
+      glVertexAttribPointer(i, 
         element.componentCount(),
         shaderDataToOpenGLBaseType(element.type), 
         element.normalized, 
@@ -65,18 +65,18 @@ namespace fge {
     }
     vertexBuffers_.push_back(vertexBuffer);
 
-    gl->BindVertexArray(0);
+    glBindVertexArray(0);
     vertexBuffer->unbind();
   }
 
   void OpenGLVertexArray::setIndexBuffer(Shared<IndexBuffer> indexBuffer) {
-    auto gl{gladGetGLContext()};
-    gl->BindVertexArray(vertexArrayId_);
+    //auto gl{gladGetGLContext()};
+    glBindVertexArray(vertexArrayId_);
 
     indexBuffer->bind();
     indexBuffer_ = indexBuffer;
 
-    gl->BindVertexArray(0);
+    glBindVertexArray(0);
     indexBuffer->unbind();
   }
 }

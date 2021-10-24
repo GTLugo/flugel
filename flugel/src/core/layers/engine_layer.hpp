@@ -22,6 +22,7 @@ namespace fge {
     Shared<Shader> shader_;
     
     virtual bool onAppEvent(AppEvent& e) override;
+    virtual bool onRenderEvent(RenderEvent& e) override;
     virtual bool onWindowEvent(WindowEvent& e) override;
     virtual bool onKeyboardEvent(KeyboardEvent& e) override;
     virtual bool onMouseEvent(MouseEvent& e) override;

@@ -3,8 +3,8 @@
 #include "core/app.hpp"
 #include "core/input/input.hpp"
 
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
+//#include <glad/gl.h>
+//#include <GLFW/glfw3.h>
 #include <imgui.h>
 // RENDER API
 #if defined(FLUGEL_USE_OPENGL)
@@ -40,7 +40,7 @@ namespace fge {
 
   bool ImGuiLayer::onAppEvent(AppEvent& e) {
     switch (e.type()) {
-      case AppEventType::StartRender: {
+      case AppEventType::Start: {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -75,32 +75,47 @@ namespace fge {
         setDarkThemeColors();
         App& app = App::instance();
 		    GLFWwindow* window = static_cast<GLFWwindow*>(app.window().nativeWindow());
-
-        //ImGui_ImplGlfw_InitForOpenGL(window, true);
-        ImGui_ImplOpenGL3_Init("#version 410");
+        
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
         return false;
       }
-      case AppEventType::UpdateRender: {
+      default: {
+        return false;
+      }
+    }
+  }
+
+  bool ImGuiLayer::onRenderEvent(RenderEvent& e) {
+    switch (e.type()) {
+      case RenderEventType::Start: {
+        ImGui_ImplOpenGL3_Init("#version 460");
+        return false;
+      }
+      case RenderEventType::BeginFrame: {
         App& app = App::instance();
 
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
         io.DisplaySize = ImVec2(app.window().dims().x, app.window().dims().y);
         io.DeltaTime = app.time().deltaTime<Seconds>();
+        //FGE_DEBUG("Time: {}", app.time().deltaTime<Seconds>());
 
         ImGui_ImplOpenGL3_NewFrame();
+		    ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
         static bool show = true;
         ImGui::ShowDemoWindow(&show);
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
+        ImGui::Render();
         return false;
       }
-      case AppEventType::EndRender: {
+      case RenderEventType::EndFrame: {
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        return false;
+      }
+      case RenderEventType::Stop: {
 		    ImGui_ImplOpenGL3_Shutdown();
-		    //ImGui_ImplGlfw_Shutdown();
+		    ImGui_ImplGlfw_Shutdown();
 		    ImGui::DestroyContext();
         return false;
       }

@@ -19,15 +19,27 @@ namespace fge {
       }
     }
   }
-
+  
   bool EngineLayer::onAppEvent(AppEvent& e) {
     switch (e.type()) {
-      case AppEventType::StartRender: {
+      case AppEventType::Poll: {
+        App::instance().window().pollEvents();
+        return false;
+      }
+      default: {
+        return false;
+      }
+    }
+  }
+
+  bool EngineLayer::onRenderEvent(RenderEvent& e) {
+    switch (e.type()) {
+      case RenderEventType::Start: {
         vao_ = VertexArray::create(
           // Vertices
-          {-.5, -.5,  0., /**/ .9, .9, .9, 1.,
-            .5, -.5,  0., /**/ .9, .9, .9, 1.,
-            0.,  .5,  0., /**/ .9, .9, .9, 1.},
+          {-.5, -.5,  0., /**/.7, .7, .7, 1.,
+            .5, -.5,  0., /**/.7, .7, .7, 1.,
+            0.,  .5,  0., /**/.1, .1, .1, 1.},
           // Layout
           {{ShaderDataType::Float3, "pos"},
            {ShaderDataType::Float4, "color"}},
@@ -37,10 +49,10 @@ namespace fge {
 
         vaoSqr_ = VertexArray::create(
           // Vertices
-          {-.75, -.75, .1, /**/ .9, .1, .1, 1.,
-            .75, -.75, .1, /**/ .1, .9, .1, 1.,
-            .75,  .75, .1, /**/ .1, .1, .9, 1.,
-           -.75,  .75, .1, /**/ .9, .9, .1, 1.},
+          {-.75, -.75, .1, /**/ .1, .1, .1, 1.,
+            .75, -.75, .1, /**/ .1, .1, .1, 1.,
+            .75,  .75, .1, /**/ .7, .7, .7, 1.,
+           -.75,  .75, .1, /**/ .7, .7, .7, 1.},
           // Layout
           {{ShaderDataType::Float3, "pos"},
            {ShaderDataType::Float4, "color"}},
@@ -75,28 +87,28 @@ namespace fge {
 
         return false;
       }
-      case AppEventType::UpdateRender: {  
-        auto gl{gladGetGLContext()};
-        gl->ClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
-        gl->Clear(GL_COLOR_BUFFER_BIT);
-        
+      case RenderEventType::BeginFrame: {
+        //auto gl{gladGetGLContext()};
+        glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
+        glClear(GL_COLOR_BUFFER_BIT);
+        return false;
+      }
+      case RenderEventType::EndFrame: { 
+        //auto gl{gladGetGLContext()};
         shader_->bind();
         
         vaoSqr_->bind();
-        gl->DrawElements(GL_TRIANGLES, vaoSqr_->indexCount(), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, vaoSqr_->indexCount(), GL_UNSIGNED_INT, nullptr);
         vaoSqr_->unbind();
 
         vao_->bind();
-        gl->DrawElements(GL_TRIANGLES, vao_->indexCount(), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, vao_->indexCount(), GL_UNSIGNED_INT, nullptr);
         vao_->unbind();
       
         shader_->unbind();
 
         App::instance().window().context().swapBuffers();
         return false;
-      }
-      case AppEventType::Poll: {
-        App::instance().window().pollEvents();
       }
       default: {
         return false;

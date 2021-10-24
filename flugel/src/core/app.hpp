@@ -6,6 +6,8 @@
 #include "core/layers/engine_layer.hpp"
 #include "core/callbacks/events/event.hpp"
 #include "core/callbacks/events/app_event.hpp"
+#include "core/callbacks/events/render_event.hpp"
+#include "core/callbacks/events/logic_event.hpp"
 #include "core/callbacks/events/window_event.hpp"
 #include "core/callbacks/events/mouse_event.hpp"
 
@@ -42,7 +44,8 @@ namespace fge {
     ThreadPool threadPool_{};
     std::mutex renderMutex_;
     std::condition_variable renderCondition_;
-    std::queue<AppUpdateRenderEvent> renderQueue_{};
+    std::queue<RenderBeginFrameEvent> renderBeginQueue_{};
+    std::queue<RenderEndFrameEvent> renderEndQueue_{};
 
     // Layers
     LayerStack layerStack_;
@@ -52,7 +55,7 @@ namespace fge {
     void renderLoop();
     
     void waitForRenderJob();
-    void pushRenderJob(AppUpdateRenderEvent& event);
+    void pushRenderJob(RenderBeginFrameEvent& beginEvent, RenderEndFrameEvent& endEvent);
 
     void eventDispatch(Event& e);
   };
