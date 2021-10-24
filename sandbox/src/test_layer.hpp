@@ -6,6 +6,7 @@ namespace sbx {
   class TestLayer : public fge::Layer {
     using Input = fge::Input;
     using Key = fge::Key;
+    using Modifier = fge::Modifier;
   public:
     TestLayer()
       : Layer{"test_layer"} {}
@@ -13,11 +14,8 @@ namespace sbx {
     virtual bool onLogicEvent(fge::LogicEvent& e) override {
       switch (e.type()) {
         case fge::LogicEventType::Tick: {
-          if (Input::isPressed(Key::Space) && !Input::isPressed(Key::LeftShift)) {
-            FGE_TRACE("UwU");
-          }
-          if (Input::isPressed(Key::Space) && Input::isPressed(Key::LeftShift)) {
-            FGE_TRACE("OwO");
+          if (Input::isPressed(Key::Space)) {
+            FGE_TRACE("{}", (Input::isPressed(Modifier::Shift|Modifier::Control)) ? "OwO" : "UwU");
           }
           return false;
         }

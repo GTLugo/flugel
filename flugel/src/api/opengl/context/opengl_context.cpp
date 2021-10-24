@@ -13,19 +13,24 @@ namespace fge {
                                   const void* userParam ) {
     switch (type) {
       case GL_DEBUG_TYPE_ERROR: { 
-        return FGE_ERROR_ENG("OPENGL ERROR | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        FGE_ERROR_ENG("OPENGL ERROR | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        return;
       }
       case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: {
-        return FGE_ERROR_ENG("OPENGL DEPRECATED BEHAVIOR | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        FGE_ERROR_ENG("OPENGL DEPRECATED BEHAVIOR | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        return;
       }
       case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: {
-        return FGE_ERROR_ENG("OPENGL UNDEFINED BEHAVIOR | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        FGE_ERROR_ENG("OPENGL UNDEFINED BEHAVIOR | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        return;
       }
       case GL_DEBUG_TYPE_PORTABILITY: {
-        return FGE_ERROR_ENG("OPENGL PORTABILITY | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        FGE_ERROR_ENG("OPENGL PORTABILITY | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        return;
       }
       case GL_DEBUG_TYPE_PERFORMANCE: {
-        return FGE_ERROR_ENG("OPENGL PERFORMANCE | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        FGE_ERROR_ENG("OPENGL PERFORMANCE | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        return;
       }
       default: { return; }
     };

@@ -46,8 +46,7 @@ namespace fge {
     ThreadPool threadPool_{};
     std::mutex renderMutex_;
     std::condition_variable renderCondition_;
-    std::queue<RenderBeginFrameEvent> renderBeginQueue_{};
-    std::queue<RenderEndFrameEvent> renderEndQueue_{};
+    std::queue<RenderEvent*> renderQueue_{};
 
     // Layers
     LayerStack layerStack_;
@@ -57,7 +56,7 @@ namespace fge {
     void renderLoop();
     
     void waitForRenderJob();
-    void pushRenderJob(RenderBeginFrameEvent& beginEvent, RenderEndFrameEvent& endEvent);
+    void pushRenderJob(RenderEvent* renderEvent);
 
     void eventDispatch(Event& e);
   };

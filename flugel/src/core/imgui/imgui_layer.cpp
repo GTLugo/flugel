@@ -91,7 +91,7 @@ namespace fge {
         ImGui_ImplOpenGL3_Init("#version 460");
         return false;
       }
-      case RenderEventType::BeginFrame: {
+      case RenderEventType::BeginImGui: {
         App& app = App::instance();
 
         ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -106,6 +106,9 @@ namespace fge {
         static bool show = true;
         ImGui::ShowDemoWindow(&show);
         
+        return false;
+      }
+      case RenderEventType::EndImGui: {
         ImGui::Render();
         return false;
       }

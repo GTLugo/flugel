@@ -113,10 +113,11 @@ namespace fge {
       // Timestep INSENSITIVE stuff happens out here, where pacing goes as fast as possible
       LogicUpdateEvent updateEvent{};
       eventDispatch(updateEvent);
-
-      RenderBeginFrameEvent beginFrameEvent{};
-      RenderEndFrameEvent endFrameEvent{};
-      pushRenderJob(beginFrameEvent, endFrameEvent);
+      
+      pushRenderJob(new RenderBeginFrameEvent{});
+      pushRenderJob(new RenderBeginImGuiEvent{});
+      pushRenderJob(new RenderEndImGuiEvent{});
+      pushRenderJob(new RenderEndFrameEvent{});
 
       time_.update();
     }
@@ -127,41 +128,51 @@ namespace fge {
   }
 
   void App::waitForRenderJob() {
-    RenderBeginFrameEvent beginFrameEvent;
-    RenderEndFrameEvent endFrameEvent;
+    RenderBeginFrameEvent* beginFrameEvent{nullptr};
+    RenderBeginImGuiEvent* beginImGuiEvent{nullptr};
+    RenderEndImGuiEvent*   endImGuiEvent{nullptr};
+    RenderEndFrameEvent*   endFrameEvent{nullptr};
 
     {
       std::unique_lock<std::mutex> lock{renderMutex_};
       //FGE_DEBUG_ENG("Render thread waiting...");
       renderCondition_.wait(lock, [this]{
-        return !renderBeginQueue_.empty() || shouldClose_; // only need to test one queue since it's 1-to-1
+        return renderQueue_.size() >= 4 || shouldClose_;
       });
 
-      if (!shouldClose_) {
-        beginFrameEvent = renderBeginQueue_.front();
-        endFrameEvent = renderEndQueue_.front();
-        renderBeginQueue_.pop();
-        renderEndQueue_.pop();
+      if (renderQueue_.size() >= 4) {
+        beginFrameEvent = dynamic_cast<RenderBeginFrameEvent*>(renderQueue_.front());
+        renderQueue_.pop();
+        beginImGuiEvent = dynamic_cast<RenderBeginImGuiEvent*>(renderQueue_.front());
+        renderQueue_.pop();
+        endImGuiEvent = dynamic_cast<RenderEndImGuiEvent*>(renderQueue_.front());
+        renderQueue_.pop();
+        endFrameEvent = dynamic_cast<RenderEndFrameEvent*>(renderQueue_.front());
+        renderQueue_.pop();
       }
       //FGE_INFO_ENG("Render thread done waiting!");
     }
 
-    if (!shouldClose_) {
+    if (beginFrameEvent && beginImGuiEvent && endImGuiEvent && endFrameEvent) {
       //FGE_TRACE_ENG("Starting render job!");
-      eventDispatch(beginFrameEvent);
-      eventDispatch(endFrameEvent);
+      eventDispatch(*beginFrameEvent);
+      delete beginFrameEvent;
+      eventDispatch(*beginImGuiEvent);
+      delete beginImGuiEvent;
+      eventDispatch(*endImGuiEvent);
+      delete endImGuiEvent;
+      eventDispatch(*endFrameEvent);
+      delete endFrameEvent;
     }
   }
 
-  void App::pushRenderJob(RenderBeginFrameEvent& beginEvent, RenderEndFrameEvent& endEvent) {
+  void App::pushRenderJob(RenderEvent* renderEvent) {
     { // Mutex lock scope
       std::unique_lock<std::mutex> lock{renderMutex_};
-      if (renderBeginQueue_.size() < 2) { // only need to test one queue since it's 1-to-1
-        renderBeginQueue_.push(beginEvent);
-        renderEndQueue_.push(endEvent);
+      const uint32_t MaxFrames = 2;
+      if (renderQueue_.size() < MaxFrames * 4) {
+        renderQueue_.push(renderEvent);
       }
-      // if (renderEndQueue_.size() < 2) {
-      // }
     } // Unlock mutex
 
     renderCondition_.notify_all();
