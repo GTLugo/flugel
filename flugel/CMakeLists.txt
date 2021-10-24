@@ -17,6 +17,7 @@ set(SOURCE_FILES
   src/core/input/mouse_codes.cpp
   src/core/input/key_codes.cpp
   src/core/layers/engine_layer.cpp
+  src/core/layers/render_layer.cpp
   src/core/layers/layer_stack.cpp
   src/core/layers/layer.cpp
   src/core/renderer/vertex_array/buffer.cpp

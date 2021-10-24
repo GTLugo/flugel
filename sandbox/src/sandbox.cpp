@@ -20,6 +20,7 @@ namespace sbx {
 
         
         pushLayer(new TestLayer{});
+        pushOverlay(new fge::RenderLayer{});
         pushOverlay(new fge::ImGuiLayer{});
       }
 

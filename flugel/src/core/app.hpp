@@ -4,6 +4,8 @@
 #include "core/window/window.hpp"
 #include "core/layers/layer_stack.hpp"
 #include "core/layers/engine_layer.hpp"
+#include "core/layers/render_layer.hpp"
+
 #include "core/callbacks/events/event.hpp"
 #include "core/callbacks/events/app_event.hpp"
 #include "core/callbacks/events/render_event.hpp"
