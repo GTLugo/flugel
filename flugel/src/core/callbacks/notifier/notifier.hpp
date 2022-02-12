@@ -23,7 +23,7 @@ namespace fge {
   template<typename Event_T>
   class FGE_API Notifier {
     using EventFn = std::function<bool(Event_T&)>;
-    /// TODO: change u64 for UUID
+    /// TODO: change uint64_t for UUID
     using SubscriberCollection = std::map<UUID, EventFn>;
   public:
     Notifier() = default;

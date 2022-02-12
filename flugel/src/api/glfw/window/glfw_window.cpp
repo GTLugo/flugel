@@ -30,7 +30,7 @@ namespace fge {
 
     FGE_TRACE_ENG("Creating window...");
     if (glfwWindowCount_s == 0) {
-      i32 glfwInitSuccess = glfwInit();
+      int32_t glfwInitSuccess = glfwInit();
       FGE_ASSERT_ENG(glfwInitSuccess, "Failed to initialize GLFW!");
       glfwSetErrorCallback(glfwErrorCallback);
     }
@@ -41,8 +41,8 @@ namespace fge {
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
     glfwWindowHint(GLFW_DECORATED, !data_.customDecor);
     glfwWindow_ = glfwCreateWindow(
-      (i32)data_.windowDims.x,
-      (i32)data_.windowDims.y,
+      (int32_t)data_.windowDims.x,
+      (int32_t)data_.windowDims.y,
       data_.title.c_str(),
       nullptr,
       nullptr
@@ -100,13 +100,13 @@ namespace fge {
       WindowCloseEvent e{};
       data.eventCallback(e);
     });
-    glfwSetWindowSizeCallback(glfwWindow_, [](GLFWwindow* window, i32 width, i32 height) {
+    glfwSetWindowSizeCallback(glfwWindow_, [](GLFWwindow* window, int32_t width, int32_t height) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       data.windowDims = {width, height};
       WindowResizeEvent e{data.windowDims.x, data.windowDims.y};
       data.eventCallback(e);
     });
-    glfwSetWindowPosCallback(glfwWindow_, [](GLFWwindow* window, i32 xPos, i32 yPos) {
+    glfwSetWindowPosCallback(glfwWindow_, [](GLFWwindow* window, int32_t xPos, int32_t yPos) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       data.windowPos = {xPos, yPos};
       WindowMovedEvent e{data.windowPos.x, data.windowPos.y};
@@ -114,7 +114,7 @@ namespace fge {
     });
 
     // KEYBOARD
-    glfwSetKeyCallback(glfwWindow_, [](GLFWwindow* window, i32 key, i32 scanCode, i32 action, i32 mods) {
+    glfwSetKeyCallback(glfwWindow_, [](GLFWwindow* window, int32_t key, int32_t scanCode, int32_t action, int32_t mods) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
@@ -139,7 +139,7 @@ namespace fge {
     });
 
     // MOUSE
-    glfwSetMouseButtonCallback(glfwWindow_, [](GLFWwindow* window, i32 button, i32 action, i32 mods) {
+    glfwSetMouseButtonCallback(glfwWindow_, [](GLFWwindow* window, int32_t button, int32_t action, int32_t mods) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
@@ -186,13 +186,13 @@ namespace fge {
   }
   
   void GlfwWindow::dragWindow(vector2_t windowCursorOffset) {
-    i32 x, y;
+    int32_t x, y;
     glfwGetWindowPos(glfwWindow_, &x, &y);
     setPos(x + glm::floor(Input::cursorPos().x) - windowCursorOffset.x, 
            y + glm::floor(Input::cursorPos().y) - windowCursorOffset.y);
   }
 
-  void GlfwWindow::setIcon(uint8_t* image, i32 width, i32 height) {
+  void GlfwWindow::setIcon(uint8_t* image, int32_t width, int32_t height) {
     icons_[0] = GLFWimage{width, height, image};
     glfwSetWindowIcon(glfwWindow_, 1, icons_);
   }

@@ -34,11 +34,11 @@ namespace fge {
 
   class FGE_API WindowResizeEvent : public WindowEvent {
   public:
-    WindowResizeEvent(u32 width, u32 height)
+    WindowResizeEvent(uint32_t width, uint32_t height)
       : WindowEvent{WindowEventType::Resize}, width_{width}, height_{height} {}
 
-    u32 width() const { return width_; }
-    u32 height() const { return height_; }
+    uint32_t width() const { return width_; }
+    uint32_t height() const { return height_; }
 
     std::string toString() const override {
       std::stringstream ss;
@@ -46,16 +46,16 @@ namespace fge {
       return ss.str();
     }
   private:
-    const u32 width_, height_;
+    const uint32_t width_, height_;
   };
 
   class FGE_API WindowMovedEvent : public WindowEvent {
   public:
-    WindowMovedEvent(i32 xPos, i32 yPos)
+    WindowMovedEvent(int32_t xPos, int32_t yPos)
       : WindowEvent{WindowEventType::Resize}, xPos_{xPos}, yPos_{yPos} {}
 
-    u32 xPos() const { return xPos_; }
-    u32 yPos() const { return yPos_; }
+    uint32_t xPos() const { return xPos_; }
+    uint32_t yPos() const { return yPos_; }
 
     std::string toString() const override {
       std::stringstream ss;
@@ -63,6 +63,6 @@ namespace fge {
       return ss.str();
     }
   private:
-    const i32 xPos_, yPos_;
+    const int32_t xPos_, yPos_;
   };
 }

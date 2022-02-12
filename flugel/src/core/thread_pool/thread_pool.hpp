@@ -8,7 +8,7 @@ namespace fge {
     ThreadPool() = default;
     ~ThreadPool() = default;
     
-    void initialize(u32 numThreads = std::thread::hardware_concurrency());
+    void initialize(uint32_t numThreads = std::thread::hardware_concurrency());
     void shutdown();
 
     void pushJob(const JobFn& job);

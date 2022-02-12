@@ -23,8 +23,8 @@ namespace fge {
     }
   }
    
-  void ThreadPool::initialize(u32 numThreads) {
-    for (u32 i = 0; i < numThreads; ++i) {
+  void ThreadPool::initialize(uint32_t numThreads) {
+    for (uint32_t i = 0; i < numThreads; ++i) {
       threadPool_.push_back(std::thread{FGE_BIND(threadLoop)});
     }
     FGE_DEBUG_ENG("Initialized thread pool! Number of threads: {0}", threadPool_.size());

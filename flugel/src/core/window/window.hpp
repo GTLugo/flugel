@@ -7,11 +7,7 @@
 namespace fge {
   struct WindowProperties {
     std::string title;
-<<<<<<< Updated upstream
     uint32_t width, height;
-=======
-    u32 width, height;
->>>>>>> Stashed changes
     Renderer::API renderApi;
     bool vSync;
     bool fullScreen;
@@ -19,13 +15,8 @@ namespace fge {
     bool customDecor;
 
     WindowProperties(const std::string& title = "FLUGEL ENGINE",
-<<<<<<< Updated upstream
                      uint32_t width = 800,
                      uint32_t height = 450,
-=======
-                     u32 width = 800,
-                     u32 height = 450,
->>>>>>> Stashed changes
                      Renderer::API renderApi = Renderer::API::OpenGL,
                      bool vSync = true,
                      bool fullScreen = false,
@@ -53,7 +44,7 @@ namespace fge {
     virtual void* nativeWindow() = 0;
     virtual void dragWindow(vector2_t windowCursorOffset) = 0;
 
-    virtual void setIcon(uint8_t* image, i32 width, i32 height) = 0;
+    virtual void setIcon(uint8_t* image, int32_t width, int32_t height) = 0;
     virtual void setPos(double xPos, double yPos) = 0;
     virtual void setVSync(bool enabled) = 0;
     virtual void setFullscreen(bool enabled) = 0;

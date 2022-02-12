@@ -16,7 +16,7 @@ namespace fge {
     virtual void* nativeWindow() override { return glfwWindow_; }
     virtual void dragWindow(vector2_t windowCursorOffset);
 
-    virtual void setIcon(uint8_t* image, i32 width, i32 height) override;
+    virtual void setIcon(uint8_t* image, int32_t width, int32_t height) override;
     virtual void setPos(double xPos, double yPos) override;
     virtual void setVSync(bool enabled) override;
     virtual void setFullscreen(bool enabled) override;

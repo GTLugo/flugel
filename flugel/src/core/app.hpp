@@ -51,7 +51,7 @@ namespace fge {
     // Layers
     LayerStack layerStack_;
     EngineLayer* engineLayer_;
-    
+
     void gameLoop();
     void renderLoop();
     

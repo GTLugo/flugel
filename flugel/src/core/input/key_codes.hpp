@@ -3,14 +3,14 @@
 namespace fge {
   class Key {
   public:
-    enum State : i32 {
+    enum State : int32_t {
       Released,
       Pressed,
       Repeat
     };
 
     // Based on GLFW
-    enum Code : i32 {
+    enum Code : int32_t {
       // Printable
       Unknown      = -1,
       Tab          = 9,
@@ -138,11 +138,11 @@ namespace fge {
       Last         = Menu,
     };
 
-    static i32 toNative(Code key) {
+    static int32_t toNative(Code key) { 
       return keyMap_.at(key);
     }
 
-    static Code fromNative(i32 key) {
+    static Code fromNative(int32_t key) {
       for (const auto& itr : keyMap_) {
         if (itr.second == key) {
           return itr.first;
@@ -155,15 +155,15 @@ namespace fge {
       return nameMap_.at(keyCode);
     }
   protected:
-    static std::map<Code, i32> keyMap_;
+    static std::map<Code, int32_t> keyMap_;
     static std::map<Code, std::string> nameMap_;
   };
   
   class Modifier {
   public:
-    using BitCodes = i32;
+    using BitCodes = int32_t;
 
-    enum Code : i32 {
+    enum Code : int32_t {
       None     = 0,
       Shift    = BIT(0),
       Control  = BIT(1),
@@ -174,12 +174,12 @@ namespace fge {
     };
 
 
-    static i32 toNative(Code mod) {
+    static int32_t toNative(Code mod) { 
       return modMap_.at(mod); 
     }
 
-    static i32 toNativeBits(BitCodes mods) {
-      i32 result{0};
+    static int32_t toNativeBits(BitCodes mods) {
+      int32_t result{0};
       if (mods & Shift)    result |= toNative(Shift);
       if (mods & Control)  result |= toNative(Control);
       if (mods & Alt)      result |= toNative(Alt);
@@ -189,8 +189,8 @@ namespace fge {
       return result;
     }
 
-    static Code fromNative(i32 mod) {
-      i32 modifiers{0};
+    static Code fromNative(int32_t mod) {
+      int32_t modifiers{0};
       for (const auto& itr : modMap_) {
         if (itr.second == mod) {
           return itr.first;
@@ -199,7 +199,7 @@ namespace fge {
       return None;
     };
 
-    static BitCodes fromNativeBits(i32 mods) {
+    static BitCodes fromNativeBits(int32_t mods) {
       BitCodes result{0};
       if (mods & toNative(Shift))    result |= Shift;
       if (mods & toNative(Control))  result |= Control;
@@ -210,6 +210,6 @@ namespace fge {
       return result;
     }
   protected:
-    static std::map<Code, i32> modMap_;
+    static std::map<Code, int32_t> modMap_;
   };
 }

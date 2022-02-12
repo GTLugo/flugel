@@ -11,10 +11,6 @@ namespace fge {
     virtual void bind() const;
     virtual void unbind() const;
   private:
-<<<<<<< Updated upstream
     uint32_t shaderId_;
-=======
-    u32 shaderId_;
->>>>>>> Stashed changes
   };
 }

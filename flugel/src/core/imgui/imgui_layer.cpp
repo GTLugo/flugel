@@ -34,20 +34,10 @@ namespace fge {
     
   }
 
-  ImGuiLayer::~ImGuiLayer() = default;
+  ImGuiLayer::~ImGuiLayer() {
 
-  bool ImGuiLayer::onAppEvent(AppEvent& e) {
-    switch (e.type()) {
-      case AppEventType::Start: {
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.ConfigFlags |= ImGuiBackendFlags_HasMouseCursors;
-        io.ConfigFlags |= ImGuiBackendFlags_HasSetMousePos;
-        // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+  }
 
-<<<<<<< Updated upstream
   bool ImGuiLayer::onAppEvent(AppEvent& e) {
     switch (e.type()) {
       case AppEventType::Start: {
@@ -87,13 +77,6 @@ namespace fge {
 		    GLFWwindow* window = static_cast<GLFWwindow*>(app.window().nativeWindow());
         
         ImGui_ImplGlfw_InitForOpenGL(window, true);
-=======
-        ImGui::StyleColorsDark();
-        setDarkThemeColors();
-        App& app = App::instance();
-		    auto* window = static_cast<GLFWwindow*>(app.window().nativeWindow());
-        
-        ImGui_ImplGlfw_InitForOpenGL(window, true);
         return false;
       }
       default: {
@@ -102,54 +85,6 @@ namespace fge {
     }
   }
 
-  bool ImGuiLayer::onRenderEvent(RenderEvent& e) {
-    switch (e.type()) {
-      case RenderEventType::Start: {
-        ImGui_ImplOpenGL3_Init("#version 460");
-        return false;
-      }
-      case RenderEventType::BeginImGui: {
-        App& app = App::instance();
-
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.DisplaySize = ImVec2(app.window().dims().x, app.window().dims().y);
-        io.DeltaTime = app.time().deltaTime<Seconds>();
-        //FGE_DEBUG("Time: {}", app.time().deltaTime<Seconds>());
-
-        ImGui_ImplOpenGL3_NewFrame();
-		    ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        ImGui::Begin("App Stats");
-        ImGui::Text("FPS: %.1f (%.3f ms)", io.Framerate, 1000. / io.Framerate);
-        ImGui::End();
-        
-        return false;
-      }
-      case RenderEventType::EndImGui: {
-        ImGui::Render();
-        std::string a{"0"};
-        auto b = *(a.end() - 1);
-        return false;
-      }
-      case RenderEventType::EndFrame: {
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        return false;
-      }
-      case RenderEventType::Stop: {
-		    ImGui_ImplOpenGL3_Shutdown();
-		    ImGui_ImplGlfw_Shutdown();
-		    ImGui::DestroyContext();
->>>>>>> Stashed changes
-        return false;
-      }
-      default: {
-        return false;
-      }
-    }
-  }
-
-<<<<<<< Updated upstream
   bool ImGuiLayer::onRenderEvent(RenderEvent& e) {
     switch (e.type()) {
       case RenderEventType::Start: {
@@ -191,22 +126,6 @@ namespace fge {
         return false;
       }
     }
-=======
-  bool ImGuiLayer::onKeyboardEvent(KeyboardEvent& e) {
-    if (blockEvents_) {
-			ImGuiIO& io = ImGui::GetIO();
-      return io.WantCaptureKeyboard;
-    }
-    return false;
-  }
-
-  bool ImGuiLayer::onMouseEvent(MouseEvent& e) {
-    if (blockEvents_) {
-			ImGuiIO& io = ImGui::GetIO();
-      return io.WantCaptureMouse;
-    }
-    return false;
->>>>>>> Stashed changes
   }
 
 	void ImGuiLayer::setDarkThemeColors() {

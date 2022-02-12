@@ -18,6 +18,7 @@ namespace sbx {
         }} {
         FGE_TRACE("Constructing sandbox...");
 
+        
         pushLayer(new TestLayer{});
         pushOverlay(new fge::RenderLayer{});
         //#if defined(DEBUG) || defined(RELDEB)
@@ -25,7 +26,7 @@ namespace sbx {
         //#endif
       }
 
-      ~Sandbox() override {
+      virtual ~Sandbox() override {
         FGE_TRACE("Destructing sandbox...");
       };
   };

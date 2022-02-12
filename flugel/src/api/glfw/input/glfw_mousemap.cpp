@@ -6,7 +6,7 @@
 #include <GLFW/glfw3.h>
 
 namespace fge {
-  std::map<Mouse::Code, i32> Mouse::mouseMap_{
+  std::map<Mouse::Code, int32_t> Mouse::mouseMap_{
     {Mouse::Unknown, -1},
     {Mouse::_1,      GLFW_MOUSE_BUTTON_1}, 
     {Mouse::_2,      GLFW_MOUSE_BUTTON_2}, 

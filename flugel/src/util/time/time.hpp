@@ -112,13 +112,13 @@ namespace fge {
     static constexpr Seconds fixedTimeStep_{1. / fixedTickRate_};
     // bail out of the fixed updates if iterations exceeds this amount to prevent lockups
     // on extremely slow systems where updateFixed may be longer than fixedTimeStep_
-    static constexpr u32 bailCount_{1024U};
+    static constexpr uint32_t bailCount_{1024U};
 
     const Stopwatch stopwatch_;
     TimePoint gameLast_{}; // when last frame started
     TimePoint gameCurrent_{}; // when this frame started
     Seconds delta_{Seconds{1. / 60.}}; // how much time last frame took
     Seconds lag_{Seconds::zero()}; // how far behind the game is from real world
-    u32 stepCount_{0U};
+    uint32_t stepCount_{0U};
   };
 }

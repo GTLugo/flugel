@@ -47,15 +47,9 @@ namespace fge {
     }
   }
 
-<<<<<<< Updated upstream
   Shared<VertexArray> VertexArray::create(float* vertices, uint32_t vertBitSize,
                                           const BufferLayout& layout,
                                           uint32_t* indices, uint32_t count) {
-=======
-  Shared<VertexArray> VertexArray::create(float* vertices, u32 vertBitSize,
-                                          const BufferLayout& layout,
-                                          u32* indices, u32 count) {
->>>>>>> Stashed changes
     FGE_ASSERT_ENG(vertices, "No vertices found for vertex array!");
     auto vbo = VertexBuffer::create(vertices, vertBitSize);
     vbo->bind();
@@ -69,11 +63,7 @@ namespace fge {
 
   Shared<VertexArray> VertexArray::create(std::vector<float>& vertices,
                                           const BufferLayout& layout,
-<<<<<<< Updated upstream
                                           std::vector<uint32_t>& indices) {
-=======
-                                          std::vector<u32>& indices) {
->>>>>>> Stashed changes
     FGE_ASSERT_ENG(vertices.size(), "No vertices found for vertex array!");
     auto vbo = VertexBuffer::create(vertices);
     vbo->bind();
@@ -87,11 +77,7 @@ namespace fge {
 
   Shared<VertexArray> VertexArray::create(const std::initializer_list<float>& vertices,
                                           const BufferLayout& layout,
-<<<<<<< Updated upstream
                                           const std::initializer_list<uint32_t>& indices) {
-=======
-                                          const std::initializer_list<u32>& indices) {
->>>>>>> Stashed changes
     FGE_ASSERT_ENG(vertices.size(), "No vertices found for vertex array!");
     auto vbo = VertexBuffer::create(vertices);
     vbo->bind();

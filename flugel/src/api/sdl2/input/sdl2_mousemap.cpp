@@ -6,7 +6,7 @@
 #include <SDL2/SDL.h>
 
 namespace fge {
-  std::map<Mouse::Code, i32> Mouse::mouseMap_{
+  std::map<Mouse::Code, int32_t> Mouse::mouseMap_{
     {Mouse::Unknown, -1},
     {Mouse::_1,      SDL_BUTTON_LEFT}, 
     {Mouse::_2,      SDL_BUTTON_RIGHT}, 
