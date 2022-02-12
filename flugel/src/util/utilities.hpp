@@ -80,6 +80,9 @@ namespace fge {
   using u32 = std::uint32_t;
   using u64 = std::uint64_t;
 
+  using i128 = boost::multiprecision::int128_t;
+  using u128 = boost::multiprecision::uint128_t;
+
   // Floating point single precision
   using fvector2_t = glm::vec2;
   using fvector3_t = glm::vec3;
