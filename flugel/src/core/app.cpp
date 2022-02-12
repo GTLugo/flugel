@@ -21,8 +21,6 @@ namespace fge {
     window_->setEventCallback(FGE_BIND(eventDispatch));
     Color::using_srgb_color_space = true;
 
-    
-
     i32 width, height;
     // boost::gil::rgb8_image_t icon;
     // boost::gil::

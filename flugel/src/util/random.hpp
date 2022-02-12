@@ -5,7 +5,7 @@
 
 
 namespace fge {
-  class Chance {
+  class Random {
     using random_device = boost::random::random_device;
     template<class T>
     using uniform_real_dist = boost::random::uniform_real_distribution<T>;

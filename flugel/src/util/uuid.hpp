@@ -1,6 +1,5 @@
 #pragma once
 
-
 // Based on TheCherno's implementation of UUID
 // https://youtu.be/O_0nUE4S8T8
 
@@ -8,7 +7,7 @@ namespace fge {
   class FGE_API UUID {
   public:
     UUID()
-      : uuid_{Chance::intBetween(min_value(), max_value())} {}
+      : uuid_{Random::intBetween(min_value(), max_value())} {}
     explicit UUID(u128 uuid)
       : uuid_(std::move(uuid)) {}
     UUID(const UUID&) = default;
