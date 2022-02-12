@@ -31,7 +31,7 @@ set(SOURCE_FILES
   src/util/color/srgb_transform/srgb_transform.cpp
   src/util/color/color.cpp
   src/util/logging/log.cpp
-  src/util/uuid.cpp)
+    )
 
 set(OPENGL_FILES
   src/api/opengl/context/opengl_context.cpp
