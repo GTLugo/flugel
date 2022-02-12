@@ -11,7 +11,7 @@
 namespace fge {
   class FGE_API Layer {
   public:
-    Layer(const std::string& name = "layer");
+    explicit Layer(const std::string& name = "layer");
     virtual ~Layer();
     
     virtual void attach() {}
@@ -29,10 +29,12 @@ namespace fge {
         case EventCategory::Mouse:    { return d.dispatch<MouseEvent>   (FGE_BIND(onMouseEvent));    }
         case EventCategory::Cursor:   { return d.dispatch<CursorEvent>  (FGE_BIND(onCursorEvent));   }
         case EventCategory::Scroll:   { return d.dispatch<ScrollEvent>  (FGE_BIND(onScrollEvent));   }
+        case EventCategory::None:
+          break;
       }
     }
 
-    const std::string& name() const { return name_; }
+    [[nodiscard]] const std::string& name() const { return name_; }
   protected:
     std::string name_;
     // bool enabled_;
