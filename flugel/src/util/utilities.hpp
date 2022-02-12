@@ -71,6 +71,18 @@ namespace fge {
   template<typename T>
   using Weak = std::weak_ptr<T>;
 
+<<<<<<< Updated upstream
+=======
+  using i8  = std::int8_t;
+  using i16 = std::int16_t;
+  using i32 = std::int32_t;
+  using i64 = std::int64_t;
+  using u8  = std::uint8_t;
+  using u16 = std::uint16_t;
+  using u32 = std::uint32_t;
+  using u64 = std::uint64_t;
+
+>>>>>>> Stashed changes
   // Floating point single precision
   using fvector2_t = glm::vec2;
   using fvector3_t = glm::vec3;

@@ -9,7 +9,11 @@ namespace fge {
     //auto gl{gladGetGLContext()};
 
     // Create an empty vertex shader handle
+<<<<<<< Updated upstream
     uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
+=======
+    u32 vertexShader = glCreateShader(GL_VERTEX_SHADER);
+>>>>>>> Stashed changes
 
     // Send the vertex shader source code to GL
     // Note that std::string's .c_str is NULL character terminated.
@@ -19,10 +23,17 @@ namespace fge {
     // Compile the vertex shader
     glCompileShader(vertexShader);
 
+<<<<<<< Updated upstream
     int32_t isCompiled = 0;
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
     if(!isCompiled) {
     	int32_t maxLength = 0;
+=======
+    i32 isCompiled = 0;
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
+    if(!isCompiled) {
+    	i32 maxLength = 0;
+>>>>>>> Stashed changes
     	glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
 
     	// The maxLength includes the NULL character
@@ -41,7 +52,11 @@ namespace fge {
     }
 
     // Create an empty fragment shader handle
+<<<<<<< Updated upstream
     uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+=======
+    u32 fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+>>>>>>> Stashed changes
 
     // Send the fragment shader source code to GL
     // Note that std::string's .c_str is NULL character terminated.
@@ -53,7 +68,11 @@ namespace fge {
 
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
     if (!isCompiled) {
+<<<<<<< Updated upstream
     	int32_t maxLength = 0;
+=======
+    	i32 maxLength = 0;
+>>>>>>> Stashed changes
     	glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
 
     	// The maxLength includes the NULL character
@@ -86,10 +105,17 @@ namespace fge {
     glLinkProgram(shaderId_);
 
     // Note the different functions here: glGetProgram* instead of glGetShader*.
+<<<<<<< Updated upstream
     int32_t isLinked = 0;
     glGetProgramiv(shaderId_, GL_LINK_STATUS, (int *)&isLinked);
     if (!isLinked) {
     	int32_t maxLength = 0;
+=======
+    i32 isLinked = 0;
+    glGetProgramiv(shaderId_, GL_LINK_STATUS, (int *)&isLinked);
+    if (!isLinked) {
+    	i32 maxLength = 0;
+>>>>>>> Stashed changes
     	glGetProgramiv(shaderId_, GL_INFO_LOG_LENGTH, &maxLength);
 
     	// The maxLength includes the NULL character

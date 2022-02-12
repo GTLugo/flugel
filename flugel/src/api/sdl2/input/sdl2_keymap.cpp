@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 
 namespace fge {
-  std::map<Key::Code, int32_t> Key::keyMap_{
+  std::map<Key::Code, i32> Key::keyMap_{
     {Key::Unknown,      SDL_SCANCODE_UNKNOWN},
     //num row
     {Key::_1,           SDL_SCANCODE_1}, 
@@ -146,7 +146,7 @@ namespace fge {
     {Key::World2,       SDL_SCANCODE_UNKNOWN},
   };
 
-  std::map<Modifier::Code, int32_t> Modifier::modMap_{
+  std::map<Modifier::Code, i32> Modifier::modMap_{
     {Modifier::None,     0},
     {Modifier::Shift,    1},
     {Modifier::Control,  2}, 

@@ -7,7 +7,11 @@
 #include "core/renderer/renderer.hpp"
 
 namespace fge {
+<<<<<<< Updated upstream
   Shared<VertexBuffer> VertexBuffer::create(float* vertices, uint32_t bitSize) {
+=======
+  Shared<VertexBuffer> VertexBuffer::create(float* vertices, u32 bitSize) {
+>>>>>>> Stashed changes
     FGE_ASSERT_ENG(vertices, "No vertices found for vertex buffer!");
     switch (Renderer::api()) {
       case Renderer::None: {
@@ -56,7 +60,11 @@ namespace fge {
     return create(verts);
   }
 
+<<<<<<< Updated upstream
   Shared<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t count) {
+=======
+  Shared<IndexBuffer> IndexBuffer::create(u32* indices, u32 count) {
+>>>>>>> Stashed changes
     switch (Renderer::api()) {
       case Renderer::None: {
         FGE_ASSERT_ENG(false, "Running with no API not implemented!");
@@ -95,12 +103,21 @@ namespace fge {
     }
   }
   
+<<<<<<< Updated upstream
   Shared<IndexBuffer> IndexBuffer::create(const std::initializer_list<uint32_t>& indices) {
     std::vector<uint32_t> i{indices};
     return create(i);
   }
   
   Shared<IndexBuffer> IndexBuffer::create(std::vector<uint32_t>& indices) {
+=======
+  Shared<IndexBuffer> IndexBuffer::create(const std::initializer_list<u32>& indices) {
+    std::vector<u32> i{indices};
+    return create(i);
+  }
+  
+  Shared<IndexBuffer> IndexBuffer::create(std::vector<u32>& indices) {
+>>>>>>> Stashed changes
     return create(indices.data(), indices.size());
   }
 }

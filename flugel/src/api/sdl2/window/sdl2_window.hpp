@@ -6,7 +6,7 @@
 
 #include <SDL2/SDL.h>
 
-namespace fge {
+namespace gtl {
   class Sdl2Window : public Window {
   public:
     Sdl2Window(const WindowProperties& props);
@@ -18,7 +18,7 @@ namespace fge {
     virtual void* nativeWindow() override { return sdl2Window_; }
     virtual void dragWindow(vector2_t windowCursorOffset);
 
-    virtual void setIcon(uint8_t* image, int32_t width, int32_t height) override;
+    virtual void setIcon(uint8_t* image, i32 width, i32 height) override;
     virtual void setPos(double xPos, double yPos) override;
     virtual void setVSync(bool enabled) override;
     virtual void setFullscreen(bool enabled) override;

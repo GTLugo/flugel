@@ -2,7 +2,7 @@
 
 #include "core/app.hpp"
 
-int32_t main(int32_t argCount = 0, char* args[] = nullptr) {
+fge::i32 main(fge::i32 argCount = 0, char* args[] = nullptr) {
   fge::Log::init();
 
   fge::Unique<fge::App> app{fge::createApp()};
@@ -17,11 +17,11 @@ int32_t main(int32_t argCount = 0, char* args[] = nullptr) {
 }
 
 #if defined(_WIN32) && defined(NDEBUG)
-  int32_t WINAPI WinMain(
+  i32 WINAPI WinMain(
       HINSTANCE h_instance,
       HINSTANCE h_prev_instance, 
       LPSTR lp_cmd_line,
-      int32_t n_cmd_show) {
+      i32 n_cmd_show) {
     return main(__argc, __argv);
   }
 #endif

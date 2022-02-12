@@ -20,8 +20,13 @@ namespace fge {
     window_ = Window::create(props);
     window_->setEventCallback(FGE_BIND(eventDispatch));
     Color::using_srgb_color_space = true;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     
-    int32_t width, height;
+
+    i32 width, height;
     // boost::gil::rgb8_image_t icon;
     // boost::gil::
     uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
@@ -52,7 +57,11 @@ namespace fge {
     threadPool_.initialize();
     threadPool_.pushJob(FGE_BIND(gameLoop));
     threadPool_.pushJob(FGE_BIND(renderLoop));
-
+    //window_->context().setCurrent(true);
+    //
+    //// RENDER THREAD
+    //RenderStartEvent renderStartEvent{};
+    //eventDispatch(renderStartEvent);
     // MAIN THREAD
     while (!shouldClose_) {
       AppPollEvent pollEvent{};
@@ -60,6 +69,17 @@ namespace fge {
 
       AppUpdateEvent mainUpdateEvent{};
       eventDispatch(mainUpdateEvent);
+<<<<<<< Updated upstream
+=======
+      //RenderBeginFrameEvent beginFrameEvent{};
+      //eventDispatch(beginFrameEvent);
+      //RenderBeginImGuiEvent beginImGuiEvent{};
+      //eventDispatch(beginImGuiEvent);
+      //RenderEndImGuiEvent endImGuiEvent{};
+      //eventDispatch(endImGuiEvent);
+      //RenderEndFrameEvent endFrameEvent{};
+      //eventDispatch(endFrameEvent);
+>>>>>>> Stashed changes
     }
 
     renderCondition_.notify_all();
@@ -169,7 +189,11 @@ namespace fge {
   void App::pushRenderJob(RenderEvent* renderEvent) {
     { // Mutex lock scope
       std::unique_lock<std::mutex> lock{renderMutex_};
+<<<<<<< Updated upstream
       const uint32_t MaxFrames = 2;
+=======
+      const u32 MaxFrames = 2;
+>>>>>>> Stashed changes
       if (renderQueue_.size() < MaxFrames * 4) {
         renderQueue_.push(renderEvent);
       }

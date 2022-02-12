@@ -10,8 +10,18 @@ namespace fge {
 
     virtual bool onAppEvent(AppEvent& e) override;
     virtual bool onRenderEvent(RenderEvent& e) override;
+<<<<<<< Updated upstream
     
   private:
     void setDarkThemeColors();
+=======
+    virtual bool onKeyboardEvent(KeyboardEvent& e) override;
+    virtual bool onMouseEvent(MouseEvent& e) override;
+    
+  private:
+		bool blockEvents_{true};
+
+    static void setDarkThemeColors();
+>>>>>>> Stashed changes
   };
 }
