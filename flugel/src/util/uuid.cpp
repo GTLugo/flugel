@@ -1,16 +1,13 @@
 #include "uuid.hpp"
 
+#include <utility>
+
 namespace fge {
-  static std::random_device randomDevice_s;
-  static std::mt19937_64 randomEngine_s{randomDevice_s()};
-  static std::uniform_int_distribution<u64> uniformDist_s;
+  u128 UUID::min_value = 0;
 
   UUID::UUID() 
-    : uuid_{uniformDist_s(randomEngine_s)} {
-    
-  }
+    : uuid_{Chance::intBetween(min_value, max_value())} {}
 
-  UUID::UUID(u64 uuid) {
-
-  } 
+  UUID::UUID(u128 uuid)
+    : uuid_(std::move(uuid)) {}
 }

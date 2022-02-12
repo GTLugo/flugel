@@ -36,7 +36,7 @@ namespace fge {
     static App* instance_;
     // Util
     /// TODO: Handle multithreaded time. (Perhaps one time per thread?)
-    Time time_{};
+    Time time_{128.};
     AppState state_[2]{}; // double buffered app state
     // Window
     Unique<Window> window_;
@@ -50,7 +50,6 @@ namespace fge {
 
     // Layers
     LayerStack layerStack_;
-    EngineLayer* engineLayer_;
     
     void gameLoop();
     void renderLoop();

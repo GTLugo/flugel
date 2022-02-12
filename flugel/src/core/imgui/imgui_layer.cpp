@@ -72,7 +72,7 @@ namespace fge {
 
         ImGuiIO& io = ImGui::GetIO(); (void)io;
         io.DisplaySize = ImVec2(app.window().dims().x, app.window().dims().y);
-        io.DeltaTime = app.time().deltaTime<Seconds>();
+        io.DeltaTime = fge::App::time().delta<Seconds>();
         //FGE_DEBUG("Time: {}", app.time().deltaTime<Seconds>());
 
         ImGui_ImplOpenGL3_NewFrame();

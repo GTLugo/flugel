@@ -46,6 +46,11 @@
 #include <glm/glm.hpp>
 #include <glm/matrix.hpp>
 
+#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/algorithm/clamp.hpp>
+#include <boost/random.hpp>
+#include <boost/random/random_device.hpp>
+
 /*----------------------
   FLUGEL LIBRARY
 ----------------------*/
@@ -53,4 +58,5 @@
 #include "util/utilities.hpp"
 #include "util/logging/log.hpp"
 #include "util/time/time.hpp"
+#include "util/chance/chance.hpp"
 #include "util/uuid.hpp"
