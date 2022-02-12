@@ -9,7 +9,7 @@ namespace fge {
     //auto gl{gladGetGLContext()};
 
     // Create an empty vertex shader handle
-    uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    u32 vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
     // Send the vertex shader source code to GL
     // Note that std::string's .c_str is NULL character terminated.
@@ -41,7 +41,7 @@ namespace fge {
     }
 
     // Create an empty fragment shader handle
-    uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    u32 fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
     // Send the fragment shader source code to GL
     // Note that std::string's .c_str is NULL character terminated.

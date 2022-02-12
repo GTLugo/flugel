@@ -11,6 +11,6 @@ namespace fge {
     virtual void bind() const;
     virtual void unbind() const;
   private:
-    uint32_t shaderId_;
+    u32 shaderId_;
   };
 }

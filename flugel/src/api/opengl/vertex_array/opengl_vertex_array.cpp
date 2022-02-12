@@ -51,7 +51,7 @@ namespace fge {
     glBindVertexArray(vertexArrayId_);
 
     vertexBuffer->bind();
-    uint32_t i{0};
+    u32 i{0};
     for (const auto& element : vertexBuffer->layout()) {
       glEnableVertexAttribArray(i);
       glVertexAttribPointer(i, 
@@ -59,7 +59,7 @@ namespace fge {
         shaderDataToOpenGLBaseType(element.type), 
         element.normalized, 
         vertexBuffer->layout().stride(), // size of an entire vertex including all attr
-        (const void*)static_cast<uint64_t>(element.offset) // offset of this attr in the vertex
+        (const void*)static_cast<u64>(element.offset) // offset of this attr in the vertex
       );
       ++i;
     }

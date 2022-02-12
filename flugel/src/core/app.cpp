@@ -183,7 +183,7 @@ namespace fge {
   void App::pushRenderJob(RenderEvent* renderEvent) {
     { // Mutex lock scope
       std::unique_lock<std::mutex> lock{renderMutex_};
-      const uint32_t MaxFrames = 2;
+      const u32 MaxFrames = 2;
       if (renderQueue_.size() < MaxFrames * 4) {
         renderQueue_.push(renderEvent);
       }

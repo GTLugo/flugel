@@ -2,7 +2,7 @@
 
 #include "core/app.hpp"
 
-i32 main(i32 argCount = 0, char* args[] = nullptr) {
+fge::i32 main(fge::i32 argCount = 0, char* args[] = nullptr) {
   fge::Log::init();
 
   fge::Unique<fge::App> app{fge::createApp()};

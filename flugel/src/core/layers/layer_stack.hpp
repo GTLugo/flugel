@@ -30,6 +30,6 @@ namespace fge {
     const_reverse_iterator rend() const { return layers_.rend(); }
   private:
     LayerCollection layers_;
-		uint32_t layerInsertIndex_{0};
+		u32 layerInsertIndex_{0};
   };
 }

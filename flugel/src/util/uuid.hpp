@@ -7,12 +7,12 @@ namespace fge {
   class FGE_API UUID {
   public:
     UUID();
-    UUID(uint64_t uuid);
+    UUID(u64 uuid);
     UUID(const UUID&) = default;
 
-    operator uint64_t() const { return uuid_; }
+    operator u64() const { return uuid_; }
   private:
-    uint64_t uuid_;
+    u64 uuid_;
   };
 }
 
@@ -21,7 +21,7 @@ namespace std {
   template<>
   struct hash<fge::UUID> {
     std::size_t operator()(const fge::UUID& uuid) const {
-      return hash<uint64_t>()((uint64_t)uuid);
+      return hash<fge::u64>()((fge::u64)uuid);
     }
   };
 }

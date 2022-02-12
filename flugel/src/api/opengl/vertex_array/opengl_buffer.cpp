@@ -8,7 +8,7 @@ namespace fge {
 
   // VERTEX BUFFER --------------------------- //
 
-  OpenGLVertexBuffer::OpenGLVertexBuffer(float* verts, uint32_t bitSize) {
+  OpenGLVertexBuffer::OpenGLVertexBuffer(float* verts, u32 bitSize) {
     //auto gl{gladGetGLContext()};
     glCreateBuffers(1, &bufferId_);
     glBindBuffer(GL_ARRAY_BUFFER, bufferId_);
@@ -33,7 +33,7 @@ namespace fge {
 
   // INDEX BUFFER --------------------------- //
 
-  OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
+  OpenGLIndexBuffer::OpenGLIndexBuffer(u32* indices, u32 count)
     : count_{count} {
     //auto gl{gladGetGLContext()};
     glCreateBuffers(1, &bufferId_);

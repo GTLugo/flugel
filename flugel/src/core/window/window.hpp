@@ -7,7 +7,7 @@
 namespace fge {
   struct WindowProperties {
     std::string title;
-    uint32_t width, height;
+    u32 width, height;
     Renderer::API renderApi;
     bool vSync;
     bool fullScreen;
@@ -15,8 +15,8 @@ namespace fge {
     bool customDecor;
 
     WindowProperties(const std::string& title = "FLUGEL ENGINE",
-                     uint32_t width = 800,
-                     uint32_t height = 450,
+                     u32 width = 800,
+                     u32 height = 450,
                      Renderer::API renderApi = Renderer::API::OpenGL,
                      bool vSync = true,
                      bool fullScreen = false,

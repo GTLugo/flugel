@@ -11,12 +11,12 @@ namespace fge {
     virtual void bind() const override;
     virtual void unbind() const override;
 
-    virtual uint32_t indexCount() const override { return indexBuffer_->count(); };
+    virtual u32 indexCount() const override { return indexBuffer_->count(); };
 
     virtual void addVertexBuffer(Shared<VertexBuffer> vertexBuffer) override;
     virtual void setIndexBuffer(Shared<IndexBuffer> indexBuffer) override;
   private:
-    uint32_t vertexArrayId_;
+    u32 vertexArrayId_;
     std::vector<Shared<VertexBuffer>> vertexBuffers_;
     Shared<IndexBuffer> indexBuffer_;
   };

@@ -7,7 +7,7 @@
 #include "core/renderer/renderer.hpp"
 
 namespace fge {
-  Shared<VertexBuffer> VertexBuffer::create(float* vertices, uint32_t bitSize) {
+  Shared<VertexBuffer> VertexBuffer::create(float* vertices, u32 bitSize) {
     FGE_ASSERT_ENG(vertices, "No vertices found for vertex buffer!");
     switch (Renderer::api()) {
       case Renderer::None: {
@@ -56,7 +56,7 @@ namespace fge {
     return create(verts);
   }
 
-  Shared<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t count) {
+  Shared<IndexBuffer> IndexBuffer::create(u32* indices, u32 count) {
     switch (Renderer::api()) {
       case Renderer::None: {
         FGE_ASSERT_ENG(false, "Running with no API not implemented!");
@@ -95,12 +95,12 @@ namespace fge {
     }
   }
   
-  Shared<IndexBuffer> IndexBuffer::create(const std::initializer_list<uint32_t>& indices) {
-    std::vector<uint32_t> i{indices};
+  Shared<IndexBuffer> IndexBuffer::create(const std::initializer_list<u32>& indices) {
+    std::vector<u32> i{indices};
     return create(i);
   }
   
-  Shared<IndexBuffer> IndexBuffer::create(std::vector<uint32_t>& indices) {
+  Shared<IndexBuffer> IndexBuffer::create(std::vector<u32>& indices) {
     return create(indices.data(), indices.size());
   }
 }
