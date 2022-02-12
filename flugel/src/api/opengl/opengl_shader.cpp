@@ -19,10 +19,10 @@ namespace fge {
     // Compile the vertex shader
     glCompileShader(vertexShader);
 
-    int32_t isCompiled = 0;
+    i32 isCompiled = 0;
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
     if(!isCompiled) {
-    	int32_t maxLength = 0;
+    	i32 maxLength = 0;
     	glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
 
     	// The maxLength includes the NULL character
@@ -53,7 +53,7 @@ namespace fge {
 
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
     if (!isCompiled) {
-    	int32_t maxLength = 0;
+    	i32 maxLength = 0;
     	glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
 
     	// The maxLength includes the NULL character
@@ -86,10 +86,10 @@ namespace fge {
     glLinkProgram(shaderId_);
 
     // Note the different functions here: glGetProgram* instead of glGetShader*.
-    int32_t isLinked = 0;
+    i32 isLinked = 0;
     glGetProgramiv(shaderId_, GL_LINK_STATUS, (int *)&isLinked);
     if (!isLinked) {
-    	int32_t maxLength = 0;
+    	i32 maxLength = 0;
     	glGetProgramiv(shaderId_, GL_INFO_LOG_LENGTH, &maxLength);
 
     	// The maxLength includes the NULL character

@@ -51,7 +51,7 @@ namespace fge {
 
   class FGE_API WindowMovedEvent : public WindowEvent {
   public:
-    WindowMovedEvent(int32_t xPos, int32_t yPos)
+    WindowMovedEvent(i32 xPos, i32 yPos)
       : WindowEvent{WindowEventType::Resize}, xPos_{xPos}, yPos_{yPos} {}
 
     uint32_t xPos() const { return xPos_; }
@@ -63,6 +63,6 @@ namespace fge {
       return ss.str();
     }
   private:
-    const int32_t xPos_, yPos_;
+    const i32 xPos_, yPos_;
   };
 }

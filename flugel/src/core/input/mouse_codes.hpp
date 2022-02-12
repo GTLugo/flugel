@@ -3,12 +3,12 @@
 namespace fge {
   class Mouse {
   public:
-    enum State : int32_t {
+    enum State : i32 {
       Released,
       Pressed
     };
 
-    enum Code : int32_t {
+    enum Code : i32 {
       Unknown = 0,
       _1 = 0x01,
       _2 = 0x02,
@@ -27,11 +27,11 @@ namespace fge {
       Forward = _5,
     };
 
-    static int32_t toNative(Code button) { 
+    static i32 toNative(Code button) {
       return mouseMap_.at(button);
     }
 
-    static Code fromNative(int32_t button) {
+    static Code fromNative(i32 button) {
       for (const auto& itr : mouseMap_) {
         if (itr.second == button) {
           return itr.first;
@@ -44,7 +44,7 @@ namespace fge {
       return nameMap_.at(keyCode);
     }
   protected:
-    static std::map<Code, int32_t> mouseMap_;
+    static std::map<Code, i32> mouseMap_;
     static std::map<Code, std::string> nameMap_;
   };
 }

@@ -12,10 +12,10 @@ namespace fge {
   static uint32_t shaderDataTypeSize(ShaderDataType type) {
     switch (type) {
       case ShaderDataType::Bool:   { return sizeof(bool); }
-      case ShaderDataType::Int:    { return sizeof(int32_t); }
-      case ShaderDataType::Int2:   { return sizeof(int32_t) * 2; }
-      case ShaderDataType::Int3:   { return sizeof(int32_t) * 3; }
-      case ShaderDataType::Int4:   { return sizeof(int32_t) * 4; }
+      case ShaderDataType::Int:    { return sizeof(i32); }
+      case ShaderDataType::Int2:   { return sizeof(i32) * 2; }
+      case ShaderDataType::Int3:   { return sizeof(i32) * 3; }
+      case ShaderDataType::Int4:   { return sizeof(i32) * 4; }
       case ShaderDataType::Float:  { return sizeof(float); }
       case ShaderDataType::Float2: { return sizeof(float) * 2; }
       case ShaderDataType::Float3: { return sizeof(float) * 3; }

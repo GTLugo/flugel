@@ -34,9 +34,7 @@ namespace fge {
     
   }
 
-  ImGuiLayer::~ImGuiLayer() {
-
-  }
+  ImGuiLayer::~ImGuiLayer() = default;
 
   bool ImGuiLayer::onAppEvent(AppEvent& e) {
     switch (e.type()) {
@@ -49,32 +47,10 @@ namespace fge {
         // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-        io.KeyMap[ImGuiKey_Tab]        = Key::Tab;
-        io.KeyMap[ImGuiKey_LeftArrow]  = Key::Left;
-        io.KeyMap[ImGuiKey_RightArrow] = Key::Right;
-        io.KeyMap[ImGuiKey_UpArrow]    = Key::Up;
-        io.KeyMap[ImGuiKey_DownArrow]  = Key::Down;
-        io.KeyMap[ImGuiKey_PageUp]     = Key::Tab;
-        io.KeyMap[ImGuiKey_PageDown]   = Key::PageDown;
-        io.KeyMap[ImGuiKey_Home]       = Key::Home;
-        io.KeyMap[ImGuiKey_End]        = Key::End;
-        io.KeyMap[ImGuiKey_Insert]     = Key::Insert;
-        io.KeyMap[ImGuiKey_Delete]     = Key::Delete;
-        io.KeyMap[ImGuiKey_Backspace]  = Key::Backspace;
-        io.KeyMap[ImGuiKey_Space]      = Key::Space;
-        io.KeyMap[ImGuiKey_Enter]      = Key::Enter;
-        io.KeyMap[ImGuiKey_Escape]     = Key::Escape;
-        io.KeyMap[ImGuiKey_A]          = Key::A;
-        io.KeyMap[ImGuiKey_C]          = Key::C;
-        io.KeyMap[ImGuiKey_V]          = Key::V;
-        io.KeyMap[ImGuiKey_X]          = Key::X;
-        io.KeyMap[ImGuiKey_Y]          = Key::Y;
-        io.KeyMap[ImGuiKey_Z]          = Key::Z;
-
         ImGui::StyleColorsDark();
         setDarkThemeColors();
         App& app = App::instance();
-		    GLFWwindow* window = static_cast<GLFWwindow*>(app.window().nativeWindow());
+		    auto* window = static_cast<GLFWwindow*>(app.window().nativeWindow());
         
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         return false;
@@ -103,13 +79,16 @@ namespace fge {
 		    ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        static bool show = true;
-        ImGui::ShowDemoWindow(&show);
+        ImGui::Begin("App Stats");
+        ImGui::Text("FPS: %.1f (%.3f ms)", io.Framerate, 1000. / io.Framerate);
+        ImGui::End();
         
         return false;
       }
       case RenderEventType::EndImGui: {
         ImGui::Render();
+        std::string a{"0"};
+        auto b = *(a.end() - 1);
         return false;
       }
       case RenderEventType::EndFrame: {
@@ -126,6 +105,22 @@ namespace fge {
         return false;
       }
     }
+  }
+
+  bool ImGuiLayer::onKeyboardEvent(KeyboardEvent& e) {
+    if (blockEvents_) {
+			ImGuiIO& io = ImGui::GetIO();
+      return io.WantCaptureKeyboard;
+    }
+    return false;
+  }
+
+  bool ImGuiLayer::onMouseEvent(MouseEvent& e) {
+    if (blockEvents_) {
+			ImGuiIO& io = ImGui::GetIO();
+      return io.WantCaptureMouse;
+    }
+    return false;
   }
 
 	void ImGuiLayer::setDarkThemeColors() {

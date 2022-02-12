@@ -8,13 +8,13 @@ namespace fge {
   public:
     EVENT_CATEGORY(EventCategory::Keyboard)
 
-    KeyboardEvent(Key::State keyState, Key::Code key, int32_t repeatCount, Modifier::BitCodes mods)
+    KeyboardEvent(Key::State keyState, Key::Code key, i32 repeatCount, Modifier::BitCodes mods)
       : keyState_{keyState}, key_{key}, repeatCount_{repeatCount}, mods_{mods} {}
 
     /// TODO: Move button state to input enum. Add Repeat state for key
     Key::State keyState() const { return keyState_; }
     Key::Code key() const { return key_; }
-    int32_t repeatCount() const { return repeatCount_; }
+    i32 repeatCount() const { return repeatCount_; }
     Modifier::BitCodes mods() const { return mods_; }
     
     std::string toString() const override {
@@ -25,7 +25,7 @@ namespace fge {
   protected:
     const Key::State keyState_;
     const Key::Code key_;
-    const int32_t repeatCount_;
+    const i32 repeatCount_;
     const Modifier::BitCodes mods_;
   };
 }

@@ -11,7 +11,7 @@ namespace sbx {
     TestLayer()
       : Layer{"test_layer"} {}
 
-    virtual bool onLogicEvent(fge::LogicEvent& e) override {
+    bool onLogicEvent(fge::LogicEvent& e) override {
       switch (e.type()) {
         case fge::LogicEventType::Tick: {
           if (Input::isPressed(Key::Space)) {
@@ -25,12 +25,12 @@ namespace sbx {
       }
     }
 
-    virtual bool onMouseEvent(fge::MouseEvent& e) override {
+    bool onMouseEvent(fge::MouseEvent& e) override {
       //FGE_DEBUG("{}: {}", name_, e);
       return true;
     }
 
-    virtual bool onKeyboardEvent(fge::KeyboardEvent& e) override {
+    bool onKeyboardEvent(fge::KeyboardEvent& e) override {
       //FGE_DEBUG("{}: {}", name_, e);
       return true;
     }

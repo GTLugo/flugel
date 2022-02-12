@@ -20,8 +20,10 @@ namespace fge {
     window_ = Window::create(props);
     window_->setEventCallback(FGE_BIND(eventDispatch));
     Color::using_srgb_color_space = true;
+
     
-    int32_t width, height;
+
+    i32 width, height;
     // boost::gil::rgb8_image_t icon;
     // boost::gil::
     uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
@@ -52,7 +54,11 @@ namespace fge {
     threadPool_.initialize();
     threadPool_.pushJob(FGE_BIND(gameLoop));
     threadPool_.pushJob(FGE_BIND(renderLoop));
-
+    //window_->context().setCurrent(true);
+    //
+    //// RENDER THREAD
+    //RenderStartEvent renderStartEvent{};
+    //eventDispatch(renderStartEvent);
     // MAIN THREAD
     while (!shouldClose_) {
       AppPollEvent pollEvent{};
@@ -60,6 +66,14 @@ namespace fge {
 
       AppUpdateEvent mainUpdateEvent{};
       eventDispatch(mainUpdateEvent);
+      //RenderBeginFrameEvent beginFrameEvent{};
+      //eventDispatch(beginFrameEvent);
+      //RenderBeginImGuiEvent beginImGuiEvent{};
+      //eventDispatch(beginImGuiEvent);
+      //RenderEndImGuiEvent endImGuiEvent{};
+      //eventDispatch(endImGuiEvent);
+      //RenderEndFrameEvent endFrameEvent{};
+      //eventDispatch(endFrameEvent);
     }
 
     renderCondition_.notify_all();

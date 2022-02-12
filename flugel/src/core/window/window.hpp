@@ -44,7 +44,7 @@ namespace fge {
     virtual void* nativeWindow() = 0;
     virtual void dragWindow(vector2_t windowCursorOffset) = 0;
 
-    virtual void setIcon(uint8_t* image, int32_t width, int32_t height) = 0;
+    virtual void setIcon(uint8_t* image, i32 width, i32 height) = 0;
     virtual void setPos(double xPos, double yPos) = 0;
     virtual void setVSync(bool enabled) = 0;
     virtual void setFullscreen(bool enabled) = 0;

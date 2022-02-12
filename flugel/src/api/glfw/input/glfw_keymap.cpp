@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 namespace fge {
-  std::map<Key::Code, int32_t> Key::keyMap_{
+  std::map<Key::Code, i32> Key::keyMap_{
     {Key::Unknown,      GLFW_KEY_UNKNOWN},
     //num row
     {Key::_1,           GLFW_KEY_1}, 
@@ -146,7 +146,7 @@ namespace fge {
     {Key::World2,       GLFW_KEY_WORLD_2},
   };
 
-  std::map<Modifier::Code, int32_t> Modifier::modMap_{
+  std::map<Modifier::Code, i32> Modifier::modMap_{
     {Modifier::None,     0}, 
     {Modifier::Shift,    GLFW_MOD_SHIFT},
     {Modifier::Control,  GLFW_MOD_CONTROL}, 

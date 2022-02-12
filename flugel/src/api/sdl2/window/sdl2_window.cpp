@@ -8,7 +8,7 @@
 
 #include <glad/glad.h>
 
-namespace fge {
+namespace gtl {
   static uint8_t sdl2WindowCount_s{0};
 
   static void sdl2ErrorCallback(const char* message) {
@@ -28,7 +28,7 @@ namespace fge {
   void Sdl2Window::init() {
     FGE_TRACE_ENG("Creating window...");
     if (sdl2WindowCount_s == 0) {
-      int32_t glfwInitSuccess = SDL_Init(SDL_INIT_VIDEO);
+      i32 glfwInitSuccess = SDL_Init(SDL_INIT_VIDEO);
       FGE_ASSERT_ENG(glfwInitSuccess >= 0, "SDL Error {} | Failed to initialize SDL!", SDL_GetError());
     }
     SDL_version version;
@@ -44,8 +44,8 @@ namespace fge {
       data_.title.c_str(),
       SDL_WINDOWPOS_UNDEFINED,
       SDL_WINDOWPOS_UNDEFINED,
-      (int32_t)data_.windowDims.x,
-      (int32_t)data_.windowDims.y,
+      (i32)data_.windowDims.x,
+      (i32)data_.windowDims.y,
       SDL_WINDOW_OPENGL
     );
     FGE_ASSERT_ENG(sdl2Window_ != nullptr, "SDL Error {} | Failed to create window!", SDL_GetError());
@@ -61,7 +61,7 @@ namespace fge {
     setFullscreen(data_.fullScreen);
     setCallbacks();
 
-    int32_t gladLoadSuccess = gladLoadGLLoader(SDL_GL_GetProcAddress);
+    i32 gladLoadSuccess = gladLoadGLLoader(SDL_GL_GetProcAddress);
     FGE_ASSERT_ENG(gladLoadSuccess, "Failed to initialize GLAD!");
     FGE_INFO_ENG("Using OpenGL | Vendor: {} | Renderer: {} | Version: {}.{}", 
       glGetString(GL_VENDOR), 
@@ -130,7 +130,7 @@ namespace fge {
             (event.key.repeat == 0) ? Key::Pressed : Key::Repeat,
             Key::fromNative(event.key.keysym.scancode), 
             event.key.repeat, 
-            Modifier::fromNativeBits(static_cast<int32_t>(event.key.keysym.mod))
+            Modifier::fromNativeBits(static_cast<i32>(event.key.keysym.mod))
           };
           data.eventCallback(e);
           break;
@@ -141,7 +141,7 @@ namespace fge {
             Key::Released,
             Key::fromNative(event.key.keysym.scancode),
             0, 
-            Modifier::fromNativeBits(static_cast<int32_t>(event.key.keysym.mod))
+            Modifier::fromNativeBits(static_cast<i32>(event.key.keysym.mod))
           };
           data.eventCallback(e);
           break;
@@ -150,7 +150,7 @@ namespace fge {
           WindowState& data = *(WindowState*)SDL_GetWindowData(sdl2Window_, dataPtrName_.c_str());
           MouseEvent e{
             Mouse::Pressed,
-            Mouse::fromNative(static_cast<int32_t>(event.button.button)),
+            Mouse::fromNative(static_cast<i32>(event.button.button)),
             Modifier::None
           };
           data.eventCallback(e);
@@ -160,7 +160,7 @@ namespace fge {
           WindowState& data = *(WindowState*)SDL_GetWindowData(sdl2Window_, dataPtrName_.c_str());
           MouseEvent e{
             Mouse::Released,
-            Mouse::fromNative(static_cast<int32_t>(event.button.button)),
+            Mouse::fromNative(static_cast<i32>(event.button.button)),
             Modifier::None
           };
           data.eventCallback(e);
@@ -180,13 +180,13 @@ namespace fge {
   }
   
   void Sdl2Window::dragWindow(vector2_t windowCursorOffset) {
-    int32_t x, y;
+    i32 x, y;
     SDL_GetWindowPosition(sdl2Window_, &x, &y);
     setPos(x + glm::floor(Input::cursorPos().x) - windowCursorOffset.x, 
            y + glm::floor(Input::cursorPos().y) - windowCursorOffset.y);
   }
 
-  void Sdl2Window::setIcon(uint8_t* image, int32_t width, int32_t height) {
+  void Sdl2Window::setIcon(uint8_t* image, i32 width, i32 height) {
     //https://wiki.libsdl.org/SDL_CreateRGBSurfaceFrom
     iconPixels_ = new uint8_t{*image};
     icon_ = SDL_CreateRGBSurfaceFrom(

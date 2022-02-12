@@ -50,8 +50,8 @@ namespace fge {
     setCurrent(true);
     
     //context_ = new GladGLContext();
-    //int32_t gladVersion = gladLoadGLContext(context_, glfwGetProcAddress);
-    int32_t gladVersion = gladLoadGL(glfwGetProcAddress);
+    //i32 gladVersion = gladLoadGLContext(context_, glfwGetProcAddress);
+    i32 gladVersion = gladLoadGL(glfwGetProcAddress);
     FGE_ASSERT_ENG(gladVersion, "Failed to initialize GLAD!");
     FGE_INFO_ENG("Using OpenGL | Vendor: {} | Renderer: {} | Version: {}.{}", 
       glGetString(GL_VENDOR),
