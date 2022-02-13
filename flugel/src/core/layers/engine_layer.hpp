@@ -9,20 +9,20 @@ namespace fge {
     EngineLayer()
       : Layer{"fge_engine_layer"} {}
   private:
-    vector2_t windowDragOffset_; // cursor position at time of clicking to drag window
+    vec2 windowDragOffset_{}; // cursor position at time of clicking to drag window
     bool draggingWindowDecor_{false};
     bool closingWindowDecor_{false};
 
     // Rendering
     Color clearColor_{0x2D2A2AFF};
     
-    virtual bool onAppEvent(AppEvent& e) override;
-    virtual bool onRenderEvent(RenderEvent& e) override;
-    virtual bool onWindowEvent(WindowEvent& e) override;
-    virtual bool onKeyboardEvent(KeyboardEvent& e) override;
-    virtual bool onMouseEvent(MouseEvent& e) override;
-    virtual bool onCursorEvent(CursorEvent& e) override;
-    virtual bool onScrollEvent(ScrollEvent& e) override;
+    bool onAppEvent(AppEvent& e) override;
+    bool onRenderEvent(RenderEvent& e) override;
+    bool onWindowEvent(WindowEvent& e) override;
+    bool onKeyboardEvent(KeyboardEvent& e) override;
+    bool onMouseEvent(MouseEvent& e) override;
+    bool onCursorEvent(CursorEvent& e) override;
+    bool onScrollEvent(ScrollEvent& e) override;
 
     void pollCustomDecor(MouseEvent& e);
   };

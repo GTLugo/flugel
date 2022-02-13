@@ -10,7 +10,7 @@ namespace fge {
     static bool using_srgb_color_space;
 
     Color(float r, float g, float b, float a = 1.f);
-    Color(unsigned int hexValue);
+    explicit Color(u32 hexValue);
 
     /*hallow_color(const hallow_color& color)
     : r{color.r}, g{color.r}, b{color.b}, a{color.a}, is_linear{color.is_linear} {};
@@ -38,14 +38,14 @@ namespace fge {
     }
 
     void to_srgb();
-    float r_srgb();
-    float g_srgb();
-    float b_srgb();
+    [[nodiscard]] float r_srgb() const;
+    [[nodiscard]] float g_srgb() const;
+    [[nodiscard]] float b_srgb() const;
 
     void to_linear();
-    float r_linear();
-    float g_linear();
-    float b_linear();
+    [[nodiscard]] float r_linear() const;
+    [[nodiscard]] float g_linear() const;
+    [[nodiscard]] float b_linear() const;
   };
 }
 // Struct based on: https://stackoverflow.com/questions/3723846/convert-from-hex-color-to-rgb-struct-in-c

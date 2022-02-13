@@ -23,6 +23,7 @@
 #include <chrono>
 #include <random>
 #include <stdexcept>
+#include <limits>
 // Data Structures
 #include <string>
 #include <array>
@@ -49,7 +50,7 @@
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/algorithm/clamp.hpp>
 #include <boost/random.hpp>
-#include <boost/random/random_device.hpp>
+#include <boost/nondet_random.hpp>
 
 /*----------------------
   FLUGEL LIBRARY

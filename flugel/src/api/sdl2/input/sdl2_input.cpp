@@ -13,13 +13,13 @@ namespace fge {
   }
 
   bool Input::isPressed(Mouse::Code button) {
-    ivector2_t pos;
+    ivec2 pos;
     auto state = SDL_GetMouseState(&pos.x, &pos.y);
     return state & SDL_BUTTON(Mouse::toNative(button)) != 0;
   }
 
-  vector2_t Input::cursorPos() {
-    ivector2_t pos;
+  dvec2 Input::cursorPos() {
+    ivec2 pos;
     auto state = SDL_GetMouseState(&pos.x, &pos.y);
     return pos;
   }

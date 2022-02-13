@@ -9,7 +9,9 @@ namespace sbx {
     using Modifier = fge::Modifier;
   public:
     TestLayer()
-      : Layer{"test_layer"} {}
+      : Layer{"test_layer"} {
+      FGE_DEBUG("{}", fge::UUID{});
+    }
 
     bool onLogicEvent(fge::LogicEvent& e) override {
       switch (e.type()) {

@@ -62,9 +62,9 @@ namespace fge {
     return true;
   }
 
-  vector2_t Input::cursorPos() {
+  dvec2 Input::cursorPos() {
     auto window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
-    vector2_t pos;
+    dvec2 pos;
     glfwGetCursorPos(window, &pos.x, &pos.y);
     return pos;
   }

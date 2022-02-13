@@ -7,22 +7,17 @@ namespace fge {
   class FGE_API UUID {
   public:
     UUID()
-      : uuid_{Random::intBetween(min_value(), max_value())} {}
+      : uuid_{Random::intBetween(std::numeric_limits<u128>::min(), std::numeric_limits<u128>::max())} {}
     explicit UUID(u128 uuid)
       : uuid_(std::move(uuid)) {}
     UUID(const UUID&) = default;
 
     explicit operator u128() const { return uuid_; }
+    friend std::ostream& operator<<(std::ostream& o, const UUID& uuid) {
+      return o << uuid.uuid_;
+    }
   private:
     u128 uuid_;
-    static u128& min_value() {
-      static u128 min_value = 0;
-      return min_value;
-    }
-    static u128& max_value() {
-      static u128 max_value = static_cast<u128>(pow(2,128) - 1);
-      return max_value;
-    }
   };
 }
 

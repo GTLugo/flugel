@@ -16,9 +16,9 @@ namespace gtl {
     virtual void render() override;
     
     virtual void* nativeWindow() override { return sdl2Window_; }
-    virtual void dragWindow(vector2_t windowCursorOffset);
+    virtual void dragWindow(vec2 windowCursorOffset);
 
-    virtual void setIcon(uint8_t* image, i32 width, i32 height) override;
+    virtual void setIcon(u8* image, i32 width, i32 height) override;
     virtual void setPos(double xPos, double yPos) override;
     virtual void setVSync(bool enabled) override;
     virtual void setFullscreen(bool enabled) override;

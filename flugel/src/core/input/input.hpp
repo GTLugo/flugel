@@ -9,6 +9,6 @@ namespace fge {
     static bool isPressed(Key::Code key);
     static bool isPressed(Mouse::Code button);
     static bool isPressed(Modifier::BitCodes mods);
-    static vector2_t cursorPos();
+    static dvec2 cursorPos();
   };
 }

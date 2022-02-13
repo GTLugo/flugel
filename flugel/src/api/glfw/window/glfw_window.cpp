@@ -185,19 +185,19 @@ namespace fge {
     glfwPollEvents();
   }
   
-  void GlfwWindow::dragWindow(vector2_t windowCursorOffset) {
+  void GlfwWindow::dragWindow(ivec2 windowCursorOffset) {
     i32 x, y;
     glfwGetWindowPos(glfwWindow_, &x, &y);
-    setPos(x + glm::floor(Input::cursorPos().x) - windowCursorOffset.x, 
-           y + glm::floor(Input::cursorPos().y) - windowCursorOffset.y);
+    setPos(static_cast<i32>(x + glm::floor(Input::cursorPos().x) - windowCursorOffset.x),
+           static_cast<i32>(y + glm::floor(Input::cursorPos().y) - windowCursorOffset.y));
   }
 
-  void GlfwWindow::setIcon(uint8_t* image, i32 width, i32 height) {
+  void GlfwWindow::setIcon(u8* image, i32 width, i32 height) {
     icons_[0] = GLFWimage{width, height, image};
     glfwSetWindowIcon(glfwWindow_, 1, icons_);
   }
 
-  void GlfwWindow::setPos(double xPos, double yPos) {
+  void GlfwWindow::setPos(i32 xPos, i32 yPos) {
     glfwSetWindowPos(glfwWindow_, xPos, yPos);
   }
 

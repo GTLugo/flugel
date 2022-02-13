@@ -14,10 +14,10 @@ namespace fge {
     virtual void pollEvents() override;
     
     virtual void* nativeWindow() override { return glfwWindow_; }
-    virtual void dragWindow(vector2_t windowCursorOffset);
+    virtual void dragWindow(ivec2 windowCursorOffset);
 
-    virtual void setIcon(uint8_t* image, i32 width, i32 height) override;
-    virtual void setPos(double xPos, double yPos) override;
+    virtual void setIcon(u8* image, i32 width, i32 height) override;
+    virtual void setPos(i32 xPos, i32 yPos) override;
     virtual void setVSync(bool enabled) override;
     virtual void setFullscreen(bool enabled) override;
     //virtual void setContextCurrent(bool isCurrent) override;

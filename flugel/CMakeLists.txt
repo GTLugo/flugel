@@ -138,6 +138,7 @@ find_package(Boost REQUIRED
     log
     system
     thread
+    random
 )
 target_link_libraries(${TARGET_NAME}
   PUBLIC
@@ -147,6 +148,7 @@ target_link_libraries(${TARGET_NAME}
     Boost::log
     Boost::system
     Boost::thread
+    Boost::random
 )
 
 # HEADER-ONLYS

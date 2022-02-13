@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "core/renderer/renderer.hpp"
 #include "core/renderer/context.hpp"
 #include "core/callbacks/events/event.hpp"
@@ -7,29 +9,31 @@
 namespace fge {
   struct WindowProperties {
     std::string title;
-    u32 width, height;
+    i32 width, height;
     Renderer::API renderApi;
     bool vSync;
     bool fullScreen;
     bool borderless;
     bool customDecor;
 
-    WindowProperties(const std::string& title = "FLUGEL ENGINE",
-                     u32 width = 800,
-                     u32 height = 450,
+    WindowProperties(std::string title = "FLUGEL ENGINE",
+                     i32 width = 800,
+                     i32 height = 450,
                      Renderer::API renderApi = Renderer::API::OpenGL,
                      bool vSync = true,
                      bool fullScreen = false,
                      bool borderless = false,
                      bool customDecor = false)
-      : title{title}, 
-        width{width}, 
+      : title{std::move(title)},
+        width{width},
         height{height},
         renderApi{renderApi},
-        vSync{vSync}, 
-        fullScreen{fullScreen}, 
-        borderless{borderless}, 
+        vSync{vSync},
+        fullScreen{fullScreen},
+        borderless{borderless},
         customDecor{customDecor} {}
+
+    WindowProperties(const WindowProperties& props) = default;
   };
 
   class FGE_API Window {
@@ -42,19 +46,19 @@ namespace fge {
     
     virtual RenderContext& context() { return *context_; }
     virtual void* nativeWindow() = 0;
-    virtual void dragWindow(vector2_t windowCursorOffset) = 0;
+    virtual void dragWindow(ivec2 windowCursorOffset) = 0;
 
-    virtual void setIcon(uint8_t* image, i32 width, i32 height) = 0;
-    virtual void setPos(double xPos, double yPos) = 0;
+    virtual void setIcon(u8* image, i32 width, i32 height) = 0;
+    virtual void setPos(i32 xPos, i32 yPos) = 0;
     virtual void setVSync(bool enabled) = 0;
     virtual void setFullscreen(bool enabled) = 0;
     //virtual void setContextCurrent(bool isCurrent) = 0;
 
-    ivector2_t pos() const { return data_.windowPos; }
-    uvector2_t dims() const { return data_.windowDims; }
-    bool isVSync() const { return data_.vSync; }
-    bool isFullscreen() const { return data_.fullScreen; }
-    bool isUsingCustomDecor() const { return data_.customDecor; }
+    [[nodiscard]] ivec2 pos() const { return data_.windowPos; }
+    [[nodiscard]] uvec2 dims() const { return data_.windowDims; }
+    [[nodiscard]] bool isVSync() const { return data_.vSync; }
+    [[nodiscard]] bool isFullscreen() const { return data_.fullScreen; }
+    [[nodiscard]] bool isUsingCustomDecor() const { return data_.customDecor; }
     void setEventCallback(const EventCallbackFn& callback) { data_.eventCallback = callback; }
     
     static Unique<Window> create(const WindowProperties& props = {});
@@ -66,16 +70,16 @@ namespace fge {
 
     struct WindowState {
       std::string title;
-      ivector2_t windowPos, posBeforeFullscreen;
-      uvector2_t windowDims, dimsBeforeFullscreen;
-      vector2_t cursorPos, cursorPosOld, cursorDelta;
+      ivec2 windowPos, posBeforeFullscreen, windowDims, dimsBeforeFullscreen;
+      ivec2 cursorPos{}, cursorPosOld{};
+      vec2 cursorDelta{};
       bool vSync;
       bool fullScreen;
       bool borderless;
       bool customDecor;
       EventCallbackFn eventCallback;
 
-      WindowState(const WindowProperties& props) 
+      explicit WindowState(const WindowProperties& props)
         : title{props.title},
           windowPos{69, 69}, posBeforeFullscreen{windowPos},
           windowDims{props.width, props.height}, dimsBeforeFullscreen{windowDims},
