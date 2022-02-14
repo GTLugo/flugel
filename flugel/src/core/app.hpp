@@ -24,7 +24,6 @@ namespace fge {
     virtual ~App();
 
     static App& instance() { return *instance_; }
-    static const Time& time() { return instance_->time_; }
     Window& window() { return *window_; }
 
     void pushLayer(Layer* layer);
@@ -35,8 +34,6 @@ namespace fge {
   private:
     static App* instance_;
     // Util
-    /// TODO: Handle multithreaded time. (Perhaps one time per thread?)
-    Time time_{128.};
     AppState state_[2]{}; // double buffered app state
     // Window
     Unique<Window> window_;

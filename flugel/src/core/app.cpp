@@ -17,6 +17,7 @@ namespace fge {
     FGE_DEBUG_ENG("Current working directory: {}", std::filesystem::current_path());
     FGE_TRACE_ENG("Constructing App...");
     instance_ = this;
+    Time::init(128.);
     window_ = Window::create(props);
     window_->setEventCallback(FGE_BIND(eventDispatch));
     Color::using_srgb_color_space = true;
@@ -115,12 +116,12 @@ namespace fge {
       // "catch up" with the proper pacing of physics.
       // Source: https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
       //FGE_TRACE_ENG("UPDATE");
-      while (time_.shouldDoTick()) {
+      while (Time::shouldDoTick()) {
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
         LogicTickEvent tickEvent{};
         eventDispatch(tickEvent);
 
-        time_.tick();
+        Time::tick();
       }
       // Timestep INSENSITIVE stuff happens out here, where pacing goes as fast as possible
       LogicUpdateEvent updateEvent{};
@@ -131,7 +132,7 @@ namespace fge {
       pushRenderJob(new RenderEndImGuiEvent{});
       pushRenderJob(new RenderEndFrameEvent{});
 
-      time_.update();
+      Time::update();
     }
     LogicStopEvent stopEvent{};
     eventDispatch(stopEvent);

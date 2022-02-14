@@ -54,50 +54,64 @@ namespace fge {
   };
 
   class Time {
-  public:
-    explicit Time(double tickRate, uint32_t bailCount = 1024U)
-      : tickRate_{tickRate},
-        bailCount_{bailCount},
-        stopwatch_{ClockSteady::now()}, 
-        gameLast_{ClockSteady::now()}, 
-        gameCurrent_{ClockSteady::now()} {
+    // This is awful and messy, but it'll prevent anyone outside the App class
+    // from reinitializing Time, which would cause the engine, the app, life,
+    // the universe, and all catgirls to die.
+    friend class App;
+
+    static void init(double tickRate, uint32_t bailCount = 1024U) {
+      tickRate_ = tickRate;
+      bailCount_ = bailCount;
+      gameLast_ = TimePoint{ClockSteady::now()};
+      gameCurrent_ = TimePoint{ClockSteady::now()};
       fixedTimeStep_ = Seconds{1. / tickRate_};
     }
-    ~Time() = default;
+  public:
+//    explicit Time(double tickRate, uint32_t bailCount = 1024U)
+//      : tickRate_{tickRate},
+//        bailCount_{bailCount},
+//        stopwatch_{ClockSteady::now()},
+//        gameLast_{ClockSteady::now()},
+//        gameCurrent_{ClockSteady::now()} {
+//      fixedTimeStep_ = Seconds{1. / tickRate_};
+//    }
+//    ~Time() = default;
 
-    [[nodiscard]] double tickRate() const { return tickRate_; }
+    [[nodiscard]] static double tickRate() {
+      return tickRate_;
+    }
 
     template<class Duration>
-    [[nodiscard]] double fixedStep() const {
+    [[nodiscard]] static double fixedStep() {
       return Duration::duration((fixedTimeStep_)).count();
     }
 
     template<class Duration>
-    [[nodiscard]] double start() const {
-      return stopwatch_.startTime<Duration>();
+    [[nodiscard]] static double start() {
+      return stopwatch().startTime<Duration>();
     }
 
     template<class Duration>
-    [[nodiscard]] double sinceStart() const {
-      return stopwatch_.getTimeElapsed<Duration>();
+    [[nodiscard]] static double sinceStart() {
+      return stopwatch().getTimeElapsed<Duration>();
     }
 
     template<typename Duration>
-    static double now() {
+    [[nodiscard]] static double now() {
       return Duration::duration(ClockSteady::now().time_since_epoch()).count();
     }
 
     template<class Duration>
-    [[nodiscard]] double delta() const {
+    [[nodiscard]] static double delta() {
       return Duration::duration((delta_)).count();
     }
 
     template<class Duration>
-    [[nodiscard]] double lag() const {
+    [[nodiscard]] static double lag() {
       return Duration::duration((lag_)).count();
     }
 
-    void update() {
+    static void update() {
       // FLUGEL_ENGINE_TRACE("Update!");
       gameCurrent_ = ClockSteady::now();
       // Seconds::duration()
@@ -107,13 +121,13 @@ namespace fge {
       stepCount_ = 0U;
     }
 
-    void tick() {
+    static void tick() {
       // FLUGEL_ENGINE_TRACE("Tick!");
       lag_ -= fixedTimeStep_;
       ++stepCount_;
     }
 
-    [[nodiscard]] bool shouldDoTick() const {
+    [[nodiscard]] static bool shouldDoTick() {
       #ifndef NDEBUG
         if (stepCount_ >= bailCount_) {
           std::cerr << "Struggling to catch up with physics rate!\n";
@@ -124,17 +138,21 @@ namespace fge {
     }
   private:
     // fixed number of ticks per second. this will be used for physics and anything else in fixed update
-    double tickRate_{};
-    Seconds fixedTimeStep_{};
+    static inline double tickRate_{};
+    static inline Seconds fixedTimeStep_{};
     // bail out of the fixed updates if iterations exceeds this amount to prevent lockups
     // on extremely slow systems where updateFixed may be longer than fixedTimeStep_
-    uint32_t bailCount_{};
+    static inline u32 bailCount_{};
 
-    const Stopwatch stopwatch_;
-    TimePoint gameLast_{}; // when last frame started
-    TimePoint gameCurrent_{}; // when this frame started
-    Seconds delta_{Seconds{1. / 60.}}; // how much time last frame took
-    Seconds lag_{Seconds::zero()}; // how far behind the game is from real world
-    uint32_t stepCount_{0U};
+    static inline TimePoint gameLast_{}; // when last frame started
+    static inline TimePoint gameCurrent_{}; // when this frame started
+    static inline Seconds delta_{Seconds{1. / 60.}}; // how much time last frame took
+    static inline Seconds lag_{Seconds::zero()}; // how far behind the game is from real world
+    static inline u32 stepCount_{0U};
+
+    static const Stopwatch& stopwatch() {
+      static const Stopwatch sw{ClockSteady::now()};
+      return sw;
+    };
   };
 }
