@@ -55,7 +55,7 @@ namespace fge {
     //virtual void setContextCurrent(bool isCurrent) = 0;
 
     [[nodiscard]] ivec2 pos() const { return data_.windowPos; }
-    [[nodiscard]] uvec2 dims() const { return data_.windowDims; }
+    [[nodiscard]] ivec2 dims() const { return data_.windowDims; }
     [[nodiscard]] bool isVSync() const { return data_.vSync; }
     [[nodiscard]] bool isFullscreen() const { return data_.fullScreen; }
     [[nodiscard]] bool isUsingCustomDecor() const { return data_.customDecor; }

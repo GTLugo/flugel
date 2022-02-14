@@ -70,7 +70,7 @@ namespace fge {
 
         ImGuiIO& io = ImGui::GetIO(); (void)io;
         io.DisplaySize = ImVec2(app.window().dims().x, app.window().dims().y);
-        io.DeltaTime = fge::App::time().delta<Seconds>();
+        io.DeltaTime = App::time().delta<Seconds>();
         //FGE_DEBUG("Time: {}", app.time().deltaTime<Seconds>());
 
         ImGui_ImplOpenGL3_NewFrame();
@@ -79,6 +79,7 @@ namespace fge {
 
         ImGui::Begin("App Stats");
         ImGui::Text("FPS: %.1f (%.3f ms)", io.Framerate, 1000. / io.Framerate);
+        ImGui::Text("Click Count: %llu", clickCount_);
         ImGui::End();
         
         return false;
@@ -116,6 +117,9 @@ namespace fge {
   bool ImGuiLayer::onMouseEvent(MouseEvent& e) {
     if (blockInputEvents_) {
 			ImGuiIO& io = ImGui::GetIO();
+      if (e.button() == Mouse::Left && e.buttonState() == Mouse::Pressed) {
+        ++clickCount_;
+      }
       return io.WantCaptureMouse;
     }
     return false;

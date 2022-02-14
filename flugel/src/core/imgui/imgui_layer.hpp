@@ -15,6 +15,7 @@ namespace fge {
   private:
 		bool blockInputEvents_{true};
     bool blockAppEvents_{false};
+    u64 clickCount_{0};
 
     static void setDarkThemeColors();
   };
