@@ -31,7 +31,6 @@ set(SOURCE_FILES
   src/util/color/srgb_transform/srgb_transform.cpp
   src/util/color/color.cpp
   src/util/logging/log.cpp
-  src/util/time/time.cpp
 )
 
 set(OPENGL_FILES

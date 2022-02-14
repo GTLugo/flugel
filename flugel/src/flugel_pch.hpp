@@ -58,6 +58,6 @@
 
 #include "util/utilities.hpp"
 #include "util/logging/log.hpp"
-#include "util/time/time.hpp"
+#include "util/time.hpp"
 #include "util/random.hpp"
 #include "util/uuid.hpp"

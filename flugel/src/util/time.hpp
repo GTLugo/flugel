@@ -8,6 +8,7 @@
 #include <iostream>
 
 namespace fge {
+
   // duration types
   using NanoSeconds = std::chrono::duration<double, std::nano>;
   using MicroSeconds = std::chrono::duration<double, std::micro>;
