@@ -15,6 +15,6 @@ namespace fge {
     Shared<VertexArray> vaoSqr_;
     Shared<Shader> shader_;
 
-    virtual bool onRenderEvent(RenderEvent& e) override;
+    bool onRenderEvent(RenderEvent& e) override;
   };
 }

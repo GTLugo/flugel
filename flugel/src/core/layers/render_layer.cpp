@@ -8,9 +8,9 @@ namespace fge {
       case RenderEventType::Start: {
         vao_ = VertexArray::create(
           // Vertices
-          {-.5, -.5,  0., /**/.7, .7, .7, 1.,
-            .5, -.5,  0., /**/.7, .7, .7, 1.,
-            0.,  .5,  0., /**/.1, .1, .1, 1.},
+          {-.5, -.5,  0., /**/.7, .1, .1, 1.,
+            .5, -.5,  0., /**/.1, .7, .1, 1.,
+            0.,  .5,  0., /**/.1, .1, .7, 1.},
           // Layout
           {{ShaderDataType::Float3, "pos"},
            {ShaderDataType::Float4, "color"}},
@@ -22,8 +22,8 @@ namespace fge {
           // Vertices
           {-.75, -.75, .1, /**/ .1, .1, .1, 1.,
             .75, -.75, .1, /**/ .1, .1, .1, 1.,
-            .75,  .75, .1, /**/ .7, .7, .7, 1.,
-           -.75,  .75, .1, /**/ .7, .7, .7, 1.},
+            .75,  .75, .1, /**/ .7, .6, .6, 1.,
+           -.75,  .75, .1, /**/ .7, .6, .6, 1.},
           // Layout
           {{ShaderDataType::Float3, "pos"},
            {ShaderDataType::Float4, "color"}},

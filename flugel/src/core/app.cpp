@@ -208,8 +208,15 @@ namespace fge {
         (*ritr)->onEvent(e);
 		  }
     }
+
     auto& engineLayer = *layerStack_.begin();
-    engineLayer->onEvent(e);
+    bool inputEvent = (e.category() == EventCategory::Keyboard ||
+                       e.category() == EventCategory::Cursor ||
+                       e.category() == EventCategory::Mouse ||
+                       e.category() == EventCategory::Scroll);
+    if (!(inputEvent && e.wasHandled())) {
+      engineLayer->onEvent(e);
+    }
     //FGE_TRACE_ENG("{}: {}", engineLayer->name(), e);
   }
 }

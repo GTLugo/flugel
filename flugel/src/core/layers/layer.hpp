@@ -11,7 +11,7 @@
 namespace fge {
   class FGE_API Layer {
   public:
-    explicit Layer(const std::string& name = "layer");
+    explicit Layer(std::string name = "layer");
     virtual ~Layer();
     
     virtual void attach() {}
@@ -20,18 +20,20 @@ namespace fge {
     void onEvent(Event& e) {
       EventDispatcher d{e};
       //FGE_DEBUG_ENG("{0}: {1}", name_, e);
-      switch (e.category()) {
-        case EventCategory::App:      { return d.dispatch<AppEvent>     (FGE_BIND(onAppEvent));      }
-        case EventCategory::Render:   { return d.dispatch<RenderEvent>  (FGE_BIND(onRenderEvent));   }
-        case EventCategory::Logic:    { return d.dispatch<LogicEvent>   (FGE_BIND(onLogicEvent));    }
-        case EventCategory::Window:   { return d.dispatch<WindowEvent>  (FGE_BIND(onWindowEvent));   }
+      switch (e.category()) { // Input events
         case EventCategory::Keyboard: { return d.dispatch<KeyboardEvent>(FGE_BIND(onKeyboardEvent)); }
         case EventCategory::Mouse:    { return d.dispatch<MouseEvent>   (FGE_BIND(onMouseEvent));    }
         case EventCategory::Cursor:   { return d.dispatch<CursorEvent>  (FGE_BIND(onCursorEvent));   }
         case EventCategory::Scroll:   { return d.dispatch<ScrollEvent>  (FGE_BIND(onScrollEvent));   }
-        case EventCategory::None:
-          break;
+        case EventCategory::App:      { return d.dispatch<AppEvent>     (FGE_BIND(onAppEvent));      }
+        case EventCategory::Render:   { return d.dispatch<RenderEvent>  (FGE_BIND(onRenderEvent));   }
+        case EventCategory::Logic:    { return d.dispatch<LogicEvent>   (FGE_BIND(onLogicEvent));    }
+        case EventCategory::Window:   { return d.dispatch<WindowEvent>  (FGE_BIND(onWindowEvent));   }
+        default: break;
       }
+//      switch (e.category()) { // App events
+//        default: break;
+//      }
     }
 
     [[nodiscard]] const std::string& name() const { return name_; }

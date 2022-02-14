@@ -52,7 +52,7 @@ namespace fge {
 
   bool EngineLayer::onKeyboardEvent(KeyboardEvent& e) {
     //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    if (Input::isPressed(Key::Enter) && Input::isPressed(Key::LeftAlt)) {
+    if (Input::isPressed(Key::Enter) && Input::isPressed(Modifier::Alt)) {
       FGE_DEBUG_ENG("{0}: Fullscreen({1})", name_, !App::instance().window().isFullscreen());
       App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
     }
@@ -60,7 +60,7 @@ namespace fge {
   }
 
   bool EngineLayer::onMouseEvent(MouseEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+    FGE_DEBUG_ENG("{0} [Thread: {1}]", e, std::this_thread::get_id());
     // custom dragging and close button
     if (App::instance().window().isUsingCustomDecor()) {
       pollCustomDecor(e);

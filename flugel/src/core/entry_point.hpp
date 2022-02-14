@@ -17,11 +17,11 @@ fge::i32 main(fge::i32 argCount = 0, char* args[] = nullptr) {
 }
 
 #if defined(_WIN32) && defined(NDEBUG)
-  i32 WINAPI WinMain(
+  fge::i32 WINAPI WinMain(
       HINSTANCE h_instance,
       HINSTANCE h_prev_instance, 
       LPSTR lp_cmd_line,
-      i32 n_cmd_show) {
+      fge::i32 n_cmd_show) {
     return main(__argc, __argv);
   }
 #endif

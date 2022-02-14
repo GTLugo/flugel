@@ -6,15 +6,15 @@ namespace fge {
   class ImGuiLayer : public Layer {
   public:
     ImGuiLayer();
-    ~ImGuiLayer();
 
-    virtual bool onAppEvent(AppEvent& e) override;
-    virtual bool onRenderEvent(RenderEvent& e) override;
-    virtual bool onKeyboardEvent(KeyboardEvent& e) override;
-    virtual bool onMouseEvent(MouseEvent& e) override;
+    bool onAppEvent(AppEvent& e) override;
+    bool onRenderEvent(RenderEvent& e) override;
+    bool onKeyboardEvent(KeyboardEvent& e) override;
+    bool onMouseEvent(MouseEvent& e) override;
     
   private:
-		bool blockEvents_{true};
+		bool blockInputEvents_{true};
+    bool blockAppEvents_{false};
 
     static void setDarkThemeColors();
   };

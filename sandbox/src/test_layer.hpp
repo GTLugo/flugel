@@ -29,12 +29,12 @@ namespace sbx {
 
     bool onMouseEvent(fge::MouseEvent& e) override {
       //FGE_DEBUG("{}: {}", name_, e);
-      return true;
+      return false;
     }
 
     bool onKeyboardEvent(fge::KeyboardEvent& e) override {
       //FGE_DEBUG("{}: {}", name_, e);
-      return true;
+      return false;
     }
   };
 }

@@ -16,9 +16,9 @@ namespace fge {
   class FGE_API Event {
     friend class EventDispatcher;
   public:
-    virtual EventCategory category() const = 0;
-    virtual std::string toString() const = 0;
-    virtual bool wasHandled() const { return wasHandled_; }
+    [[nodiscard]] virtual EventCategory category() const = 0;
+    [[nodiscard]] virtual std::string toString() const = 0;
+    [[nodiscard]] virtual bool wasHandled() const { return wasHandled_; }
   protected:
     bool wasHandled_{false};
   };
@@ -37,7 +37,7 @@ namespace fge {
     template<typename Event_t>
     using EventHandlerFn = std::function<bool(Event_t&)>;
   public:
-    EventDispatcher(Event& e)
+    explicit EventDispatcher(Event& e)
       : event_{e} {}
     
     template<typename Event_t>

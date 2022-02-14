@@ -34,8 +34,6 @@ namespace fge {
     
   }
 
-  ImGuiLayer::~ImGuiLayer() = default;
-
   bool ImGuiLayer::onAppEvent(AppEvent& e) {
     switch (e.type()) {
       case AppEventType::Start: {
@@ -108,7 +106,7 @@ namespace fge {
   }
 
   bool ImGuiLayer::onKeyboardEvent(KeyboardEvent& e) {
-    if (blockEvents_) {
+    if (blockInputEvents_) {
 			ImGuiIO& io = ImGui::GetIO();
       return io.WantCaptureKeyboard;
     }
@@ -116,7 +114,7 @@ namespace fge {
   }
 
   bool ImGuiLayer::onMouseEvent(MouseEvent& e) {
-    if (blockEvents_) {
+    if (blockInputEvents_) {
 			ImGuiIO& io = ImGui::GetIO();
       return io.WantCaptureMouse;
     }
