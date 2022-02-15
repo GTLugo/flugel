@@ -21,14 +21,14 @@ namespace fge {
       EventDispatcher d{e};
       //FGE_DEBUG_ENG("{0}: {1}", name_, e);
       switch (e.category()) { // Input events
-        case EventCategory::Keyboard: { return d.dispatch<KeyboardEvent>(FGE_BIND(onKeyboardEvent)); }
-        case EventCategory::Mouse:    { return d.dispatch<MouseEvent>   (FGE_BIND(onMouseEvent));    }
-        case EventCategory::Cursor:   { return d.dispatch<CursorEvent>  (FGE_BIND(onCursorEvent));   }
-        case EventCategory::Scroll:   { return d.dispatch<ScrollEvent>  (FGE_BIND(onScrollEvent));   }
-        case EventCategory::App:      { return d.dispatch<AppEvent>     (FGE_BIND(onAppEvent));      }
-        case EventCategory::Render:   { return d.dispatch<RenderEvent>  (FGE_BIND(onRenderEvent));   }
-        case EventCategory::Logic:    { return d.dispatch<LogicEvent>   (FGE_BIND(onLogicEvent));    }
-        case EventCategory::Window:   { return d.dispatch<WindowEvent>  (FGE_BIND(onWindowEvent));   }
+        case Event::Category::Keyboard: { return d.dispatch<KeyboardEvent>(FGE_BIND(onKeyboardEvent)); }
+        case Event::Category::Mouse:    { return d.dispatch<MouseEvent>   (FGE_BIND(onMouseEvent));    }
+        case Event::Category::Cursor:   { return d.dispatch<CursorEvent>  (FGE_BIND(onCursorEvent));   }
+        case Event::Category::Scroll:   { return d.dispatch<ScrollEvent>  (FGE_BIND(onScrollEvent));   }
+        case Event::Category::App:      { return d.dispatch<AppEvent>     (FGE_BIND(onAppEvent));      }
+        case Event::Category::Render:   { return d.dispatch<RenderEvent>  (FGE_BIND(onRenderEvent));   }
+        case Event::Category::Logic:    { return d.dispatch<LogicEvent>   (FGE_BIND(onLogicEvent));    }
+        case Event::Category::Window:   { return d.dispatch<WindowEvent>  (FGE_BIND(onWindowEvent));   }
         default: break;
       }
 //      switch (e.category()) { // App events

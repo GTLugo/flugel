@@ -10,7 +10,7 @@ namespace fge {
 
   class FGE_API AppEvent : public Event {
   public:
-    EVENT_CATEGORY(EventCategory::App)
+    EVENT_CATEGORY(Event::Category::App)
 
     AppEventType type() const { return type_; }
   protected:

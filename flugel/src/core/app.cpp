@@ -192,7 +192,7 @@ namespace fge {
   }
   
   void App::eventDispatch(Event& e) {
-    if (e.category() == EventCategory::Render) {
+    if (e.category() == Event::Category::Render) {
       for (auto itr = layerStack_.begin() + 1; itr != layerStack_.end(); ++itr) {
         //FGE_TRACE_ENG("{}: {}", (*itr)->name(), e);
         if (e.wasHandled()) {
@@ -211,10 +211,7 @@ namespace fge {
     }
 
     auto& engineLayer = *layerStack_.begin();
-    bool inputEvent = (e.category() == EventCategory::Keyboard ||
-                       e.category() == EventCategory::Cursor ||
-                       e.category() == EventCategory::Mouse ||
-                       e.category() == EventCategory::Scroll);
+    bool inputEvent = (e.category() | Event::Category::Input);
     if (!(inputEvent && e.wasHandled())) {
       engineLayer->onEvent(e);
     }

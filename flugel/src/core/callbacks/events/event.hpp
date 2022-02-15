@@ -4,19 +4,28 @@
 // https://thecherno.com/engine
 
 namespace fge {
-  enum class EventCategory {
-    None = 0,
-    App, Render, Logic, Window, Keyboard, Mouse, Cursor, Scroll
-  };
 
-  /// TODO: Remove this macro! It's unnecesary!
-  #define EVENT_CATEGORY(event_cat) static EventCategory categoryStatic() { return event_cat; }\
-                                   virtual EventCategory category() const override { return categoryStatic(); }
+  #define EVENT_CATEGORY(event_cat) static Category categoryStatic() { return event_cat; }\
+                                   virtual Category category() const override { return categoryStatic(); }
   
   class FGE_API Event {
     friend class EventDispatcher;
   public:
-    [[nodiscard]] virtual EventCategory category() const = 0;
+    enum Category {
+      None     = 0b0,
+      App      = 0b1,
+      Render   = 0b10,
+      Logic    = 0b100,
+      Window   = 0b1000,
+      Keyboard = 0b10000,
+      Mouse    = 0b100000,
+      Cursor   = 0b1000000,
+      Scroll   = 0b10000000,
+
+      Input    = Keyboard | Cursor | Mouse | Scroll,
+    };
+
+    [[nodiscard]] virtual Category category() const = 0;
     [[nodiscard]] virtual std::string toString() const = 0;
     [[nodiscard]] virtual bool wasHandled() const { return wasHandled_; }
   protected:
@@ -26,11 +35,6 @@ namespace fge {
   inline std::ostream& operator<<(std::ostream& out, const Event& e) {
     return out << e.toString();
   }
-
-  #define FLUGEL_BIND_INPUT_EVENTS(dispatcher) dispatcher.tryDispatch<KeyboardEvent>(FLUGEL_BIND_FN(onKeyboardEvent));\
-                                               dispatcher.tryDispatch<MouseEvent>(FGE_BIND(onMouseEvent));\
-                                               dispatcher.tryDispatch<CursorEvent>(FGE_BIND(onCursorEvent));\
-                                               dispatcher.tryDispatch<ScrollEvent>(FGE_BIND(onScrollEvent))
 
   // Takes an event and conditionally dispatches it to a handler if it matches the category type
   class EventDispatcher {

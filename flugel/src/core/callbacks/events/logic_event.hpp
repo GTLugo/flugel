@@ -10,7 +10,7 @@ namespace fge {
 
   class FGE_API LogicEvent : public Event {
   public:
-    EVENT_CATEGORY(EventCategory::Logic)
+    EVENT_CATEGORY(Event::Category::Logic)
 
     LogicEventType type() const { return type_; }
   protected:

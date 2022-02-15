@@ -10,7 +10,7 @@ namespace fge {
 
   class FGE_API RenderEvent : public Event {
   public:
-    EVENT_CATEGORY(EventCategory::Render)
+    EVENT_CATEGORY(Event::Category::Render)
 
     RenderEventType type() const { return type_; }
   protected:

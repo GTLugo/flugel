@@ -6,7 +6,7 @@
 namespace fge {
   class FGE_API KeyboardEvent : public Event {
   public:
-    EVENT_CATEGORY(EventCategory::Keyboard)
+    EVENT_CATEGORY(Event::Category::Keyboard)
 
     KeyboardEvent(Key::State keyState, Key::Code key, i32 repeatCount, Modifier::BitCodes mods)
       : keyState_{keyState}, key_{key}, repeatCount_{repeatCount}, mods_{mods} {}
