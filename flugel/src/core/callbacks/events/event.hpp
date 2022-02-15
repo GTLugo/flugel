@@ -12,16 +12,17 @@ namespace fge {
     friend class EventDispatcher;
   public:
     enum Category {
-      None     = 0b0,
-      App      = 0b1,
-      Render   = 0b10,
-      Logic    = 0b100,
-      Window   = 0b1000,
-      Keyboard = 0b10000,
-      Mouse    = 0b100000,
-      Cursor   = 0b1000000,
-      Scroll   = 0b10000000,
+      None     = 0,
+      Window   = 1 << 0,
+      App      = 1 << 1,
+      Logic    = 1 << 2,
+      Render   = 1 << 3,
+      Keyboard = 1 << 4,
+      Mouse    = 1 << 5,
+      Cursor   = 1 << 6,
+      Scroll   = 1 << 7,
 
+      Pipeline = App | Logic | Render,
       Input    = Keyboard | Cursor | Mouse | Scroll,
     };
 
