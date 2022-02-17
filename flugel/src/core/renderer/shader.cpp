@@ -81,35 +81,29 @@ namespace fge {
     std::string nextWord;
     shaderStream >> nextWord;
     while (shaderStream) {
-      std::stringstream outputStream;
+      std::stringstream sectionStream;
       if (nextWord == preprocessorToken) {
         // Grab type of shader
         std::string type;
         shaderStream >> type;
         FGE_ASSERT_ENG(types.find(type) != types.end(), "Shader type \"", type, "\" is not supported!");
+
         // Loop through shader section body
         shaderStream >> nextWord;
         while (shaderStream && nextWord != preprocessorToken) {
-          // If #version line, it's necessary to add a \n after the version line
-          if (nextWord == "#version") {
-            // add "#version" and version number
-            for (i32 i{0}; shaderStream && i < 2; ++i) {
-              outputStream << nextWord << ' ';
-              shaderStream >> nextWord;
-            }
-            // check if "core" follows the version number, then add \n
-            if (nextWord == "core") {
-              outputStream << nextWord << '\n';
-              shaderStream >> nextWord;
-            } else {
-              outputStream << '\n';
-            }
+          // If a preprocessor line, it's necessary to add a \n after it, else add word normally
+          if (nextWord[0] == '#') {
+            char temp[256];
+            shaderStream.getline(&temp[0], 256);
+            sectionStream << nextWord << temp << '\n';
+          } else {
+            sectionStream << nextWord << ' ';
           }
-          // Add word normally
-          outputStream << nextWord << ' ';
           shaderStream >> nextWord;
         }
-        srcs[types[type]] = outputStream.str();
+
+        // add to result map
+        srcs[types[type]] = sectionStream.str();
       }
     }
 
