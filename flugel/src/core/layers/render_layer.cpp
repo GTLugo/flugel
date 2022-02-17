@@ -1,5 +1,7 @@
 #include "render_layer.hpp"
 
+#include "core/app.hpp"
+
 #include <glad/gl.h>
 
 namespace fge {
@@ -35,12 +37,20 @@ namespace fge {
 
         return false;
       }
+      case RenderEventType::BeginFrame: {
+        //auto gl{gladGetGLContext()};
+        glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
+        glClear(GL_COLOR_BUFFER_BIT);
+        return false;
+      }
       case RenderEventType::EndFrame: { 
         //auto gl{gladGetGLContext()};
+
+        //RenderCommand::setClearColor()
         //Renderer::beginScene();
 
         shader_->bind();
-        
+
         vaoSqr_->bind();
         glDrawElements(GL_TRIANGLES, vaoSqr_->indexCount(), GL_UNSIGNED_INT, nullptr);
         vaoSqr_->unbind();
@@ -49,12 +59,12 @@ namespace fge {
         vao_->bind();
         glDrawElements(GL_TRIANGLES, vao_->indexCount(), GL_UNSIGNED_INT, nullptr);
         vao_->unbind();
-      
-        shader_->unbind();
 
         //Renderer::submit(vaoSqr_);
+        shader_->unbind();
         //Renderer::endScene();
         //Renderer::flush();
+        App::instance().window().context().swapBuffers();
         return false;
       }
       default: {

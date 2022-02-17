@@ -20,7 +20,7 @@ namespace fge {
 
   class FGE_API App {
   public:
-    App(const WindowProperties& props = {});
+    explicit App(const WindowProperties& props = {});
     virtual ~App();
 
     static App& instance() { return *instance_; }

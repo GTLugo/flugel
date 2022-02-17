@@ -34,16 +34,6 @@ namespace fge {
 
   bool EngineLayer::onRenderEvent(RenderEvent& e) {
     switch (e.type()) {
-      case RenderEventType::BeginFrame: {
-        //auto gl{gladGetGLContext()};
-        glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
-        glClear(GL_COLOR_BUFFER_BIT);
-        return false;
-      }
-      case RenderEventType::EndFrame: {
-        App::instance().window().context().swapBuffers();
-        return false;
-      }
       default: {
         return false;
       }

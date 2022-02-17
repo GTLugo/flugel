@@ -148,7 +148,7 @@ namespace fge {
           return itr.first;
         }
       } 
-      return Unknown;
+      return Code::Unknown;
     };
 
     static std::string toString(Code keyCode) {

@@ -3,6 +3,11 @@
 #include "layer.hpp"
 
 namespace fge {
+  // Engine,
+  // ...(AppLayers)...,
+  // ...(AppOverlays)...,
+  // ImGui,
+  // Render
   class FGE_API LayerStack {
     using LayerCollection = std::vector<Layer*>;
   public:
@@ -18,6 +23,8 @@ namespace fge {
     void pushOverlay(Layer* overlay);
     void popLayer(Layer* layer);
     void popOverlay(Layer* overlay);
+    void pushBottomStack(Layer* layer);
+    void popBottomStack(Layer* layer);
 
     iterator begin() { return layers_.begin(); }
     iterator end() { return layers_.end(); }
@@ -31,5 +38,6 @@ namespace fge {
   private:
     LayerCollection layers_;
 		u32 layerInsertIndex_{0};
+    u32 overlayInsertIndex_{0};
   };
 }

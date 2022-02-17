@@ -16,7 +16,7 @@ namespace fge {
     bool borderless;
     bool customDecor;
 
-    WindowProperties(std::string title = "FLUGEL ENGINE",
+    WindowProperties(std::string title = "FLUGEL ENGINE", // NOLINT(google-explicit-constructor)
                      i32 width = 800,
                      i32 height = 450,
                      Renderer::API renderApi = Renderer::API::OpenGL,
@@ -63,7 +63,7 @@ namespace fge {
     
     static Unique<Window> create(const WindowProperties& props = {});
   protected:
-    Window(const WindowProperties& props)
+    explicit Window(const WindowProperties& props)
       : data_{props} {
       Renderer::setApi(props.renderApi);
     }

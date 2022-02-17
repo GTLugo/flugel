@@ -8,25 +8,25 @@
 namespace fge {
   class GlfwWindow : public Window {
   public:
-    GlfwWindow(const WindowProperties& props);
-    virtual ~GlfwWindow();
+    explicit GlfwWindow(const WindowProperties& props);
+    ~GlfwWindow() override;
     
-    virtual void pollEvents() override;
+    void pollEvents() override;
     
-    virtual void* nativeWindow() override { return glfwWindow_; }
-    virtual void dragWindow(ivec2 windowCursorOffset);
+    void* nativeWindow() override { return glfwWindow_; }
+    void dragWindow(ivec2 windowCursorOffset) override;
 
-    virtual void setIcon(u8* image, i32 width, i32 height) override;
-    virtual void setPos(i32 xPos, i32 yPos) override;
-    virtual void setVSync(bool enabled) override;
-    virtual void setFullscreen(bool enabled) override;
+    void setIcon(u8* image, i32 width, i32 height) override;
+    void setPos(i32 xPos, i32 yPos) override;
+    void setVSync(bool enabled) override;
+    void setFullscreen(bool enabled) override;
     //virtual void setContextCurrent(bool isCurrent) override;
     
   private:
-    GLFWwindow* glfwWindow_;
-    const GLFWvidmode* vidMode_;
+    GLFWwindow* glfwWindow_{};
+    const GLFWvidmode* vidMode_{};
 
-    GLFWimage icons_[1];
+    GLFWimage icons_[1]{};
     
     void init();
     void setCallbacks();

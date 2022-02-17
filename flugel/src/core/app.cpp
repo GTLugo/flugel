@@ -3,6 +3,8 @@
 #include "core/input/input.hpp"
 
 #include "util/color/color.hpp"
+#include "core/layers/render_layer.hpp"
+#include "core/imgui/imgui_layer.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -31,10 +33,18 @@ namespace fge {
     
     // engine layer should be first layer (last to check)
     pushLayer(new EngineLayer{});
+    layerStack_.pushBottomStack(new ImGuiLayer{});
+    layerStack_.pushBottomStack(new RenderLayer{});
+
+    //#if defined(DEBUG) || defined(RELDEB)
+    //#endif
   }
 
   App::~App() {
     FGE_TRACE_ENG("Destructing App...");
+    for (auto itr = layerStack_.begin(); itr != layerStack_.end(); ++itr) {
+      FGE_DEBUG_ENG("{}", (*itr)->name());
+    }
   }
 
   void App::pushLayer(Layer* layer) {
@@ -192,29 +202,29 @@ namespace fge {
   }
   
   void App::eventDispatch(Event& e) {
+    //bool inputEvent = (e.category() | Event::Category::Input);
     if (e.category() == Event::Category::Render) {
-      for (auto itr = layerStack_.begin() + 1; itr != layerStack_.end(); ++itr) {
+      for (auto itr = layerStack_.begin(); itr != layerStack_.end(); ++itr) {
         //FGE_TRACE_ENG("{}: {}", (*itr)->name(), e);
         if (e.wasHandled()) {
           break;
         }
         (*itr)->onEvent(e);
-		  }
+      }
     } else {
-      for (auto ritr = layerStack_.rbegin(); ritr != layerStack_.rend() - 1; ++ritr) {
-        //FGE_TRACE_ENG("{}: {}", (*itr)->name(), e);
+      for (auto ritr = layerStack_.rbegin(); ritr != layerStack_.rend(); ++ritr) {
+        //FGE_TRACE_ENG("{}: {}", (*ritr)->name(), e);
         if (e.wasHandled()) {
           break;
         }
         (*ritr)->onEvent(e);
-		  }
+      }
     }
 
-    auto& engineLayer = *layerStack_.begin();
-    bool inputEvent = (e.category() | Event::Category::Input);
-    if (!(inputEvent && e.wasHandled())) {
-      engineLayer->onEvent(e);
-    }
+//    auto& engineLayer = *layerStack_.begin();
+//    if (!(inputEvent && e.wasHandled())) {
+//      engineLayer->onEvent(e);
+//    }
     //FGE_TRACE_ENG("{}: {}", engineLayer->name(), e);
   }
 }
