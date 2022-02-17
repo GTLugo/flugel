@@ -63,8 +63,8 @@ namespace fge {
       calculateOffsetAndStride();
     }
 
-    const std::vector<BufferElement>& elements() const { return elements_; }
-    const u32 stride() const { return stride_; }
+    [[nodiscard]] const std::vector<BufferElement>& elements() const { return elements_; }
+    [[nodiscard]] const u32 stride() const { return stride_; }
 
     std::vector<BufferElement>::iterator begin() { return elements_.begin(); }
     std::vector<BufferElement>::iterator end()   { return elements_.end(); }
@@ -86,11 +86,11 @@ namespace fge {
 
   class VertexBuffer {
   public:
-    virtual ~VertexBuffer() {}
+    virtual ~VertexBuffer() = default;
 
     // set vertex data?
     // virtual u32 id() const = 0;
-    virtual const BufferLayout& layout() const = 0;
+    [[nodiscard]] virtual const BufferLayout& layout() const = 0;
     virtual void setLayout(const BufferLayout& layout) = 0;
 
     virtual void bind() const = 0;
@@ -103,12 +103,12 @@ namespace fge {
 
   class IndexBuffer {
   public:
-    virtual ~IndexBuffer() {}
+    virtual ~IndexBuffer() = default;
 
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
 
-    virtual u32 count() const = 0;
+    [[nodiscard]] virtual u32 count() const = 0;
 
     static Shared<IndexBuffer> create(u32* indices, u32 count);
     static Shared<IndexBuffer> create(std::vector<u32>& indices);

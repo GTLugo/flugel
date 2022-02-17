@@ -6,10 +6,10 @@ namespace fge {
   class OpenGLShader : public Shader {
   public:
     OpenGLShader(const std::string& vertSrc, const std::string& fragSrc);
-    virtual ~OpenGLShader();
+    ~OpenGLShader() override;
 
-    virtual void bind() const;
-    virtual void unbind() const;
+    void bind() const override;
+    void unbind() const override;
   private:
     u32 shaderId_;
   };

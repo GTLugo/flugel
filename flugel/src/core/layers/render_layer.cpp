@@ -31,40 +31,20 @@ namespace fge {
           {0, 1, 2, 2, 3, 0}
         );
 
-        shader_ = Shader::create(
-          // Vertex
-          R"(#version 460 core
-   
-             layout (location = 0) in vec4 pos;
-             layout (location = 1) in vec4 color;
-   
-             out vec4 vertColor;
-   
-             void main() {
-               vertColor = color;
-               gl_Position = pos;
-             })",
-          // Fragment
-          R"(#version 460 core
-             
-             in vec4 vertColor;
-   
-             layout (location = 0) out vec4 fragColor;
-   
-             void main() {
-               fragColor = vertColor;
-             })"
-        );
+        shader_ = Shader::create("res/flugel/shaders/simple_shader.glsl");
 
         return false;
       }
       case RenderEventType::EndFrame: { 
         //auto gl{gladGetGLContext()};
+        //Renderer::beginScene();
+
         shader_->bind();
         
         vaoSqr_->bind();
         glDrawElements(GL_TRIANGLES, vaoSqr_->indexCount(), GL_UNSIGNED_INT, nullptr);
         vaoSqr_->unbind();
+
 
         vao_->bind();
         glDrawElements(GL_TRIANGLES, vao_->indexCount(), GL_UNSIGNED_INT, nullptr);
@@ -72,6 +52,9 @@ namespace fge {
       
         shader_->unbind();
 
+        //Renderer::submit(vaoSqr_);
+        //Renderer::endScene();
+        //Renderer::flush();
         return false;
       }
       default: {

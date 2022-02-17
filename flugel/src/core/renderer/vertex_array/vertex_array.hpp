@@ -5,12 +5,12 @@
 namespace fge {
   class VertexArray {
   public:
-    virtual ~VertexArray() {}
+    virtual ~VertexArray() = default;
 
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
 
-    virtual u32 indexCount() const = 0;
+    [[nodiscard]] virtual u32 indexCount() const = 0;
 
     virtual void addVertexBuffer(Shared<VertexBuffer> vertexBuffer) = 0;
     virtual void setIndexBuffer(Shared<IndexBuffer> indexBuffer) = 0;

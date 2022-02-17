@@ -22,6 +22,7 @@ namespace fge {
       Cursor   = 1 << 6,
       Scroll   = 1 << 7,
 
+      // These might be best to separate out to avoid confusion
       Pipeline = App | Logic | Render,
       Input    = Keyboard | Cursor | Mouse | Scroll,
     };

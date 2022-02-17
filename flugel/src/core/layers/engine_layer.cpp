@@ -60,7 +60,6 @@ namespace fge {
   }
 
   bool EngineLayer::onMouseEvent(MouseEvent& e) {
-    FGE_DEBUG_ENG("{0} [Thread: {1}]", e, std::this_thread::get_id());
     // custom dragging and close button
     if (App::instance().window().isUsingCustomDecor()) {
       pollCustomDecor(e);

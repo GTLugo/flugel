@@ -45,7 +45,7 @@ namespace fge {
   }
 
   void OpenGLVertexArray::addVertexBuffer(Shared<VertexBuffer> vertexBuffer) {
-    FGE_ASSERT_ENG(vertexBuffer->layout().elements().size(), "Vertex buffer has no layout!");
+    FGE_ASSERT_ENG(!vertexBuffer->layout().elements().empty(), "Vertex buffer has no layout!");
 
     //auto gl{gladGetGLContext()};
     glBindVertexArray(vertexArrayId_);
