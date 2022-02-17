@@ -2,9 +2,9 @@
 
 namespace fge {
   LayerStack::~LayerStack() {
-    for (Layer* layer : layers_) {
-      layer->detach();
-      delete layer;
+    for (auto ritr = rbegin(); ritr != rend(); ++ritr) {
+      (*ritr)->detach();
+      delete (*ritr);
     }
   }
 
