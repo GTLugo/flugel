@@ -40,12 +40,13 @@ namespace fge {
     // Window
     Unique<Window> window_;
     bool shouldClose_{false};
+    const u32 MaxFrames{2};
 
     // Threads
     ThreadPool threadPool_{};
     std::mutex renderMutex_;
     std::condition_variable renderCondition_;
-    std::queue<RenderEvent*> renderQueue_{};
+    std::queue<std::array<RenderEvent, 4>*> renderQueue_{};
 
     // Layers
     LayerStack layerStack_;
@@ -54,7 +55,7 @@ namespace fge {
     void renderLoop();
     
     void waitForRenderJob();
-    void pushRenderJob(std::array<RenderEvent*, 4> renderEvents);
+    void pushRenderJob(std::array<RenderEvent, 4>* renderEvents);
 
     void eventDispatch(Event& e);
   };

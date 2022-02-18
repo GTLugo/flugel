@@ -139,11 +139,11 @@ namespace fge {
       LogicEvent updateEvent{LogicEvent::Update};
       eventDispatch(updateEvent);
 
-      pushRenderJob({
-        new RenderEvent{RenderEvent::BeginFrame},
-        new RenderEvent{RenderEvent::BeginImGui},
-        new RenderEvent{RenderEvent::EndImGui},
-        new RenderEvent{RenderEvent::EndFrame}
+      pushRenderJob(new std::array<RenderEvent, 4>{
+        RenderEvent{RenderEvent::BeginFrame},
+        RenderEvent{RenderEvent::BeginImGui},
+        RenderEvent{RenderEvent::EndImGui},
+        RenderEvent{RenderEvent::EndFrame}
       });
 
       Time::update();
@@ -155,41 +155,36 @@ namespace fge {
   }
 
   void App::waitForRenderJob() {
-    std::array<RenderEvent*, 4> renderEvents{};
+    std::array<RenderEvent, 4>* renderEvents{nullptr};
 
     {
       std::unique_lock<std::mutex> lock{renderMutex_};
       //FGE_DEBUG_ENG("Render thread waiting...");
       renderCondition_.wait(lock, [this, &renderEvents]{
-        return renderQueue_.size() >= renderEvents.size() || shouldClose_;
+        return renderQueue_.size() >= MaxFrames || shouldClose_;
       });
 
-      if (renderQueue_.size() >= renderEvents.size()) {
-        for (i32 i{0}; i < renderEvents.size(); ++i) {
-          renderEvents[i] = renderQueue_.front();
-          renderQueue_.pop();
-        }
+      if (renderQueue_.size() >= MaxFrames) {
+        renderEvents = renderQueue_.front();
+        renderQueue_.pop();
       }
       //FGE_INFO_ENG("Render thread done waiting!");
     }
 
-    if (renderEvents[0] && renderEvents[1] && renderEvents[2] && renderEvents[3]) {
+    if (renderEvents) {
       //FGE_TRACE_ENG("Starting render job!");
-      for (auto& renderEvent : renderEvents) {
-        eventDispatch(*renderEvent);
-        delete renderEvent;
+      for (auto& renderEvent : *renderEvents) {
+        eventDispatch(renderEvent);
       }
+      delete renderEvents;
     }
   }
 
-  void App::pushRenderJob(std::array<RenderEvent*, 4> renderEvents) {
+  void App::pushRenderJob(std::array<RenderEvent, 4>* renderEvents) {
     { // Mutex lock scope
       std::unique_lock<std::mutex> lock{renderMutex_};
-      const u32 MaxFrames = 2;
-      if (renderQueue_.size() < MaxFrames * renderEvents.size()) {
-        for (auto& renderEvent : renderEvents) {
-          renderQueue_.push(renderEvent);
-        }
+      if (renderQueue_.size() < MaxFrames) {
+        renderQueue_.push(renderEvents);
       }
     } // Unlock mutex
 
