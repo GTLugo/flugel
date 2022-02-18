@@ -50,11 +50,11 @@ namespace fge {
     ++glfwWindowCount_s;
 
     switch (Renderer::api()) {
-      case Renderer::None: {
+      case Renderer::API::None: {
         FGE_ASSERT_ENG(false, "Running with no API not implemented!");
         break;
       }
-      case Renderer::OpenGL: {
+      case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
           context_ = makeUnique<OpenGLContext>(glfwWindow_);
         #else
@@ -62,7 +62,7 @@ namespace fge {
         #endif
         break;
       }
-      case Renderer::Vulkan: {
+      case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
           FGE_ASSERT_ENG(false, "Vulkan not implemented!");
         #else
@@ -70,7 +70,7 @@ namespace fge {
         #endif
         break;
       }
-      case Renderer::D3D11: {
+      case Renderer::API::D3D11: {
         #if defined(FLUGEL_USE_D3D11)
           FGE_ASSERT_ENG(false, "D3D11 not implemented!");
         #else

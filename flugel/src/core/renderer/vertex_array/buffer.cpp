@@ -10,11 +10,11 @@ namespace fge {
   Shared<VertexBuffer> VertexBuffer::create(float* vertices, u32 bitSize) {
     FGE_ASSERT_ENG(vertices, "No vertices found for vertex buffer!");
     switch (Renderer::api()) {
-      case Renderer::None: {
+      case Renderer::API::None: {
         FGE_ASSERT_ENG(false, "Running with no API not implemented!");
         return nullptr;
       }
-      case Renderer::OpenGL: {
+      case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
           return makeShared<OpenGLVertexBuffer>(vertices, bitSize);
         #else
@@ -22,7 +22,7 @@ namespace fge {
           return nullptr;
         #endif
       }
-      case Renderer::Vulkan: {
+      case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
           FGE_ASSERT_ENG(false, "Vulkan not implemented!");
           return nullptr;
@@ -31,7 +31,7 @@ namespace fge {
           return nullptr;
         #endif
       }
-      case Renderer::D3D11: {
+      case Renderer::API::D3D11: {
         #if defined(FLUGEL_USE_D3D11)
           FGE_ASSERT_ENG(false, "D3D11 not implemented!");
           return nullptr;
@@ -58,11 +58,11 @@ namespace fge {
 
   Shared<IndexBuffer> IndexBuffer::create(u32* indices, u32 count) {
     switch (Renderer::api()) {
-      case Renderer::None: {
+      case Renderer::API::None: {
         FGE_ASSERT_ENG(false, "Running with no API not implemented!");
         return nullptr;
       }
-      case Renderer::OpenGL: {
+      case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
           return makeShared<OpenGLIndexBuffer>(indices, count);
         #else
@@ -70,7 +70,7 @@ namespace fge {
           return nullptr;
         #endif
       }
-      case Renderer::Vulkan: {
+      case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
           FGE_ASSERT_ENG(false, "Vulkan not implemented!");
           return nullptr;
@@ -79,7 +79,7 @@ namespace fge {
           return nullptr;
         #endif
       }
-      case Renderer::D3D11: {
+      case Renderer::API::D3D11: {
         #if defined(FLUGEL_USE_D3D11)
           FGE_ASSERT_ENG(false, "D3D11 not implemented!");
           return nullptr;

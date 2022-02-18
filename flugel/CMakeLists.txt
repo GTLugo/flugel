@@ -24,10 +24,12 @@ set(SOURCE_FILES
   src/core/renderer/vertex_array/vertex_array.cpp
   src/core/renderer/context.cpp
   src/core/renderer/renderer.cpp
+  src/core/renderer/render_dispatcher.cpp
   src/core/renderer/shader.cpp
   src/core/thread_pool/thread_pool.cpp
   src/core/window/window.cpp
   src/core/app.cpp
+  src/core/entry_point.cpp
   src/util/color/srgb_transform/srgb_transform.cpp
   src/util/color/color.cpp
   src/util/logging/log.cpp
@@ -37,6 +39,7 @@ set(OPENGL_FILES
   src/api/opengl/context/opengl_context.cpp
   src/api/opengl/vertex_array/opengl_buffer.cpp
   src/api/opengl/vertex_array/opengl_vertex_array.cpp
+  src/api/opengl/opengl_render_dispatcher.cpp
   src/api/opengl/opengl_shader.cpp
 )
 
@@ -105,8 +108,8 @@ target_compile_definitions(${TARGET_NAME}
 # Export the library's public header path to dependent targets
 # Define the include DIRs
 target_include_directories(${TARGET_NAME}
-  PRIVATE
-    "src" "include"
+  PUBLIC
+    "include"
   PUBLIC
     "src"
 )
@@ -119,7 +122,7 @@ target_precompile_headers(${TARGET_NAME}
 
 # Define the link libraries
 target_link_directories(${TARGET_NAME}
-  PRIVATE
+  PUBLIC
     "lib"
 )
 
@@ -155,7 +158,7 @@ target_link_libraries(${TARGET_NAME}
 # stb
 find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
 target_include_directories(${TARGET_NAME}
-  PRIVATE
+  PUBLIC
     ${STB_INCLUDE_DIRS}
 )
 
@@ -165,8 +168,8 @@ target_include_directories(${TARGET_NAME}
   PRIVATE
     "vendor/imgui"
 )
-target_sources(${TARGET_NAME} 
-  PRIVATE 
+target_sources(${TARGET_NAME}
+  PUBLIC
     vendor/imgui/imgui_demo.cpp
     vendor/imgui/imgui_draw.cpp
     vendor/imgui/imgui_tables.cpp

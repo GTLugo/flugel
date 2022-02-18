@@ -13,6 +13,7 @@ message(STATUS "Configuring: ${PROJECT_NAME}")
 
 set(SOURCE_FILES
   src/sandbox.cpp
+  src/test_layer.cpp
 )
 
 # ===================================================
@@ -49,13 +50,13 @@ target_compile_definitions(${TARGET_NAME}
 # ===================================================
 # Define the include DIRs
 target_include_directories(${TARGET_NAME}
-  PRIVATE
+  PUBLIC
     "src" "include"
 )
 
 # Define the link libraries
 target_link_directories(${TARGET_NAME}
-  PRIVATE
+  PUBLIC
     "lib"
 )
 
@@ -63,7 +64,7 @@ target_link_directories(${TARGET_NAME}
 message(CHECK_START "Linking against Flugel Engine...")
 set(LIBS "flugel")
 target_link_libraries(${TARGET_NAME}
-  PRIVATE
+  PUBLIC
     ${LIBS}
 )
 message(CHECK_PASS "linked!")

@@ -14,9 +14,6 @@ namespace fge {
   private:
     // Rendering
     Color clearColor_{0x2D2A2AFF};
-    Shared<VertexArray> vao_;
-    Shared<VertexArray> vaoSqr_;
-    Shared<Shader> shader_;
 
     bool onRenderEvent(RenderEvent& e) override;
   };

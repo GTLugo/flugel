@@ -1,19 +1,32 @@
 #pragma once
 
+#include "util/color/color.hpp"
+#include "core/renderer/vertex_array/vertex_array.hpp"
+#include "render_dispatcher.hpp"
+
 namespace fge {
 
   class Renderer {
   public:
-    enum API {
+    enum class API {
       None = 0,
       OpenGL,
       Vulkan,
       D3D11,
     };
 
-    static API api() { return renderingAPI_s; }
-    static void setApi(API api) { renderingAPI_s = api; }
+    static API api() { return renderingAPI_; }
+    static void setApi(API api);
+
+    static void clear(Color color);
+    static void beginScene();
+    static void submit(const Shared<VertexArray>& vertexArray);
+    static void endScene();
+
   private:
-    static API renderingAPI_s;
+    static inline API renderingAPI_{Renderer::API::None};
+    static inline Unique<RenderDispatcher> renderDispatcher;
+
+    static void draw(const Shared<VertexArray>& vertexArray);
   };
 }

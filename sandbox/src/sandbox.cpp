@@ -1,6 +1,5 @@
-#include "test_layer.hpp"
-
 #include "flugel.hpp"
+#include "test_layer.hpp"
 
 namespace sbx {
   class Sandbox : public fge::App {
@@ -10,7 +9,7 @@ namespace sbx {
           "SANDBOX", // title
           800, // width
           450, // height
-          fge::Renderer::OpenGL,
+          fge::Renderer::API::OpenGL,
           false, // vsync
           false, // fullscreen
           false, // borderless
