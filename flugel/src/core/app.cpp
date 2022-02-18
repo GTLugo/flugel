@@ -13,8 +13,6 @@
 #include <boost/range/adaptor/reversed.hpp>
 
 namespace fge {
-  App* App::instance_ = nullptr;
-
   App::App(const WindowProperties& props) {
     FGE_DEBUG_ENG("Current working directory: {}", std::filesystem::current_path());
     FGE_TRACE_ENG("Constructing App...");
@@ -53,6 +51,10 @@ namespace fge {
 
   void App::pushOverlay(Layer* overlay) {
     layerStack_.pushOverlay(overlay);
+  }
+
+  void App::toggleImGui(bool enabled) {
+    (*(layerStack_.end() - 2))->toggle(enabled);
   }
 
   void App::run() {

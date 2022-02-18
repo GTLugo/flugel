@@ -16,8 +16,13 @@ namespace fge {
     
     virtual void attach() {}
     virtual void detach() {}
+
+    void toggle(bool enabled) { enabled_ = enabled; }
+    [[nodiscard]] bool isEnabled() const { return enabled_; }
     
     void onEvent(Event& e) {
+      if (!enabled_) return;
+
       EventDispatcher d{e};
       //FGE_DEBUG_ENG("{0}: {1}", name_, e);
       switch (e.type()) { // Input events
@@ -39,6 +44,7 @@ namespace fge {
     [[nodiscard]] const std::string& name() const { return name_; }
   protected:
     std::string name_;
+    bool enabled_{true};
     // bool enabled_;
 
     virtual bool onAppEvent(AppEvent& e)           { return false; }

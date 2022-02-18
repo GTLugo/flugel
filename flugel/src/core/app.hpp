@@ -29,10 +29,12 @@ namespace fge {
     void pushLayer(Layer* layer);
     void pushOverlay(Layer* overlay);
 
+    void toggleImGui(bool enabled);
+
     void run();
     void close();
   private:
-    static App* instance_;
+    static inline App* instance_{nullptr};
     // Util
     AppState state_[2]{}; // double buffered app state
     // Window

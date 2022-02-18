@@ -16,7 +16,7 @@ namespace sbx {
           true // custom window decorations
         }} {
         FGE_TRACE("Constructing sandbox...");
-
+        //toggleImGui(false);
         pushLayer(new TestLayer{});
       }
 
