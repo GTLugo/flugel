@@ -4,14 +4,14 @@
 
 namespace fge {
   bool RenderLayer::onRenderEvent(RenderEvent& e) {
-    switch (e.type()) {
-      case RenderEventType::BeginFrame: {
+    switch (e.action()) {
+      case RenderEvent::BeginFrame: {
         Renderer::clear(clearColor_);
         Renderer::beginScene();
 
         return false;
       }
-      case RenderEventType::EndFrame: {
+      case RenderEvent::EndFrame: {
         Renderer::endScene();
         //Renderer::flush();
         App::instance().window().context().swapBuffers();

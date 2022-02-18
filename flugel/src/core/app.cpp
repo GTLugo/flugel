@@ -27,7 +27,7 @@ namespace fge {
     i32 width, height;
     // boost::gil::rgb8_image_t icon;
     // boost::gil::
-    uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
+    u8* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
     window_->setIcon(icon, width, height);
     stbi_image_free(icon);
     
@@ -57,7 +57,7 @@ namespace fge {
 
   void App::run() {
     FGE_TRACE_ENG("Started main thread (ID: {})", std::this_thread::get_id());
-    AppStartEvent mainStartEvent{};
+    AppEvent mainStartEvent{AppEvent::Start};
     eventDispatch(mainStartEvent);
 
     threadPool_.initialize();
@@ -70,10 +70,10 @@ namespace fge {
     //eventDispatch(renderStartEvent);
     // MAIN THREAD
     while (!shouldClose_) {
-      AppPollEvent pollEvent{};
+      AppEvent pollEvent{AppEvent::Poll};
       eventDispatch(pollEvent);
 
-      AppUpdateEvent mainUpdateEvent{};
+      AppEvent mainUpdateEvent{AppEvent::Update};
       eventDispatch(mainUpdateEvent);
       //RenderBeginFrameEvent beginFrameEvent{};
       //eventDispatch(beginFrameEvent);
@@ -88,7 +88,7 @@ namespace fge {
     renderCondition_.notify_all();
     threadPool_.shutdown();
     
-    AppStopEvent mainEndEvent{};
+    AppEvent mainEndEvent{AppEvent::Stop};
     eventDispatch(mainEndEvent);
     FGE_TRACE_ENG("Stopped main thread");
   }
@@ -102,12 +102,12 @@ namespace fge {
     window_->context().setCurrent(true);
     
     // RENDER THREAD
-    RenderStartEvent renderStartEvent{};
+    RenderEvent renderStartEvent{RenderEvent::Start};
     eventDispatch(renderStartEvent);
     while (!shouldClose_) {
       waitForRenderJob();
     }
-    RenderStopEvent renderEndEvent{};
+    RenderEvent renderEndEvent{RenderEvent::Stop};
     eventDispatch(renderEndEvent);
 
     FGE_TRACE_ENG("Stopped render thread");
@@ -117,7 +117,7 @@ namespace fge {
     FGE_TRACE_ENG("Started game thread (ID: {})", std::this_thread::get_id());
 
     // GAME LOGIC THREAD
-    LogicStartEvent startEvent{};
+    LogicEvent startEvent{LogicEvent::Start};
     eventDispatch(startEvent);
     while (!shouldClose_) {
       // This loop will only occur once every fixedTimeStep, being skipped for every
@@ -128,73 +128,66 @@ namespace fge {
       //FGE_TRACE_ENG("UPDATE");
       while (Time::shouldDoTick()) {
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
-        LogicTickEvent tickEvent{};
+        LogicEvent tickEvent{LogicEvent::Tick};
         eventDispatch(tickEvent);
 
         Time::tick();
       }
       // Timestep INSENSITIVE stuff happens out here, where pacing goes as fast as possible
-      LogicUpdateEvent updateEvent{};
+      LogicEvent updateEvent{LogicEvent::Update};
       eventDispatch(updateEvent);
-      
-      pushRenderJob(new RenderBeginFrameEvent{});
-      pushRenderJob(new RenderBeginImGuiEvent{});
-      pushRenderJob(new RenderEndImGuiEvent{});
-      pushRenderJob(new RenderEndFrameEvent{});
+
+      pushRenderJob({
+        new RenderEvent{RenderEvent::BeginFrame},
+        new RenderEvent{RenderEvent::BeginImGui},
+        new RenderEvent{RenderEvent::EndImGui},
+        new RenderEvent{RenderEvent::EndFrame}
+      });
 
       Time::update();
     }
-    LogicStopEvent stopEvent{};
+    LogicEvent stopEvent{LogicEvent::Stop};
     eventDispatch(stopEvent);
 
     FGE_TRACE_ENG("Stopped game thread");
   }
 
   void App::waitForRenderJob() {
-    RenderBeginFrameEvent* beginFrameEvent{nullptr};
-    RenderBeginImGuiEvent* beginImGuiEvent{nullptr};
-    RenderEndImGuiEvent*   endImGuiEvent{nullptr};
-    RenderEndFrameEvent*   endFrameEvent{nullptr};
+    std::array<RenderEvent*, 4> renderEvents{};
 
     {
       std::unique_lock<std::mutex> lock{renderMutex_};
       //FGE_DEBUG_ENG("Render thread waiting...");
-      renderCondition_.wait(lock, [this]{
-        return renderQueue_.size() >= 4 || shouldClose_;
+      renderCondition_.wait(lock, [this, &renderEvents]{
+        return renderQueue_.size() >= renderEvents.size() || shouldClose_;
       });
 
-      if (renderQueue_.size() >= 4) {
-        beginFrameEvent = dynamic_cast<RenderBeginFrameEvent*>(renderQueue_.front());
-        renderQueue_.pop();
-        beginImGuiEvent = dynamic_cast<RenderBeginImGuiEvent*>(renderQueue_.front());
-        renderQueue_.pop();
-        endImGuiEvent = dynamic_cast<RenderEndImGuiEvent*>(renderQueue_.front());
-        renderQueue_.pop();
-        endFrameEvent = dynamic_cast<RenderEndFrameEvent*>(renderQueue_.front());
-        renderQueue_.pop();
+      if (renderQueue_.size() >= renderEvents.size()) {
+        for (i32 i{0}; i < renderEvents.size(); ++i) {
+          renderEvents[i] = renderQueue_.front();
+          renderQueue_.pop();
+        }
       }
       //FGE_INFO_ENG("Render thread done waiting!");
     }
 
-    if (beginFrameEvent && beginImGuiEvent && endImGuiEvent && endFrameEvent) {
+    if (renderEvents[0] && renderEvents[1] && renderEvents[2] && renderEvents[3]) {
       //FGE_TRACE_ENG("Starting render job!");
-      eventDispatch(*beginFrameEvent);
-      delete beginFrameEvent;
-      eventDispatch(*beginImGuiEvent);
-      delete beginImGuiEvent;
-      eventDispatch(*endImGuiEvent);
-      delete endImGuiEvent;
-      eventDispatch(*endFrameEvent);
-      delete endFrameEvent;
+      for (auto& renderEvent : renderEvents) {
+        eventDispatch(*renderEvent);
+        delete renderEvent;
+      }
     }
   }
 
-  void App::pushRenderJob(RenderEvent* renderEvent) {
+  void App::pushRenderJob(std::array<RenderEvent*, 4> renderEvents) {
     { // Mutex lock scope
       std::unique_lock<std::mutex> lock{renderMutex_};
       const u32 MaxFrames = 2;
-      if (renderQueue_.size() < MaxFrames * 4) {
-        renderQueue_.push(renderEvent);
+      if (renderQueue_.size() < MaxFrames * renderEvents.size()) {
+        for (auto& renderEvent : renderEvents) {
+          renderQueue_.push(renderEvent);
+        }
       }
     } // Unlock mutex
 
@@ -203,9 +196,11 @@ namespace fge {
   
   void App::eventDispatch(Event& e) {
     //bool inputEvent = (e.category() | Event::Category::Input);
-    if (e.category() == Event::Category::Render) {
+    if (e.type() == Event::Render) {
       for (auto itr = layerStack_.begin(); itr != layerStack_.end(); ++itr) {
-        //FGE_TRACE_ENG("{}: {}", (*itr)->name(), e);
+//        if ((*itr)->name() == "imgui_layer") {
+//          FGE_TRACE_ENG("{}: {}", (*itr)->name(), e);
+//        }
         if (e.wasHandled()) {
           break;
         }

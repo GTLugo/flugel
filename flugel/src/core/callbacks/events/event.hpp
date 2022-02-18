@@ -5,13 +5,13 @@
 
 namespace fge {
 
-  #define EVENT_CATEGORY(event_cat) static Category categoryStatic() { return event_cat; }\
-                                   virtual Category category() const override { return categoryStatic(); }
+  #define EVENT_TYPE(event_cat) static Type typeStatic() { return event_cat; }\
+                                   virtual Type type() const override { return typeStatic(); }
   
   class FGE_API Event {
     friend class EventDispatcher;
   public:
-    enum Category {
+    enum Type {
       None     = 0,
       Window   = 1 << 0,
       App      = 1 << 1,
@@ -27,7 +27,7 @@ namespace fge {
       Input    = Keyboard | Cursor | Mouse | Scroll,
     };
 
-    [[nodiscard]] virtual Category category() const = 0;
+    [[nodiscard]] virtual Type type() const = 0;
     [[nodiscard]] virtual std::string toString() const = 0;
     [[nodiscard]] virtual bool wasHandled() const { return wasHandled_; }
   protected:

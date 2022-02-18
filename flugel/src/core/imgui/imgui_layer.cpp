@@ -35,8 +35,8 @@ namespace fge {
   }
 
   bool ImGuiLayer::onAppEvent(AppEvent& e) {
-    switch (e.type()) {
-      case AppEventType::Start: {
+    switch (e.action()) {
+      case AppEvent::Start: {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -60,12 +60,12 @@ namespace fge {
   }
 
   bool ImGuiLayer::onRenderEvent(RenderEvent& e) {
-    switch (e.type()) {
-      case RenderEventType::Start: {
+    switch (e.action()) {
+      case RenderEvent::Start: {
         ImGui_ImplOpenGL3_Init("#version 460");
         return false;
       }
-      case RenderEventType::BeginImGui: {
+      case RenderEvent::BeginImGui: {
         App& app = App::instance();
 
         ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -84,17 +84,17 @@ namespace fge {
         
         return false;
       }
-      case RenderEventType::EndImGui: {
+      case RenderEvent::EndImGui: {
         ImGui::Render();
         std::string a{"0"};
         auto b = *(a.end() - 1);
         return false;
       }
-      case RenderEventType::EndFrame: {
+      case RenderEvent::EndFrame: {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         return false;
       }
-      case RenderEventType::Stop: {
+      case RenderEvent::Stop: {
 		    ImGui_ImplOpenGL3_Shutdown();
 		    ImGui_ImplGlfw_Shutdown();
 		    ImGui::DestroyContext();

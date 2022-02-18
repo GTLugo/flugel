@@ -6,8 +6,8 @@
 
 namespace sbx {
   bool TestLayer::onRenderEvent(fge::RenderEvent& e) {
-    switch (e.type()) {
-      case fge::RenderEventType::Start: {
+    switch (e.action()) {
+      case fge::RenderEvent::Start: {
         vao_ = fge::VertexArray::create(
             // Vertices
             {-.5, -.5,  0., /**/.7, .1, .1, 1.,
@@ -37,7 +37,7 @@ namespace sbx {
 
         return false;
       }
-      case fge::RenderEventType::EndFrame: {
+      case fge::RenderEvent::EndFrame: {
         shader_->bind();
         fge::Renderer::submit(vaoSqr_);
         fge::Renderer::submit(vao_);

@@ -52,7 +52,7 @@ namespace fge {
     void renderLoop();
     
     void waitForRenderJob();
-    void pushRenderJob(RenderEvent* renderEvent);
+    void pushRenderJob(std::array<RenderEvent*, 4> renderEvents);
 
     void eventDispatch(Event& e);
   };

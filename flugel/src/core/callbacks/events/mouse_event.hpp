@@ -6,7 +6,7 @@
 namespace fge {
   class FGE_API MouseEvent : public Event {
   public:
-    EVENT_CATEGORY(Event::Category::Mouse)
+    EVENT_TYPE(Event::Type::Mouse)
 
     MouseEvent(Mouse::State buttonState, Mouse::Code button, Modifier::BitCodes mods)
       : buttonState_{buttonState}, button_{button}, mods_{mods} {}
@@ -29,7 +29,7 @@ namespace fge {
 
   class FGE_API CursorEvent : public Event {
   public:
-    EVENT_CATEGORY(Event::Category::Cursor)
+    EVENT_TYPE(Event::Type::Cursor)
 
     CursorEvent(double xPos, double yPos)
       : xPos_{xPos}, yPos_{yPos} {}
@@ -48,7 +48,7 @@ namespace fge {
 
   class FGE_API ScrollEvent : public Event {
   public:
-    EVENT_CATEGORY(Event::Category::Scroll)
+    EVENT_TYPE(Event::Type::Scroll)
 
     ScrollEvent(double xOffset, double yOffset)
       : xOffset_{xOffset}, yOffset_{yOffset} {}

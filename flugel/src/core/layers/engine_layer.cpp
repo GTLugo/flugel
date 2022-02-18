@@ -8,8 +8,8 @@
 namespace fge {
   bool EngineLayer::onWindowEvent(WindowEvent& e) {
     //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    switch (e.type()) {
-      case WindowEventType::Close: {
+    switch (e.action()) {
+      case WindowEvent::Close: {
         FGE_DEBUG_ENG("{0}: {1}", name_, e);
         App::instance().close();
         return true;
@@ -21,8 +21,8 @@ namespace fge {
   }
   
   bool EngineLayer::onAppEvent(AppEvent& e) {
-    switch (e.type()) {
-      case AppEventType::Poll: {
+    switch (e.action()) {
+      case AppEvent::Poll: {
         App::instance().window().pollEvents();
         return false;
       }
@@ -33,7 +33,7 @@ namespace fge {
   }
 
   bool EngineLayer::onRenderEvent(RenderEvent& e) {
-    switch (e.type()) {
+    switch (e.action()) {
       default: {
         return false;
       }

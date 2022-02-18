@@ -3,27 +3,28 @@
 #include "event.hpp"
 
 namespace fge {
-  enum class WindowEventType {
-    None = 0,
-    Close, Resize, Focus, LostFocus, Moved,
-  };
 
   class FGE_API WindowEvent : public Event {
   public:
-    EVENT_CATEGORY(Event::Category::Window)
+    enum Action {
+      None = 0,
+      Close, Resize, Focus, LostFocus, Moved,
+    };
 
-    [[nodiscard]] WindowEventType type() const { return type_; }
+    EVENT_TYPE(Event::Type::Window)
+
+    [[nodiscard]] Action action() const { return action_; }
   protected:
-    const WindowEventType type_;
+    const Action action_;
 
-    explicit WindowEvent(WindowEventType type)
-      : type_{type} {}
+    explicit WindowEvent(Action action)
+        : action_{action} {}
   };
 
   class FGE_API WindowCloseEvent : public WindowEvent {
   public:
     WindowCloseEvent()
-     : WindowEvent{WindowEventType::Close} {}
+     : WindowEvent{Action::Close} {}
 
     [[nodiscard]] std::string toString() const override {
       std::stringstream ss;
@@ -35,7 +36,7 @@ namespace fge {
   class FGE_API WindowResizeEvent : public WindowEvent {
   public:
     WindowResizeEvent(i32 width, i32 height)
-      : WindowEvent{WindowEventType::Resize}, width_{width}, height_{height} {}
+      : WindowEvent{Action::Resize}, width_{width}, height_{height} {}
 
     [[nodiscard]] i32 width() const { return width_; }
     [[nodiscard]] i32 height() const { return height_; }
@@ -52,7 +53,7 @@ namespace fge {
   class FGE_API WindowMovedEvent : public WindowEvent {
   public:
     WindowMovedEvent(i32 xPos, i32 yPos)
-      : WindowEvent{WindowEventType::Resize}, xPos_{xPos}, yPos_{yPos} {}
+      : WindowEvent{Action::Resize}, xPos_{xPos}, yPos_{yPos} {}
 
     [[nodiscard]] i32 xPos() const { return xPos_; }
     [[nodiscard]] i32 yPos() const { return yPos_; }
