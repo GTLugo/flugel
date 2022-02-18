@@ -33,6 +33,8 @@ namespace fge {
 
     void run();
     void close();
+
+    App(const App& app) = delete;
   private:
     static inline App* instance_{nullptr};
     // Util

@@ -5,7 +5,7 @@ namespace sbx {
   class Sandbox : public fge::App {
     public:
       Sandbox()
-        : fge::App{fge::WindowProperties{
+        : fge::App{{
           .title       = "SANDBOX", // title
           .width       = 800, // width
           .height      = 450, // height
