@@ -8,32 +8,14 @@
 
 namespace fge {
   struct WindowProperties {
-    std::string title;
-    i32 width, height;
-    Renderer::API renderApi;
-    bool vSync;
-    bool fullScreen;
-    bool borderless;
-    bool customDecor;
-
-    WindowProperties(std::string title = "FLUGEL ENGINE", // NOLINT(google-explicit-constructor)
-                     i32 width = 800,
-                     i32 height = 450,
-                     Renderer::API renderApi = Renderer::API::OpenGL,
-                     bool vSync = true,
-                     bool fullScreen = false,
-                     bool borderless = false,
-                     bool customDecor = false)
-      : title{std::move(title)},
-        width{width},
-        height{height},
-        renderApi{renderApi},
-        vSync{vSync},
-        fullScreen{fullScreen},
-        borderless{borderless},
-        customDecor{customDecor} {}
-
-    WindowProperties(const WindowProperties& props) = default;
+    const std::string title{"FLUGEL ENGINE"};
+    const i32 width{800};
+    const i32 height{450};
+    const Renderer::API renderApi{Renderer::API::OpenGL};
+    const bool vSync{true};
+    const bool fullScreen{false};
+    const bool borderless{false};
+    const bool customDecor{false};
   };
 
   class FGE_API Window {

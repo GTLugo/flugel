@@ -17,7 +17,7 @@ namespace fge {
     FGE_DEBUG_ENG("Current working directory: {}", std::filesystem::current_path());
     FGE_TRACE_ENG("Constructing App...");
     instance_ = this;
-    Time::init(128.);
+    Time::init(tickRate_);
     window_ = Window::create(props);
     window_->setEventCallback(FGE_BIND(eventDispatch));
     Color::using_srgb_color_space = true;
@@ -25,7 +25,7 @@ namespace fge {
     i32 width, height;
     // boost::gil::rgb8_image_t icon;
     // boost::gil::
-    u8* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
+    u8* icon = stbi_load("res/flugel/icon.png", &width, &height, nullptr, 4);
     window_->setIcon(icon, width, height);
     stbi_image_free(icon);
     
@@ -40,9 +40,6 @@ namespace fge {
 
   App::~App() {
     FGE_TRACE_ENG("Destructing App...");
-    for (auto itr = layerStack_.begin(); itr != layerStack_.end(); ++itr) {
-      FGE_DEBUG_ENG("{}", (*itr)->name());
-    }
   }
 
   void App::pushLayer(Layer* layer) {
@@ -160,11 +157,11 @@ namespace fge {
     {
       std::unique_lock<std::mutex> lock{renderMutex_};
       //FGE_DEBUG_ENG("Render thread waiting...");
-      renderCondition_.wait(lock, [this, &renderEvents]{
-        return renderQueue_.size() >= MaxFrames || shouldClose_;
+      renderCondition_.wait(lock, [this]{
+        return renderQueue_.size() >= maxFrames_ || shouldClose_;
       });
 
-      if (renderQueue_.size() >= MaxFrames) {
+      if (renderQueue_.size() >= maxFrames_) {
         renderEvents = renderQueue_.front();
         renderQueue_.pop();
       }
@@ -183,7 +180,7 @@ namespace fge {
   void App::pushRenderJob(std::array<RenderEvent, 4>* renderEvents) {
     { // Mutex lock scope
       std::unique_lock<std::mutex> lock{renderMutex_};
-      if (renderQueue_.size() < MaxFrames) {
+      if (renderQueue_.size() < maxFrames_) {
         renderQueue_.push(renderEvents);
       }
     } // Unlock mutex

@@ -62,7 +62,9 @@ namespace fge {
   bool ImGuiLayer::onRenderEvent(RenderEvent& e) {
     switch (e.action()) {
       case RenderEvent::Start: {
+        App& app = App::instance();
         ImGui_ImplOpenGL3_Init("#version 460");
+        vsyncEnabled_ = app.window().isVSync();
         return false;
       }
       case RenderEvent::BeginImGui: {
@@ -79,6 +81,8 @@ namespace fge {
 
         ImGui::Begin("App Stats");
         ImGui::Text("FPS: %.1f (%.3f ms)", io.Framerate, 1000. / io.Framerate);
+        ImGui::Checkbox("Vsync", &vsyncEnabled_);
+        app.window().setVSync(vsyncEnabled_);
         ImGui::Text("Click Count: %llu", clickCount_);
         ImGui::End();
         

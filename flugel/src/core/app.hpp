@@ -37,10 +37,11 @@ namespace fge {
     static inline App* instance_{nullptr};
     // Util
     AppState state_[2]{}; // double buffered app state
+    const u32 maxFrames_{2};
+    float tickRate_{128.};
     // Window
     Unique<Window> window_;
     bool shouldClose_{false};
-    const u32 MaxFrames{2};
 
     // Threads
     ThreadPool threadPool_{};

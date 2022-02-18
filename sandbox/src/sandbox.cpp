@@ -5,15 +5,12 @@ namespace sbx {
   class Sandbox : public fge::App {
     public:
       Sandbox()
-        : fge::App{{
-          "SANDBOX", // title
-          800, // width
-          450, // height
-          fge::Renderer::API::OpenGL,
-          false, // vsync
-          false, // fullscreen
-          false, // borderless
-          true // custom window decorations
+        : fge::App{fge::WindowProperties{
+          .title       = "SANDBOX", // title
+          .width       = 800, // width
+          .height      = 450, // height
+          .renderApi   = fge::Renderer::API::OpenGL,
+          .customDecor = true // custom window decorations
         }} {
         FGE_TRACE("Constructing sandbox...");
         //toggleImGui(false);
