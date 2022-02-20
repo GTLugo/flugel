@@ -80,9 +80,12 @@ namespace fge {
         ImGui::NewFrame();
 
         ImGui::Begin("App Stats");
-        ImGui::Text("FPS: %.1f (%.3f ms)", io.Framerate, 1000. / io.Framerate);
+        ImGui::Text("FPS: %i (%.3f ms)", static_cast<int>(floor(io.Framerate)), 1000. / io.Framerate);
         ImGui::Checkbox("Vsync", &vsyncEnabled_);
         app.window().setVSync(vsyncEnabled_);
+        ImGui::End();
+
+        ImGui::Begin("Clicks");
         ImGui::Text("Click Count: %llu", clickCount_);
         ImGui::End();
         

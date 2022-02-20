@@ -3,19 +3,19 @@
 #include <glad/gl.h>
 
 namespace fge {
-  static GLenum shaderDataToOpenGLBaseType(ShaderDataType type) {
+  static GLenum shaderDataToOpenGLBaseType(BufferElement::DataType type) {
     switch (type) {
-      case ShaderDataType::Bool:   { return GL_BOOL; }
-      case ShaderDataType::Int:    { return GL_INT; }
-      case ShaderDataType::Int2:   { return GL_INT; }
-      case ShaderDataType::Int3:   { return GL_INT; }
-      case ShaderDataType::Int4:   { return GL_INT; }
-      case ShaderDataType::Float:  { return GL_FLOAT; }
-      case ShaderDataType::Float2: { return GL_FLOAT; }
-      case ShaderDataType::Float3: { return GL_FLOAT; }
-      case ShaderDataType::Float4: { return GL_FLOAT; }
-      case ShaderDataType::Mat3:   { return GL_FLOAT; }
-      case ShaderDataType::Mat4:   { return GL_FLOAT; }
+      case BufferElement::DataType::Bool:   { return GL_BOOL; }
+      case BufferElement::DataType::Int:    { return GL_INT; }
+      case BufferElement::DataType::Int2:   { return GL_INT; }
+      case BufferElement::DataType::Int3:   { return GL_INT; }
+      case BufferElement::DataType::Int4:   { return GL_INT; }
+      case BufferElement::DataType::Float:  { return GL_FLOAT; }
+      case BufferElement::DataType::Float2: { return GL_FLOAT; }
+      case BufferElement::DataType::Float3: { return GL_FLOAT; }
+      case BufferElement::DataType::Float4: { return GL_FLOAT; }
+      case BufferElement::DataType::Mat3:   { return GL_FLOAT; }
+      case BufferElement::DataType::Mat4:   { return GL_FLOAT; }
       default:                     { return 0; }
     }
   }
@@ -55,7 +55,7 @@ namespace fge {
     for (const auto& element : vertexBuffer->layout()) {
       glEnableVertexAttribArray(i);
       glVertexAttribPointer(i, 
-        element.componentCount(),
+        element.componentCount,
         shaderDataToOpenGLBaseType(element.type), 
         element.normalized, 
         vertexBuffer->layout().stride(), // size of an entire vertex including all attr

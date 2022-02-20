@@ -9,28 +9,36 @@ namespace sbx {
     switch (e.action()) {
       case fge::RenderEvent::Start: {
         vao_ = fge::VertexArray::create(
-            // Vertices
-            {-.5, -.5,  0., /**/.7, .1, .1, 1.,
-             .5, -.5,  0., /**/.1, .7, .1, 1.,
-             0.,  .5,  0., /**/.1, .1, .7, 1.},
-            // Layout
-            {{fge::ShaderDataType::Float3, "pos"},
-             {fge::ShaderDataType::Float4, "color"}},
-            // Indices
-            {0, 1, 2}
+          // Vertices
+          {
+            -.5f, -.5f,  0.f, /**/.7f, .1f, .1f, 1.f,
+             .5f, -.5f,  0.f, /**/.1f, .7f, .1f, 1.f,
+             0.f,  .5f,  0.f, /**/.1f, .1f, .7f, 1.f
+          },
+          // Layout
+          {
+            fge::BufferElement::create<fge::vec3>("pos"),
+            fge::BufferElement::create<fge::vec4>("color"),
+          },
+          // Indices
+          {0, 1, 2}
         );
 
         vaoSqr_ = fge::VertexArray::create(
-            // Vertices
-            {-.75, -.75, .1, /**/ .1, .1, .1, 1.,
+          // Vertices
+          {
+            -.75, -.75, .1, /**/ .1, .1, .1, 1.,
              .75, -.75, .1, /**/ .1, .1, .1, 1.,
              .75,  .75, .1, /**/ .7, .6, .6, 1.,
-             -.75,  .75, .1, /**/ .7, .6, .6, 1.},
-            // Layout
-            {{fge::ShaderDataType::Float3, "pos"},
-             {fge::ShaderDataType::Float4, "color"}},
-            // Indices
-            {0, 1, 2, 2, 3, 0}
+             -.75, .75, .1, /**/ .7, .6, .6, 1.
+          },
+          // Layout
+          {
+            fge::BufferElement::create<fge::vec3>("pos"),
+            fge::BufferElement::create<fge::vec4>("color"),
+          },
+          // Indices
+          {0, 1, 2, 2, 3, 0}
         );
 
         shader_ = fge::Shader::create("res/flugel/shaders/simple_shader.glsl");

@@ -12,8 +12,8 @@ namespace fge {
       static std::shared_ptr<spdlog::logger>& appLogger() { return appLogger_; }
 
   private:
-    static std::shared_ptr<spdlog::logger> engineLogger_;
-    static std::shared_ptr<spdlog::logger> appLogger_;
+    static inline std::shared_ptr<spdlog::logger> engineLogger_;
+    static inline std::shared_ptr<spdlog::logger> appLogger_;
   };
 }
 

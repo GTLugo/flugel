@@ -25,6 +25,9 @@
 #include <random>
 #include <stdexcept>
 #include <limits>
+#include <typeinfo>
+#include <format>
+#include <string_view>
 // Data Structures
 #include <string>
 #include <array>

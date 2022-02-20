@@ -9,8 +9,7 @@ namespace sbx {
           .title       = "SANDBOX", // title
           .width       = 800, // width
           .height      = 450, // height
-          .renderApi   = fge::Renderer::API::OpenGL,
-          .customDecor = true // custom window decorations
+          .renderApi   = fge::Renderer::API::OpenGL
         }} {
         FGE_TRACE("Constructing sandbox...");
         //toggleImGui(false);

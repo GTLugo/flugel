@@ -22,5 +22,7 @@ namespace sbx {
     fge::Shared<fge::VertexArray> vao_;
     fge::Shared<fge::VertexArray> vaoSqr_;
     fge::Shared<fge::Shader> shader_;
+    bool left_{false};
+    fge::vec3 pos_{0, 0, 0};
   };
 }
