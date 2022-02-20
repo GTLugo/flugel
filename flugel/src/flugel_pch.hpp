@@ -50,6 +50,7 @@
 ----------------------*/
 #include <glm/glm.hpp>
 #include <glm/matrix.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/algorithm/clamp.hpp>

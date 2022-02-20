@@ -7,7 +7,7 @@
 #include "util/color/color.hpp"
 
 namespace fge {
-  class RenderLayer : public Layer {
+  class FGE_API RenderLayer : public Layer {
   public:
     RenderLayer()
       : Layer{"fge_render_layer"} {}

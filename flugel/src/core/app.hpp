@@ -63,6 +63,5 @@ namespace fge {
     void eventDispatch(Event& e);
   };
 
-  // To be defined in project app
   Unique<App> createApp();
 }

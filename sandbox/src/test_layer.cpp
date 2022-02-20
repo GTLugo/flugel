@@ -1,7 +1,6 @@
 //
 // Created by galex on 2/17/2022.
 //
-
 #include "test_layer.hpp"
 
 namespace sbx {

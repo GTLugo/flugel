@@ -3,7 +3,7 @@
 #include "core/layers/layer.hpp"
 
 namespace fge {
-  class ImGuiLayer : public Layer {
+  class FGE_API ImGuiLayer : public Layer {
   public:
     ImGuiLayer();
 

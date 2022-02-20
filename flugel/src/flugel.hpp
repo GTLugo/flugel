@@ -3,8 +3,9 @@
 // ONLY FOR USE BY EXTERNAL APPS
 
 // entry
-#include "core/entry_point.hpp"
+//#include "entry_point.hpp"
 // utility
+#include "util/utilities.hpp"
 #include "util/logging/log.hpp"
 // app
 #include "core/app.hpp"

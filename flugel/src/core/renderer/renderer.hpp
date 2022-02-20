@@ -6,7 +6,7 @@
 
 namespace fge {
 
-  class Renderer {
+  class FGE_API Renderer {
   public:
     enum class API {
       None = 0,

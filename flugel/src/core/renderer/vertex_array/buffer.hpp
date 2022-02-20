@@ -3,7 +3,7 @@
 #define BUFFER_ELEMENT(type, name) fge::BufferElement{fge::BufferElement::dataTypeToShaderDataType<type>(), #name}
 
 namespace fge {
-  struct BufferElement {
+  struct FGE_API BufferElement {
     enum class DataType {
       None = 0,
       Bool,
@@ -94,7 +94,7 @@ namespace fge {
     }
   };
 
-  class BufferLayout {
+  class FGE_API BufferLayout {
   public:
     BufferLayout(const std::initializer_list<BufferElement>& elements = {{}})
       : elements_{elements} {
@@ -122,7 +122,7 @@ namespace fge {
     }
   };
 
-  class VertexBuffer {
+  class FGE_API VertexBuffer {
   public:
     virtual ~VertexBuffer() = default;
 
@@ -139,7 +139,7 @@ namespace fge {
     static Shared<VertexBuffer> create(const std::initializer_list<float>& vertices);
   };
 
-  class IndexBuffer {
+  class FGE_API IndexBuffer {
   public:
     virtual ~IndexBuffer() = default;
 

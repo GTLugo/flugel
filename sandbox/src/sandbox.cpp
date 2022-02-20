@@ -1,4 +1,6 @@
 #include "flugel.hpp"
+#include "entry_point.hpp"
+
 #include "test_layer.hpp"
 
 namespace sbx {

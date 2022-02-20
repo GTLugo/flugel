@@ -3,7 +3,7 @@
 #include "layer.hpp"
 
 namespace fge {
-  class EngineLayer : public Layer {
+  class FGE_API EngineLayer : public Layer {
   public:
     EngineLayer()
       : Layer{"fge_engine_layer"} {}

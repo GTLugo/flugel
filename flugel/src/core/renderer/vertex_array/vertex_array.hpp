@@ -3,7 +3,7 @@
 #include "core/renderer/vertex_array/buffer.hpp"
 
 namespace fge {
-  class VertexArray {
+  class FGE_API VertexArray {
   public:
     virtual ~VertexArray() = default;
 

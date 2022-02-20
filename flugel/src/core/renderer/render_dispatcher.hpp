@@ -8,7 +8,7 @@
 #include "core/renderer/vertex_array/vertex_array.hpp"
 
 namespace fge {
-  class RenderDispatcher {
+  class FGE_API RenderDispatcher {
   public:
     virtual void clear(Color color) = 0;
     virtual void draw(const Shared<VertexArray>& vertexArray) = 0;

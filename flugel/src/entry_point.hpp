@@ -1,6 +1,4 @@
-//
-// Created by galex on 2/17/2022.
-//
+#pragma once
 
 #include "core/app.hpp"
 

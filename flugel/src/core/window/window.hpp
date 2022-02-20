@@ -7,7 +7,7 @@
 #include "core/callbacks/events/event.hpp"
 
 namespace fge {
-  struct WindowProperties {
+  struct FGE_API WindowProperties {
     const std::string title{"FLUGEL ENGINE"};
     const i32 width{800};
     const i32 height{450};

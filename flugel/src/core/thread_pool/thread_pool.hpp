@@ -2,7 +2,7 @@
 #pragma once
 
 namespace fge {
-  class FGE_API ThreadPool {
+  class ThreadPool {
     using JobFn = std::function<void()>;
   public:
     ThreadPool() = default;

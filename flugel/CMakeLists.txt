@@ -12,95 +12,96 @@ message(STATUS "Configuring: ${PROJECT_NAME}")
 # ===================================================
 
 set(SOURCE_FILES
-  src/core/callbacks/notifier/notifier.cpp
-  src/core/imgui/imgui_layer.cpp
-  src/core/input/mouse_codes.cpp
-  src/core/input/key_codes.cpp
-  src/core/layers/engine_layer.cpp
-  src/core/layers/render_layer.cpp
-  src/core/layers/layer_stack.cpp
-  src/core/layers/layer.cpp
-  src/core/renderer/vertex_array/buffer.cpp
-  src/core/renderer/vertex_array/vertex_array.cpp
-  src/core/renderer/context.cpp
-  src/core/renderer/renderer.cpp
-  src/core/renderer/render_dispatcher.cpp
-  src/core/renderer/shader.cpp
-  src/core/thread_pool/thread_pool.cpp
-  src/core/window/window.cpp
-  src/core/app.cpp
-  src/core/entry_point.cpp
-  src/util/color/srgb_transform/srgb_transform.cpp
-  src/util/color/color.cpp
-  src/util/logging/log.cpp
-)
+    src/core/callbacks/notifier/notifier.cpp
+    src/core/imgui/imgui_layer.cpp
+    src/core/input/mouse_codes.cpp
+    src/core/input/key_codes.cpp
+    src/core/layers/engine_layer.cpp
+    src/core/layers/render_layer.cpp
+    src/core/layers/layer_stack.cpp
+    src/core/layers/layer.cpp
+    src/core/renderer/vertex_array/buffer.cpp
+    src/core/renderer/vertex_array/vertex_array.cpp
+    src/core/renderer/context.cpp
+    src/core/renderer/renderer.cpp
+    src/core/renderer/render_dispatcher.cpp
+    src/core/renderer/shader.cpp
+    src/core/renderer/camera/camera.cpp
+    src/core/thread_pool/thread_pool.cpp
+    src/core/window/window.cpp
+    src/core/app.cpp
+    src/util/color/srgb_transform/srgb_transform.cpp
+    src/util/color/color.cpp
+    src/util/logging/log.cpp
+    )
 
 set(OPENGL_FILES
-  src/api/opengl/context/opengl_context.cpp
-  src/api/opengl/vertex_array/opengl_buffer.cpp
-  src/api/opengl/vertex_array/opengl_vertex_array.cpp
-  src/api/opengl/opengl_render_dispatcher.cpp
-  src/api/opengl/opengl_shader.cpp
-)
+    src/api/opengl/context/opengl_context.cpp
+    src/api/opengl/vertex_array/opengl_buffer.cpp
+    src/api/opengl/vertex_array/opengl_vertex_array.cpp
+    src/api/opengl/opengl_render_dispatcher.cpp
+    src/api/opengl/opengl_shader.cpp
+    )
 
 set(VULKAN_FILES
 
-)
+    )
 
 set(D3D11_FILES
 
-)
+    )
 
 set(GLFW_FILES
-  src/api/glfw/input/glfw_input.cpp
-  src/api/glfw/input/glfw_keymap.cpp
-  src/api/glfw/input/glfw_mousemap.cpp
-  src/api/glfw/window/glfw_window.cpp
-)
+    src/api/glfw/input/glfw_input.cpp
+    src/api/glfw/input/glfw_keymap.cpp
+    src/api/glfw/input/glfw_mousemap.cpp
+    src/api/glfw/window/glfw_window.cpp
+    )
 
 set(SDL2_FILES
-  src/api/sdl2/input/sdl2_input.cpp
-  src/api/sdl2/input/sdl2_keymap.cpp
-  src/api/sdl2/input/sdl2_mousemap.cpp
-  src/api/sdl2/window/sdl2_window.cpp
-)
+    src/api/sdl2/input/sdl2_input.cpp
+    src/api/sdl2/input/sdl2_keymap.cpp
+    src/api/sdl2/input/sdl2_mousemap.cpp
+    src/api/sdl2/window/sdl2_window.cpp
+    )
 
 set(SHADER_FILES
-  res/shaders/simple_shader.glsl)
+    res/shaders/simple_shader.glsl)
 
 # ===================================================
 # ADD LIBRARY TARGET
 # ===================================================
 add_library(${TARGET_NAME}
-  STATIC
+    SHARED
     ${SOURCE_FILES}
-)
+    )
 
 set_target_properties(${TARGET_NAME}
-  PROPERTIES
+    PROPERTIES
     OUTPUT_NAME "${TARGET_NAME}"
     CXX_VISIBILITY_PRESET hidden
-)
+    )
 
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E remove_directory
-  "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}")
+    COMMAND ${CMAKE_COMMAND} -E remove_directory
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}")
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-  ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}
-  "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}")
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}")
 
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME}
-  PRIVATE
+    PRIVATE
     $<$<CONFIG:debug>:DEBUG=1>
     $<$<CONFIG:release>:RELEASE=1>
     $<$<CONFIG:relwithdebinfo>:RELDEB=1>
     $<$<CONFIG:minsizerel>:MINREL=1>
-  PUBLIC
+    FLUGEL_BUILD_DLL=1
+    PUBLIC
     $<$<CONFIG:debug>:FLUGEL_ENABLE_ASSERTS=1>
     $<$<CONFIG:relwithdebinfo>:FLUGEL_ENABLE_ASSERTS=1>
-)
+    )
 
 # ===================================================
 # INCLUDING & LINKING
@@ -108,23 +109,23 @@ target_compile_definitions(${TARGET_NAME}
 # Export the library's public header path to dependent targets
 # Define the include DIRs
 target_include_directories(${TARGET_NAME}
-  PUBLIC
-    "include"
-  PUBLIC
+    PUBLIC
+    "src" "include"
+    INTERFACE
     "src"
-)
+    )
 
 # Precompiled Headers
 target_precompile_headers(${TARGET_NAME}
-  PUBLIC
+    PUBLIC
     "src/flugel_pch.hpp"
-)
+    )
 
 # Define the link libraries
 target_link_directories(${TARGET_NAME}
-  PUBLIC
+    PUBLIC
     "lib"
-)
+    )
 
 # ===================================================
 # DEPENDENCIES - VCPKG SUGGESTED
@@ -134,17 +135,18 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # PACKAGES
 # boost
+#set(Boost_USE_STATIC_RUNTIME ON)
 find_package(Boost REQUIRED
-  COMPONENTS
+    COMPONENTS
     container
     coroutine
     log
     system
     thread
     random
-)
+    )
 target_link_libraries(${TARGET_NAME}
-  PUBLIC
+    PUBLIC
     Boost::headers
     Boost::container
     Boost::coroutine
@@ -152,30 +154,30 @@ target_link_libraries(${TARGET_NAME}
     Boost::system
     Boost::thread
     Boost::random
-)
+    )
 
 # HEADER-ONLYS
 # stb
 find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
 target_include_directories(${TARGET_NAME}
-  PUBLIC
+    PRIVATE
     ${STB_INCLUDE_DIRS}
-)
+    )
 
 # SUBMODULES
 # imgui
 target_include_directories(${TARGET_NAME}
-  PRIVATE
+    PUBLIC
     "vendor/imgui"
-)
+    )
 target_sources(${TARGET_NAME}
-  PUBLIC
+    PUBLIC
     vendor/imgui/imgui_demo.cpp
     vendor/imgui/imgui_draw.cpp
     vendor/imgui/imgui_tables.cpp
     vendor/imgui/imgui_widgets.cpp
     vendor/imgui/imgui.cpp
-)
+    )
 # IMGUI RENDER
 if(FLUGEL_OPENGL)
   target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_opengl3.cpp)
@@ -200,24 +202,24 @@ endif()
 # glm
 add_subdirectory(vendor/glm)
 target_include_directories(${TARGET_NAME}
-  PRIVATE
+    PUBLIC
     "vendor/glm"
-)
+    )
 target_link_libraries(${TARGET_NAME}
-  PUBLIC
+    PUBLIC
     glm::glm
-)
+    )
 
 # spdlog
 add_subdirectory(vendor/spdlog)
 target_include_directories(${TARGET_NAME}
-  PRIVATE
+    PUBLIC
     "vendor/spdlog/include"
-)
+    )
 target_link_libraries(${TARGET_NAME}
-  PUBLIC
+    PUBLIC
     spdlog::spdlog
-)
+    )
 
 # ===================================================
 # API SPECIFICS
@@ -231,14 +233,14 @@ if(FLUGEL_OPENGL)
   set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
   add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
   set(GLAD_LIBRARY glad_gl_core_46)
-  glad_add_library(${GLAD_LIBRARY} 
-    STATIC API # MX MXGLOBAL
-    gl:core=4.6
-  )
+  glad_add_library(${GLAD_LIBRARY}
+      STATIC API # MX MXGLOBAL
+      gl:core=4.6
+      )
   target_link_libraries(${TARGET_NAME}
-    PRIVATE
+      PRIVATE
       ${GLAD_LIBRARY}
-  )
+      )
 endif()
 if(FLUGEL_VULKAN)
   message(STATUS "Using VULKAN!")
@@ -248,24 +250,24 @@ if(FLUGEL_VULKAN)
   set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
   add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
   set(GLAD_LIBRARY glad_vulkan_12)
-  glad_add_library(${GLAD_LIBRARY} 
-    STATIC API # MX MXGLOBAL
-    vulkan=1.2
-  )
+  glad_add_library(${GLAD_LIBRARY}
+      STATIC API # MX MXGLOBAL
+      vulkan=1.2
+      )
   target_link_libraries(${TARGET_NAME}
-    PRIVATE
+      PRIVATE
       ${GLAD_LIBRARY}
-  )
+      )
   # vulkan
   find_package(Vulkan REQUIRED)
   target_include_directories(${TARGET_NAME}
-    PRIVATE
+      PRIVATE
       ${Vulkan_INCLUDE_DIRS}
-  )
+      )
   target_link_libraries(${TARGET_NAME}
-    PRIVATE
+      PRIVATE
       ${Vulkan_LIBRARIES}
-  )
+      )
 endif()
 if(FLUGEL_D3D11)
   message(STATUS "Using D3D11!")
@@ -280,13 +282,13 @@ if(FLUGEL_GLFW)
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_GLFW=1 GLFW_INCLUDE_NONE=1)
   add_subdirectory(vendor/glfw)
   target_include_directories(${TARGET_NAME}
-    PRIVATE
+      PRIVATE
       "vendor/glfw/include"
-  )
+      )
   target_link_libraries(${TARGET_NAME}
-    PRIVATE
+      PRIVATE
       glfw
-  )
+      )
 endif()
 if(FLUGEL_SDL)
   message(STATUS "Using SDL2!")
@@ -294,13 +296,13 @@ if(FLUGEL_SDL)
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_SDL2=1)
   add_subdirectory(vendor/sdl)
   target_include_directories(${TARGET_NAME}
-    PRIVATE
+      PRIVATE
       "vendor/sdl/include"
-  )
+      )
   target_link_libraries(${TARGET_NAME}
-    PRIVATE
+      PRIVATE
       SDL2::SDL2
-  )
+      )
 endif()
 if(FLUGEL_WIN32)
   message(STATUS "Using WIN32!")

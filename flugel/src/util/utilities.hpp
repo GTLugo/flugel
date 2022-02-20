@@ -1,5 +1,6 @@
 #pragma once
 
+#define FLUGEL_DYNAMIC
 #ifdef FLUGEL_DYNAMIC
   #ifdef FLUGEL_BUILD_DLL
     #ifdef _WIN32 // Windows
@@ -72,14 +73,13 @@ namespace fge {
   using Weak = std::weak_ptr<T>;
 
   using i8  = std::int8_t;
-  using i16 = std::int16_t;
-  using i32 = std::int32_t;
-  using i64 = std::int64_t;
   using u8  = std::uint8_t;
+  using i16 = std::int16_t;
   using u16 = std::uint16_t;
+  using i32 = std::int32_t;
   using u32 = std::uint32_t;
+  using i64 = std::int64_t;
   using u64 = std::uint64_t;
-
   using i128 = boost::multiprecision::int128_t;
   using u128 = boost::multiprecision::uint128_t;
 
@@ -103,4 +103,6 @@ namespace fge {
   using uvec2 = glm::uvec2;
   using uvec3 = glm::uvec3;
   using uvec4 = glm::uvec4;
+
+  using quat = glm::quat;
 }
