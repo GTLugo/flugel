@@ -6,9 +6,10 @@ namespace fge {
 
   class FGE_API LogicEvent : public Event {
   public:
-    enum Action {
+    enum Action { // Order of Game thread
       None = 0,
-      Start, Tick, Update, Stop, // Game thread
+      Start, Stop,
+      Tick, Update,
     };
 
     explicit LogicEvent(Action action)

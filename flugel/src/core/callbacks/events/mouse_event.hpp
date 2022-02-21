@@ -18,7 +18,16 @@ namespace fge {
     
     std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <Mouse> (" << buttonState_ << ": " << Mouse::toString(button_) << " + " << mods_ << ")";
+      ss << "Event <Mouse> (";
+      switch (buttonState_) {
+        case Mouse::Released:
+          ss << "RELEASE";
+          break;
+        case Mouse::Pressed:
+          ss << "PRESS";
+          break;
+      }
+      ss << ": " << Mouse::toString(button_) << " + " << mods_ << ")";
       return ss.str();
     }
   protected:

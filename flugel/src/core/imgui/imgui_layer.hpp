@@ -13,10 +13,12 @@ namespace fge {
     bool onMouseEvent(MouseEvent& e) override;
     
   private:
+    App* app;
 		bool blockInputEvents_{true};
     bool blockAppEvents_{false};
     u64 clickCount_{0};
     bool vsyncEnabled_{false};
+
 
     static void setDarkThemeColors();
   };

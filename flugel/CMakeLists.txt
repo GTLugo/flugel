@@ -22,6 +22,8 @@ set(SOURCE_FILES
     src/core/layers/layer.cpp
     src/core/renderer/vertex_array/buffer.cpp
     src/core/renderer/vertex_array/vertex_array.cpp
+    src/core/renderer/framebuffer/frame_buffer.cpp
+    src/core/renderer/framebuffer/texture_buffer.cpp
     src/core/renderer/context.cpp
     src/core/renderer/renderer.cpp
     src/core/renderer/render_dispatcher.cpp
@@ -40,6 +42,8 @@ set(OPENGL_FILES
     src/api/opengl/vertex_array/opengl_buffer.cpp
     src/api/opengl/vertex_array/opengl_vertex_array.cpp
     src/api/opengl/opengl_render_dispatcher.cpp
+    src/api/opengl/framebuffer/opengl_frame_buffer.cpp
+    src/api/opengl/framebuffer/opengl_texture_buffer.cpp
     src/api/opengl/opengl_shader.cpp
     )
 

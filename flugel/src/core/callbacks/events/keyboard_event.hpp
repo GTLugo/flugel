@@ -19,7 +19,23 @@ namespace fge {
     
     [[nodiscard]] std::string toString() const override {
       std::stringstream ss;
-      ss << "Event <Keyboard> (" << keyState_ << ": " << Key::toString(key_) << " + " << mods_ << ", REP: " << repeatCount_ << ")";
+      ss << "Event <Keyboard> (";
+      switch (keyState_) {
+        case Key::Released:
+          ss << "RELEASE";
+          break;
+        case Key::Pressed:
+          ss << "PRESS";
+          break;
+        case Key::Repeat:
+          ss << "REPEAT";
+          break;
+      }
+      ss << ": " << Key::toString(key_) << " + " << mods_;
+      if (keyState_ == Key::Repeat) {
+        ss << ", REP: " << repeatCount_;
+      }
+      ss << ")";
       return ss.str();
     }
   protected:

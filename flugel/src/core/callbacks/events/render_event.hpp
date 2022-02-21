@@ -6,9 +6,10 @@ namespace fge {
 
   class FGE_API RenderEvent : public Event {
   public:
-    enum Action {
+    enum Action { // Order of Render thread
       None = 0,
-      Start, BeginFrame, EndFrame, BeginImGui, EndImGui, Stop, // Render thread
+      Start, Stop,
+      BeginFrame, AppStep, ImGuiStep, EndFrame,
     };
 
     explicit RenderEvent(Action action)
@@ -28,14 +29,14 @@ namespace fge {
         case Action::BeginFrame:
           ss << "(BEGIN_FRAME)";
           break;
+        case Action::AppStep:
+          ss << "(APP)";
+          break;
+        case Action::ImGuiStep:
+          ss << "(IMGUI)";
+          break;
         case Action::EndFrame:
           ss << "(END_FRAME)";
-          break;
-        case Action::BeginImGui:
-          ss << "(BEGIN_IMGUI)";
-          break;
-        case Action::EndImGui:
-          ss << "(END_IMGUI)";
           break;
         case Action::Stop:
           ss << "(STOP)";

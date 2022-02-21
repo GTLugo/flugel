@@ -19,6 +19,7 @@ namespace fge {
   };
 
   class FGE_API App {
+    using RenderEvents = std::array<RenderEvent, 4>;
   public:
     explicit App(const WindowProperties& props = {});
     virtual ~App();
@@ -39,7 +40,7 @@ namespace fge {
     static inline App* instance_{nullptr};
     // Util
     AppState state_[2]{}; // double buffered app state
-    const u32 maxFrames_{2};
+    const u32 maxFramesInFlight_{2};
     float tickRate_{128.};
     // Window
     Unique<Window> window_;
@@ -49,7 +50,7 @@ namespace fge {
     ThreadPool threadPool_{};
     std::mutex renderMutex_;
     std::condition_variable renderCondition_;
-    std::queue<std::array<RenderEvent, 4>*> renderQueue_{};
+    std::queue<RenderEvents*> renderQueue_{};
 
     // Layers
     LayerStack layerStack_;
@@ -58,7 +59,7 @@ namespace fge {
     void renderLoop();
     
     void waitForRenderJob();
-    void pushRenderJob(std::array<RenderEvent, 4>* renderEvents);
+    void pushRenderJob(RenderEvents* renderEvents);
 
     void eventDispatch(Event& e);
   };

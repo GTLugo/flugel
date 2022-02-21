@@ -5,7 +5,7 @@
 #include "renderer.hpp"
 
 #if defined(FLUGEL_USE_OPENGL)
-#include "api/opengl/opengl_render_dispatcher.hpp"
+  #include "api/opengl/opengl_render_dispatcher.hpp"
 #endif
 
 namespace fge {

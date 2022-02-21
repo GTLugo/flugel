@@ -134,10 +134,10 @@ namespace fge {
       LogicEvent updateEvent{LogicEvent::Update};
       eventDispatch(updateEvent);
 
-      pushRenderJob(new std::array<RenderEvent, 4>{
+      pushRenderJob(new RenderEvents{
         RenderEvent{RenderEvent::BeginFrame},
-        RenderEvent{RenderEvent::BeginImGui},
-        RenderEvent{RenderEvent::EndImGui},
+        RenderEvent{RenderEvent::AppStep},
+        RenderEvent{RenderEvent::ImGuiStep},
         RenderEvent{RenderEvent::EndFrame}
       });
 
@@ -150,16 +150,16 @@ namespace fge {
   }
 
   void App::waitForRenderJob() {
-    std::array<RenderEvent, 4>* renderEvents{nullptr};
+    RenderEvents* renderEvents{nullptr};
 
     {
       std::unique_lock<std::mutex> lock{renderMutex_};
       //FGE_DEBUG_ENG("Render thread waiting...");
       renderCondition_.wait(lock, [this]{
-        return renderQueue_.size() >= maxFrames_ || shouldClose_;
+        return renderQueue_.size() >= maxFramesInFlight_ || shouldClose_;
       });
 
-      if (renderQueue_.size() >= maxFrames_) {
+      if (renderQueue_.size() >= maxFramesInFlight_) {
         renderEvents = renderQueue_.front();
         renderQueue_.pop();
       }
@@ -175,10 +175,10 @@ namespace fge {
     }
   }
 
-  void App::pushRenderJob(std::array<RenderEvent, 4>* renderEvents) {
+  void App::pushRenderJob(RenderEvents* renderEvents) {
     { // Mutex lock scope
       std::unique_lock<std::mutex> lock{renderMutex_};
-      if (renderQueue_.size() < maxFrames_) {
+      if (renderQueue_.size() < maxFramesInFlight_) {
         renderQueue_.push(renderEvents);
       }
     } // Unlock mutex

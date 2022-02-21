@@ -3,19 +3,19 @@
 #include <glad/gl.h>
 
 namespace fge {
-  static GLenum shaderDataToOpenGLBaseType(BufferElement::DataType type) {
+  static GLenum shaderDataToOpenGLBaseType(BufferElement::Type type) {
     switch (type) {
-      case BufferElement::DataType::Bool:   { return GL_BOOL; }
-      case BufferElement::DataType::Int:    { return GL_INT; }
-      case BufferElement::DataType::Int2:   { return GL_INT; }
-      case BufferElement::DataType::Int3:   { return GL_INT; }
-      case BufferElement::DataType::Int4:   { return GL_INT; }
-      case BufferElement::DataType::Float:  { return GL_FLOAT; }
-      case BufferElement::DataType::Float2: { return GL_FLOAT; }
-      case BufferElement::DataType::Float3: { return GL_FLOAT; }
-      case BufferElement::DataType::Float4: { return GL_FLOAT; }
-      case BufferElement::DataType::Mat3:   { return GL_FLOAT; }
-      case BufferElement::DataType::Mat4:   { return GL_FLOAT; }
+      case BufferElement::Type::Bool:   { return GL_BOOL; }
+      case BufferElement::Type::Int:    { return GL_INT; }
+      case BufferElement::Type::Int2:   { return GL_INT; }
+      case BufferElement::Type::Int3:   { return GL_INT; }
+      case BufferElement::Type::Int4:   { return GL_INT; }
+      case BufferElement::Type::Float:  { return GL_FLOAT; }
+      case BufferElement::Type::Float2: { return GL_FLOAT; }
+      case BufferElement::Type::Float3: { return GL_FLOAT; }
+      case BufferElement::Type::Float4: { return GL_FLOAT; }
+      case BufferElement::Type::Mat3:   { return GL_FLOAT; }
+      case BufferElement::Type::Mat4:   { return GL_FLOAT; }
       default:                     { return 0; }
     }
   }

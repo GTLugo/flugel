@@ -4,7 +4,7 @@
 
 namespace fge {
   struct FGE_API BufferElement {
-    enum class DataType {
+    enum class Type {
       None = 0,
       Bool,
       Int, Int2, Int3, Int4,
@@ -12,7 +12,7 @@ namespace fge {
       Mat3, Mat4
     };
 
-    DataType type;
+    Type type;
     std::string name;
     u32 componentCount;
     u32 size;
@@ -24,7 +24,7 @@ namespace fge {
       return {fge::BufferElement::dataTypeToShaderDataType<U>(), name};
     }
 
-    BufferElement(DataType type = DataType::Float, std::string name = "buffer_element", bool normalized = false)
+    BufferElement(Type type = Type::Float, std::string name = "buffer_element", bool normalized = false)
         : type{type},
           name{std::move(name)},
           componentCount{dataTypeComponentCount(type)},
@@ -33,62 +33,62 @@ namespace fge {
           normalized{normalized} {}
 
     template<typename U>
-    static DataType dataTypeToShaderDataType() {
+    static Type dataTypeToShaderDataType() {
       if (typeid(U) == typeid(bool)) {
-        return DataType::Bool;
+        return Type::Bool;
       } else if (typeid(U) == typeid(int)) {
-        return DataType::Int;
+        return Type::Int;
       } else if (typeid(U) == typeid(ivec2)) {
-        return DataType::Int2;
+        return Type::Int2;
       } else if (typeid(U) == typeid(ivec3)) {
-        return DataType::Int3;
+        return Type::Int3;
       } else if (typeid(U) == typeid(ivec4)) {
-        return DataType::Int4;
+        return Type::Int4;
       } else if (typeid(U) == typeid(vec2)) {
-        return DataType::Float2;
+        return Type::Float2;
       } else if (typeid(U) == typeid(vec3)) {
-        return DataType::Float3;
+        return Type::Float3;
       } else if (typeid(U) == typeid(vec4)) {
-        return DataType::Float4;
+        return Type::Float4;
       } else if (typeid(U) == typeid(mat3)) {
-        return DataType::Mat3;
+        return Type::Mat3;
       } else if (typeid(U) == typeid(mat4)) {
-        return DataType::Mat4;
+        return Type::Mat4;
       }
       FGE_ASSERT_ENG(false, "Failed to find supported buffer element data type!");
-      return DataType::None;
+      return Type::None;
     }
 
-    static u32 dataTypeComponentCount(DataType type) {
+    static u32 dataTypeComponentCount(Type type) {
       switch (type) {
-        case DataType::Bool:   { return 1; }
-        case DataType::Int:    { return 1; }
-        case DataType::Int2:   { return 2; }
-        case DataType::Int3:   { return 3; }
-        case DataType::Int4:   { return 4; }
-        case DataType::Float:  { return 1; }
-        case DataType::Float2: { return 2; }
-        case DataType::Float3: { return 3; }
-        case DataType::Float4: { return 4; }
-        case DataType::Mat3:   { return 3 * 3; }
-        case DataType::Mat4:   { return 4 * 4; }
+        case Type::Bool:   { return 1; }
+        case Type::Int:    { return 1; }
+        case Type::Int2:   { return 2; }
+        case Type::Int3:   { return 3; }
+        case Type::Int4:   { return 4; }
+        case Type::Float:  { return 1; }
+        case Type::Float2: { return 2; }
+        case Type::Float3: { return 3; }
+        case Type::Float4: { return 4; }
+        case Type::Mat3:   { return 3 * 3; }
+        case Type::Mat4:   { return 4 * 4; }
         default:               { return 0; }
       }
     }
 
-    static u32 shaderDataTypeSize(DataType type) {
+    static u32 shaderDataTypeSize(Type type) {
       switch (type) {
-        case DataType::Bool:   { return sizeof(bool); }
-        case DataType::Int:    { return sizeof(i32); }
-        case DataType::Int2:   { return sizeof(i32) * 2; }
-        case DataType::Int3:   { return sizeof(i32) * 3; }
-        case DataType::Int4:   { return sizeof(i32) * 4; }
-        case DataType::Float:  { return sizeof(float); }
-        case DataType::Float2: { return sizeof(float) * 2; }
-        case DataType::Float3: { return sizeof(float) * 3; }
-        case DataType::Float4: { return sizeof(float) * 4; }
-        case DataType::Mat3:   { return sizeof(float) * 3 * 3; }
-        case DataType::Mat4:   { return sizeof(float) * 4 * 4; }
+        case Type::Bool:   { return sizeof(bool); }
+        case Type::Int:    { return sizeof(i32); }
+        case Type::Int2:   { return sizeof(i32) * 2; }
+        case Type::Int3:   { return sizeof(i32) * 3; }
+        case Type::Int4:   { return sizeof(i32) * 4; }
+        case Type::Float:  { return sizeof(float); }
+        case Type::Float2: { return sizeof(float) * 2; }
+        case Type::Float3: { return sizeof(float) * 3; }
+        case Type::Float4: { return sizeof(float) * 4; }
+        case Type::Mat3:   { return sizeof(float) * 3 * 3; }
+        case Type::Mat4:   { return sizeof(float) * 4 * 4; }
         default:               { return 0; }
       }
     }

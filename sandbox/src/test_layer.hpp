@@ -15,12 +15,13 @@ namespace sbx {
 
     bool onRenderEvent(fge::RenderEvent& e) final;
     bool onLogicEvent(fge::LogicEvent& e) final;
-    bool onMouseEvent(fge::MouseEvent& e) final;
     bool onKeyboardEvent(fge::KeyboardEvent& e) final;
+    bool onMouseEvent(fge::MouseEvent& e) final;
+    bool onScrollEvent(fge::ScrollEvent& e) final;
 
   private:
     fge::Shared<fge::VertexArray> vao_;
-    fge::Shared<fge::VertexArray> vaoSqr_;
+    fge::Shared<fge::VertexArray> background_;
     fge::Shared<fge::Shader> shader_;
     bool left_{false};
     fge::vec3 pos_{0, 0, 0};

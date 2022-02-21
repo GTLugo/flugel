@@ -23,13 +23,13 @@ namespace sbx {
           {0, 1, 2}
         );
 
-        vaoSqr_ = fge::VertexArray::create(
+        background_ = fge::VertexArray::create(
           // Vertices
           {
-            -.75, -.75, .1, /**/ .1, .1, .1, 1.,
-             .75, -.75, .1, /**/ .1, .1, .1, 1.,
-             .75,  .75, .1, /**/ .7, .6, .6, 1.,
-             -.75, .75, .1, /**/ .7, .6, .6, 1.
+            -1.f, -1.f, .1f, /**/ .1, .1, .1, 1.,
+             1.f, -1.f, .1f, /**/ .1, .1, .1, 1.,
+             1.f,  1.f, .1f, /**/ .7, .6, .6, 1.,
+            -1.f,  1.f, .1f, /**/ .7, .6, .6, 1.
           },
           // Layout
           {
@@ -44,9 +44,9 @@ namespace sbx {
 
         return false;
       }
-      case fge::RenderEvent::EndFrame: {
+      case fge::RenderEvent::AppStep: {
         shader_->bind();
-        fge::Renderer::submit(vaoSqr_);
+        fge::Renderer::submit(background_);
         fge::Renderer::submit(vao_);
         shader_->unbind();
 
@@ -70,25 +70,18 @@ namespace sbx {
     return false;
   }
 
-  bool TestLayer::onMouseEvent(fge::MouseEvent& e) {
-    //FGE_DEBUG("{}: {}", name_, e);
+  bool TestLayer::onKeyboardEvent(fge::KeyboardEvent& e) {
+    FGE_DEBUG("{}: {}", name_, e);
     return false;
   }
 
-  bool TestLayer::onKeyboardEvent(fge::KeyboardEvent& e) {
-    //FGE_DEBUG("{}: {}", name_, e);
-    std::string input{"hello\n { everyone i am cat girl"};
-    std::stringstream inputStream{input};
-    std::stringstream outputStream;
-    std::string input2, input3;
-    std::string nextInput;
-    inputStream >> input2 >> input3 >> nextInput;
-    while (inputStream) {
-      outputStream << nextInput << " ";
-      inputStream >> nextInput;
-    }
+  bool TestLayer::onMouseEvent(fge::MouseEvent& e) {
+    FGE_DEBUG("{}: {}", name_, e);
+    return false;
+  }
 
-    FGE_DEBUG("\n{}\n{}\n{}\n{}", input2, input3, inputStream.str(), outputStream.str());
+  bool TestLayer::onScrollEvent(fge::ScrollEvent& e) {
+    FGE_DEBUG("{}: {}", name_, e);
     return false;
   }
 }

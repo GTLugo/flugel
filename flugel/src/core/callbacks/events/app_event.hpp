@@ -6,9 +6,10 @@ namespace fge {
 
   class FGE_API AppEvent : public Event {
   public:
-    enum Action {
+    enum Action { // Order of Main thread
       None = 0,
-      Start, Poll, Update, Stop, // Main thread
+      Start, Stop,
+      Poll, Update,
     };
 
     explicit AppEvent(Action A)
