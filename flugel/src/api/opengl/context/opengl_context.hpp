@@ -8,16 +8,14 @@ struct GladGLContext;
 namespace fge {
   class OpenGLContext : public RenderContext {
   public:
-    OpenGLContext(GLFWwindow* windowHandle);
+    explicit OpenGLContext(GLFWwindow* windowHandle);
     ~OpenGLContext();
 
-    //virtual void* nativeContext() override { return context_; }
-    virtual void setCurrent(bool isCurrent) override;
-    virtual void swapBuffers() override;
+    virtual void* nativeContext() override { return context_; }
+    void setCurrent(bool isCurrent) final;
+    void swapBuffers() final;
   private:
     GLFWwindow* windowHandle_;
-    //GladGLContext* context_;
-
-    virtual void init() override;
+    GladGLContext* context_;
   };
 }

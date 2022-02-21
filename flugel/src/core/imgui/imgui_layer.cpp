@@ -3,8 +3,6 @@
 #include "core/app.hpp"
 #include "core/input/input.hpp"
 
-//#include <glad/gl.h>
-//#include <GLFW/glfw3.h>
 #include <imgui.h>
 // WINDOW API
 #if defined(FLUGEL_USE_GLFW)
@@ -45,13 +43,12 @@ namespace fge {
         ImGuiIO& io = ImGui::GetIO(); (void)io;
         io.ConfigFlags |= ImGuiBackendFlags_HasMouseCursors;
         io.ConfigFlags |= ImGuiBackendFlags_HasSetMousePos;
-        // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         ImGui::StyleColorsDark();
         setDarkThemeColors();
-        App& app = App::instance();
-		    auto* window = static_cast<GLFWwindow*>(app.window().nativeWindow());
+		    auto* window = static_cast<GLFWwindow*>(app->window().nativeWindow());
 
         IMGUI_WINDOW_IMPL_INIT(window, true);
         return false;
@@ -97,6 +94,12 @@ namespace fge {
       case RenderEvent::EndFrame: {
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        // Update and Render additional Platform Windows
+        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+        //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        App::instance().window().context().setCurrent(true);
         return false;
       }
       case RenderEvent::Stop: {

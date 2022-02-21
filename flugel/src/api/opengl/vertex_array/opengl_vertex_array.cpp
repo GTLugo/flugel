@@ -21,7 +21,7 @@ namespace fge {
   }
 
   OpenGLVertexArray::~OpenGLVertexArray() {
-    //auto gl{gladGetGLContext()};
+    auto gl{gladGetGLContext()};
     
     glDeleteVertexArrays(1, &vertexArrayId_);
   }
