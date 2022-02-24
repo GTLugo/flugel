@@ -4,11 +4,14 @@
 
 #include "opengl_texture_buffer.hpp"
 
+#include "core/app.hpp"
+
 #include <glad/gl.h>
 
 namespace fge {
   OpenGLTextureBuffer::OpenGLTextureBuffer(TextureBuffer::Format format, i32 width, i32 height, void* data) {
-    glGenTextures(1, &textureId_);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->GenTextures(1, &textureId_);
     bind();
     i32 glFormat{};
     switch (format) {
@@ -20,18 +23,29 @@ namespace fge {
         break;
       default: FGE_ASSERT_ENG(false, "Unsupported texture buffer format!");
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, GL_UNSIGNED_BYTE, data);
+    gl->TexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, GL_UNSIGNED_BYTE, data);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    gl->TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    gl->TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     unbind();
   }
 
+  OpenGLTextureBuffer::~OpenGLTextureBuffer() {
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->DeleteTextures(1, &textureId_);
+  }
+
   void OpenGLTextureBuffer::bind() const {
-    glBindTexture(GL_TEXTURE_2D, textureId_);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->BindTexture(GL_TEXTURE_2D, textureId_);
   }
 
   void OpenGLTextureBuffer::unbind() const {
-    glBindTexture(GL_TEXTURE_2D, 0);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->BindTexture(GL_TEXTURE_2D, 0);
+  }
+
+  void* OpenGLTextureBuffer::handle() const {
+    return reinterpret_cast<void*>(textureId_);
   }
 }

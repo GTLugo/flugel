@@ -10,5 +10,6 @@ namespace fge {
   public:
     void clear(Color color) final;
     void draw(const Shared<VertexArray>& vertexArray) final;
+    void setDepthTest(bool enabled) final;
   };
 }

@@ -236,9 +236,9 @@ if(FLUGEL_OPENGL)
   # glad
   set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
   add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
-  set(GLAD_LIBRARY glad_gl_core_46)
+  set(GLAD_LIBRARY glad_gl_core_mx_global_46)
   glad_add_library(${GLAD_LIBRARY}
-      STATIC MX API #GLOBAL #MX
+      STATIC MX GLOBAL API # #MX
       gl:core=4.6
       )
   target_link_libraries(${TARGET_NAME}

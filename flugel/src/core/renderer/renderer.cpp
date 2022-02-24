@@ -4,6 +4,8 @@
 
 #include "renderer.hpp"
 
+#include "core/app.hpp"
+
 #if defined(FLUGEL_USE_OPENGL)
   #include "api/opengl/opengl_render_dispatcher.hpp"
 #endif
@@ -19,7 +21,7 @@ namespace fge {
       }
       case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
-        renderDispatcher = makeUnique<OpenGLRenderDispatcher>();
+        renderDispatcher_ = makeUnique<OpenGLRenderDispatcher>();
         #else
         FGE_ASSERT_ENG(false, "OpenGL not supported!");
         #endif
@@ -49,26 +51,34 @@ namespace fge {
   }
 
   void Renderer::clear(Color color) {
-    renderDispatcher->clear(color);
+    renderDispatcher_->clear(color);
   }
 
   void Renderer::beginScene() {
-
   }
 
-  void Renderer::submit(const Shared<VertexArray>& vertexArray) {
+  void Renderer::submit(const Shared<VertexArray>& vertexArray, bool drawToDefaultFrameBuffer) {
     // this will eventually be moved to a queue system where submission happens
     // at any time, but this draw method is called at the end of the frame.
+    if (Shared<FrameBuffer> fbShared = frameBuffer_.lock()) {
+      if (drawToDefaultFrameBuffer) fbShared->bind();
+    }
     draw(vertexArray);
+    if (Shared<FrameBuffer> fbShared = frameBuffer_.lock()) {
+      if (drawToDefaultFrameBuffer) fbShared->unbind();
+    }
   }
 
   void Renderer::endScene() {
+  }
 
+  void Renderer::setDepthTest(bool enabled) {
+    renderDispatcher_->setDepthTest(enabled);
   }
 
   void Renderer::draw(const Shared<VertexArray>& vertexArray) {
     vertexArray->bind();
-    renderDispatcher->draw(vertexArray);
+    renderDispatcher_->draw(vertexArray);
     vertexArray->unbind();
   }
 }

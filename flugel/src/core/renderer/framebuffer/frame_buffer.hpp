@@ -4,16 +4,24 @@
 
 #pragma once
 
+#include "texture_buffer.hpp"
+
 
 namespace fge {
   class FGE_API FrameBuffer {
   public:
     virtual ~FrameBuffer() = default;
 
+    static Shared<FrameBuffer> create(TextureBuffer::Format format, i32 width, i32 height, void* data);
+    static Shared<FrameBuffer> create(const Shared<TextureBuffer>& textureBuffer);
+
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
 
-    static Shared<FrameBuffer> create();
+    void attachTextureBuffer(Shared<TextureBuffer>& textureBuffer) { textureBuffer_ = textureBuffer; }
+    Shared<TextureBuffer>& textureBuffer() { return textureBuffer_; }
+  protected:
+    Shared<TextureBuffer> textureBuffer_;
   };
 }
 

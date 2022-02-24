@@ -16,6 +16,7 @@ namespace fge {
 
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
+    [[nodiscard]] virtual void* handle() const = 0;
 
     static Shared<TextureBuffer> create(Format format, i32 width, i32 height, void* data);
   };

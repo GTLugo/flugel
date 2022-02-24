@@ -5,7 +5,7 @@
 #pragma once
 
 namespace fge {
-  class Camera {
+  class FGE_API Camera {
   public:
     Camera(float left, float right, float bottom, float top, float near, float far);
     Camera(float fovY, float aspectRatio, float near, float far);

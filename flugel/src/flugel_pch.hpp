@@ -66,3 +66,4 @@
 #include "util/time.hpp"
 #include "util/random.hpp"
 #include "util/uuid.hpp"
+#include "util/color/color.hpp"

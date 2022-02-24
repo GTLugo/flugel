@@ -16,6 +16,9 @@ namespace fge {
     [[nodiscard]] Key::Code key() const { return key_; }
     [[nodiscard]] i32 repeatCount() const { return repeatCount_; }
     [[nodiscard]] Modifier::BitCodes mods() const { return mods_; }
+
+    template<Key::Code C>
+    [[nodiscard]] bool check(Key::State state) const { return key() == C && keyState() == state; }
     
     [[nodiscard]] std::string toString() const override {
       std::stringstream ss;

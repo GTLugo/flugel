@@ -1,5 +1,7 @@
 #include "opengl_vertex_array.hpp"
 
+#include "core/app.hpp"
+
 #include <glad/gl.h>
 
 namespace fge {
@@ -21,40 +23,41 @@ namespace fge {
   }
 
   OpenGLVertexArray::~OpenGLVertexArray() {
-    auto gl{gladGetGLContext()};
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
     
-    glDeleteVertexArrays(1, &vertexArrayId_);
+    gl->DeleteVertexArrays(1, &vertexArrayId_);
   }
 
   OpenGLVertexArray::OpenGLVertexArray(Shared<VertexBuffer> vertexBuffer, Shared<IndexBuffer> indexBuffer) {
-    //auto gl{gladGetGLContext()};
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
 
-    glCreateVertexArrays(1, &vertexArrayId_);
+    gl->CreateVertexArrays(1, &vertexArrayId_);
     addVertexBuffer(vertexBuffer);
     setIndexBuffer(indexBuffer);
   }
 
   void OpenGLVertexArray::bind() const {
-    //auto gl{gladGetGLContext()};
-    glBindVertexArray(vertexArrayId_);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->BindVertexArray(vertexArrayId_);
   }
 
   void OpenGLVertexArray::unbind() const {
-    //auto gl{gladGetGLContext()};
-    glBindVertexArray(0);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->BindVertexArray(0);
   }
 
   void OpenGLVertexArray::addVertexBuffer(Shared<VertexBuffer> vertexBuffer) {
     FGE_ASSERT_ENG(!vertexBuffer->layout().elements().empty(), "Vertex buffer has no layout!");
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
 
     //auto gl{gladGetGLContext()};
-    glBindVertexArray(vertexArrayId_);
+    gl->BindVertexArray(vertexArrayId_);
 
     vertexBuffer->bind();
     u32 i{0};
     for (const auto& element : vertexBuffer->layout()) {
-      glEnableVertexAttribArray(i);
-      glVertexAttribPointer(i, 
+      gl->EnableVertexAttribArray(i);
+      gl->VertexAttribPointer(i,
         element.componentCount,
         shaderDataToOpenGLBaseType(element.type), 
         element.normalized, 
@@ -65,18 +68,18 @@ namespace fge {
     }
     vertexBuffers_.push_back(vertexBuffer);
 
-    glBindVertexArray(0);
+    gl->BindVertexArray(0);
     vertexBuffer->unbind();
   }
 
   void OpenGLVertexArray::setIndexBuffer(Shared<IndexBuffer> indexBuffer) {
-    //auto gl{gladGetGLContext()};
-    glBindVertexArray(vertexArrayId_);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->BindVertexArray(vertexArrayId_);
 
     indexBuffer->bind();
     indexBuffer_ = indexBuffer;
 
-    glBindVertexArray(0);
+    gl->BindVertexArray(0);
     indexBuffer->unbind();
   }
 }

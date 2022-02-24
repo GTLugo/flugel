@@ -2,6 +2,7 @@
 // https://www.khronos.org/opengl/wiki/Shader_Compilation
 #include "opengl_shader.hpp"
 
+#include "core/app.hpp"
 #include <glad/gl.h>
 
 namespace fge {
@@ -15,31 +16,31 @@ namespace fge {
   }
 
   void OpenGLShader::init(const std::string& vertSrc, const std::string& fragSrc) {
-    //auto gl{gladGetGLContext()};
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
 
     // Create an empty vertex shader handle
-    u32 vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    u32 vertexShader{gl->CreateShader(GL_VERTEX_SHADER)};
 
     // Send the vertex shader source code to GL
     // Note that std::string's .c_str is NULL character terminated.
     const char* source = vertSrc.c_str();
-    glShaderSource(vertexShader, 1, &source, nullptr);
+    gl->ShaderSource(vertexShader, 1, &source, nullptr);
 
     // Compile the vertex shader
-    glCompileShader(vertexShader);
+    gl->CompileShader(vertexShader);
 
     i32 isCompiled = 0;
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
+    gl->GetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
     if(!isCompiled) {
       i32 maxLength = 0;
-      glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+      gl->GetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
 
       // The maxLength includes the NULL character
       std::vector<char> infoLog(maxLength);
-      glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
+      gl->GetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
 
       // We don't need the shader anymore.
-      glDeleteShader(vertexShader);
+      gl->DeleteShader(vertexShader);
 
       // Use the infoLog as you see fit.
       FGE_ERROR_ENG("SHADER ERROR | {}", infoLog.data());
@@ -50,29 +51,29 @@ namespace fge {
     }
 
     // Create an empty fragment shader handle
-    u32 fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    u32 fragmentShader{gl->CreateShader(GL_FRAGMENT_SHADER)};
 
     // Send the fragment shader source code to GL
     // Note that std::string's .c_str is NULL character terminated.
     source = fragSrc.c_str();
-    glShaderSource(fragmentShader, 1, &source, nullptr);
+    gl->ShaderSource(fragmentShader, 1, &source, nullptr);
 
     // Compile the fragment shader
-    glCompileShader(fragmentShader);
+    gl->CompileShader(fragmentShader);
 
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
+    gl->GetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
     if (!isCompiled) {
       i32 maxLength = 0;
-      glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
+      gl->GetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
 
       // The maxLength includes the NULL character
       std::vector<char> infoLog(maxLength);
-      glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
+      gl->GetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
 
       // We don't need the shader anymore.
-      glDeleteShader(fragmentShader);
+      gl->DeleteShader(fragmentShader);
       // Either of them. Don't leak shaders.
-      glDeleteShader(vertexShader);
+      gl->DeleteShader(vertexShader);
 
       // Use the infoLog as you see fit.
       FGE_ERROR_ENG("SHADER ERROR | {}", infoLog.data());
@@ -85,31 +86,31 @@ namespace fge {
     // Vertex and fragment shaders are successfully compiled.
     // Now time to link them together into a program.
     // Get a program object.
-    shaderId_ = glCreateProgram();
+    shaderId_ = gl->CreateProgram();
 
     // Attach our shaders to our program
-    glAttachShader(shaderId_, vertexShader);
-    glAttachShader(shaderId_, fragmentShader);
+    gl->AttachShader(shaderId_, vertexShader);
+    gl->AttachShader(shaderId_, fragmentShader);
 
     // Link our program
-    glLinkProgram(shaderId_);
+    gl->LinkProgram(shaderId_);
 
     // Note the different functions here: glGetProgram* instead of glGetShader*.
     i32 isLinked = 0;
-    glGetProgramiv(shaderId_, GL_LINK_STATUS, (int *)&isLinked);
+    gl->GetProgramiv(shaderId_, GL_LINK_STATUS, (int *)&isLinked);
     if (!isLinked) {
       i32 maxLength = 0;
-      glGetProgramiv(shaderId_, GL_INFO_LOG_LENGTH, &maxLength);
+      gl->GetProgramiv(shaderId_, GL_INFO_LOG_LENGTH, &maxLength);
 
       // The maxLength includes the NULL character
       std::vector<char> infoLog(maxLength);
-      glGetProgramInfoLog(shaderId_, maxLength, &maxLength, &infoLog[0]);
+      gl->GetProgramInfoLog(shaderId_, maxLength, &maxLength, &infoLog[0]);
 
       // We don't need the program anymore.
-      glDeleteProgram(shaderId_);
+      gl->DeleteProgram(shaderId_);
       // Don't leak shaders either.
-      glDeleteShader(vertexShader);
-      glDeleteShader(fragmentShader);
+      gl->DeleteShader(vertexShader);
+      gl->DeleteShader(fragmentShader);
 
       // Use the infoLog as you see fit.
       FGE_ERROR_ENG("SHADER ERROR | {}", infoLog.data());
@@ -120,23 +121,23 @@ namespace fge {
     }
 
     // Always detach shaders after a successful link.
-    glDetachShader(shaderId_, vertexShader);
-    glDetachShader(shaderId_, fragmentShader);
+    gl->DetachShader(shaderId_, vertexShader);
+    gl->DetachShader(shaderId_, fragmentShader);
   }
 
   OpenGLShader::~OpenGLShader() {
-    //auto gl = gladGetGLContext();
-    glDeleteProgram(shaderId_);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->DeleteProgram(shaderId_);
   }
 
   void OpenGLShader::bind() const {
-    //auto gl = gladGetGLContext();
-    glUseProgram(shaderId_);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->UseProgram(shaderId_);
   }
 
   void OpenGLShader::unbind() const {
-    //auto gl = gladGetGLContext();
-    glUseProgram(0);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->UseProgram(0);
   }
 
   std::unordered_map<Shader::Type, std::string> OpenGLShader::parseFile(const std::string& shaderFilePath) {

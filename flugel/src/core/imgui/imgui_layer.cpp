@@ -2,6 +2,7 @@
 
 #include "core/app.hpp"
 #include "core/input/input.hpp"
+#include "core/renderer/renderer.hpp"
 
 #include <imgui.h>
 // WINDOW API
@@ -40,7 +41,7 @@ namespace fge {
       case AppEvent::Start: {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiBackendFlags_HasMouseCursors;
         io.ConfigFlags |= ImGuiBackendFlags_HasSetMousePos;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -67,7 +68,7 @@ namespace fge {
         return false;
       }
       case RenderEvent::BeginFrame: {
-        ImGuiIO& io{ImGui::GetIO()}; (void)io;
+        ImGuiIO& io{ImGui::GetIO()};
         io.DisplaySize = ImVec2(app->window().dims().x, app->window().dims().y);
         io.DeltaTime = Time::delta<Seconds>();
         //FGE_DEBUG("Time: {}", app.time().deltaTime<Seconds>());
@@ -79,27 +80,82 @@ namespace fge {
       case RenderEvent::ImGuiStep: {
         ImGuiIO& io{ImGui::GetIO()};
 
-        ImGui::Begin("App Stats");
-        ImGui::Text("FPS: %i (%.3f ms)", static_cast<int>(floor(io.Framerate)), 1000. / io.Framerate);
-        ImGui::Checkbox("Vsync", &vsyncEnabled_);
-        app->window().setVSync(vsyncEnabled_);
+        ImGuiDockNodeFlags dockspaceFlags =
+            ImGuiDockNodeFlags_None /*|
+            ImGuiDockNodeFlags_AutoHideTabBar*/;
+        ImGuiWindowFlags dockspaceWindowFlags =
+            ImGuiWindowFlags_MenuBar |
+            ImGuiWindowFlags_NoDocking |
+            ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoCollapse |
+            ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_NoBringToFrontOnFocus |
+            ImGuiWindowFlags_NoNavFocus;
+        const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+        std::string title{"Flugel Engine | " + App::instance().window().title()};
+        ImGui::Begin(title.c_str(), nullptr, dockspaceWindowFlags);
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar(2);
+
+        ImGuiID dockspaceId{ImGui::GetID("Engine Dock Space")};
+        ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockspaceFlags);
+
+        if (ImGui::BeginMenuBar()) {
+          if (ImGui::BeginMenu("Menu")) {
+            ImGui::MenuItem("Vsync", nullptr, &vsyncEnabled_);
+            app->window().setVSync(vsyncEnabled_);
+            ImGui::EndMenu();
+          }
+          ImGui::EndMenuBar();
+        } ImGui::End();
+
+        ImGui::Begin("App"); { // https://gamedev.stackexchange.com/questions/140693/how-can-i-render-an-opengl-scene-into-an-imgui-window
+          ImGui::BeginChild("GameRender");
+          ImVec2 winSize{ImGui::GetWindowSize()};
+          if (Shared<FrameBuffer> fb = Renderer::defaultFrameBuffer().lock()) {
+            ImGui::Image(
+                (ImTextureID)reinterpret_cast<u32>(fb->textureBuffer()->handle()),
+                winSize,
+                ImVec2{0, 1},
+                ImVec2{1, 0});
+          }
+          ImGui::EndChild();
+        } ImGui::End();
+
+        ImGui::Begin("Log");
+        ImGui::Text("UwU I'm a log OwO");
         ImGui::End();
 
-        ImGui::Begin("Clicks");
+        ImGui::Begin("Engine Stats");
+        ImGui::Text("FPS: %i", static_cast<int>(floor(io.Framerate)));
+        ImGui::Text("FT: %.3f ms", 1000. / io.Framerate);
+        ImGui::End();
+
+        ImGui::Begin("App Stats");
         ImGui::Text("Click Count: %llu", clickCount_);
         ImGui::End();
-        
         return false;
       }
       case RenderEvent::EndFrame: {
+        ImGuiIO& io{ImGui::GetIO()};
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        // Update and Render additional Platform Windows
-        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-        //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
-        ImGui::UpdatePlatformWindows();
-        ImGui::RenderPlatformWindowsDefault();
-        App::instance().window().context().setCurrent(true);
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+          // Update and Render additional Platform Windows
+          // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+          //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+          ImGui::UpdatePlatformWindows();
+          ImGui::RenderPlatformWindowsDefault();
+          App::instance().window().context().setCurrent(true);
+        }
         return false;
       }
       case RenderEvent::Stop: {
@@ -116,18 +172,19 @@ namespace fge {
 
   bool ImGuiLayer::onKeyboardEvent(KeyboardEvent& e) {
     if (blockInputEvents_) {
-			ImGuiIO& io = ImGui::GetIO();
+      ImGuiIO& io = ImGui::GetIO();
       return io.WantCaptureKeyboard;
     }
     return false;
   }
 
   bool ImGuiLayer::onMouseEvent(MouseEvent& e) {
+    if (e.check<Mouse::Left>(Mouse::Pressed)) {
+      ++clickCount_;
+    }
+
     if (blockInputEvents_) {
-			ImGuiIO& io = ImGui::GetIO();
-      if (e.button() == Mouse::Left && e.buttonState() == Mouse::Pressed) {
-        ++clickCount_;
-      }
+      ImGuiIO& io = ImGui::GetIO();
       return io.WantCaptureMouse;
     }
     return false;
@@ -135,33 +192,38 @@ namespace fge {
 
 	void ImGuiLayer::setDarkThemeColors() {
 		auto& colors = ImGui::GetStyle().Colors;
-		colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
+
+    auto dark0{ImVec4{ 0.03f, 0.03f, 0.03f, 1.0f }};
+    auto dark1{ImVec4{ 0.05f, 0.05f, 0.05f, 1.0f }};
+    auto dark2{ImVec4{ 0.05f, 0.05f, 0.05f, 1.0f }};
+
+		colors[ImGuiCol_WindowBg] = dark0;
 
 		// Headers
-		colors[ImGuiCol_Header] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
-		colors[ImGuiCol_HeaderHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
-		colors[ImGuiCol_HeaderActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+		colors[ImGuiCol_Header]        = dark1;
+		colors[ImGuiCol_HeaderHovered] = dark1;
+		colors[ImGuiCol_HeaderActive]  = dark1;
 		
 		// Buttons
-		colors[ImGuiCol_Button] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
-		colors[ImGuiCol_ButtonHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
-		colors[ImGuiCol_ButtonActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+		colors[ImGuiCol_Button]        = dark1;
+		colors[ImGuiCol_ButtonHovered] = dark1;
+		colors[ImGuiCol_ButtonActive]  = dark1;
 
 		// Frame BG
-		colors[ImGuiCol_FrameBg] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
-		colors[ImGuiCol_FrameBgHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
-		colors[ImGuiCol_FrameBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+		colors[ImGuiCol_FrameBg]        = dark1;
+		colors[ImGuiCol_FrameBgHovered] = dark1;
+		colors[ImGuiCol_FrameBgActive]  = dark1;
 
 		// Tabs
-		colors[ImGuiCol_Tab] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-		colors[ImGuiCol_TabHovered] = ImVec4{ 0.38f, 0.3805f, 0.381f, 1.0f };
-		colors[ImGuiCol_TabActive] = ImVec4{ 0.28f, 0.2805f, 0.281f, 1.0f };
-		colors[ImGuiCol_TabUnfocused] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-		colors[ImGuiCol_TabUnfocusedActive] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
+		colors[ImGuiCol_Tab]                = dark1;
+		colors[ImGuiCol_TabHovered]         = dark1;
+		colors[ImGuiCol_TabActive]          = dark1;
+		colors[ImGuiCol_TabUnfocused]       = dark1;
+		colors[ImGuiCol_TabUnfocusedActive] = dark1;
 
 		// Title
-		colors[ImGuiCol_TitleBg] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-		colors[ImGuiCol_TitleBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-		colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+		colors[ImGuiCol_TitleBg]          = dark1;
+		colors[ImGuiCol_TitleBgActive]    = dark1;
+		colors[ImGuiCol_TitleBgCollapsed] = dark1;
 	}
 }

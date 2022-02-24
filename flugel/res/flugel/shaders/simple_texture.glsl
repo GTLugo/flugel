@@ -2,22 +2,24 @@
 #version 460 core
 
 layout (location = 0) in vec4 pos;
-layout (location = 1) in vec4 color;
+layout (location = 1) in vec2 texCoords;
 
-out vec4 vertColor;
+out vec2 TexCoords;
 
 void main() {
-    vertColor = color;
+    TexCoords = texCoords;
     gl_Position = pos;
 }
 
 #type fragment
 #version 460 core
 
-in vec4 vertColor;
+in vec2 TexCoords;
 
 layout (location = 0) out vec4 fragColor;
 
+uniform sampler2D screenTexture;
+
 void main() {
-    fragColor = vertColor;
+    fragColor = texture(screenTexture, TexCoords);
 }

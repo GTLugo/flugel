@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "util/color/color.hpp"
 #include "core/renderer/vertex_array/vertex_array.hpp"
 
 namespace fge {
@@ -12,6 +11,7 @@ namespace fge {
   public:
     virtual void clear(Color color) = 0;
     virtual void draw(const Shared<VertexArray>& vertexArray) = 0;
+    virtual void setDepthTest(bool enabled) = 0;
   };
 }
 

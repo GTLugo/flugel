@@ -4,17 +4,28 @@
 
 #include "opengl_render_dispatcher.hpp"
 
+#include "core/app.hpp"
+
 #include <glad/gl.h>
 
 namespace fge {
   void OpenGLRenderDispatcher::clear(Color color) {
-    //auto gl{gladGetGLContext()};
-    glClearColor(color.r, color.g, color.b, color.a);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->ClearColor(color.r, color.g, color.b, color.a);
+    gl->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
   void OpenGLRenderDispatcher::draw(const Shared<VertexArray>& vertexArray) {
-    //auto gl{gladGetGLContext()};
-    glDrawElements(GL_TRIANGLES, vertexArray->indexCount(), GL_UNSIGNED_INT, nullptr);
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->DrawElements(GL_TRIANGLES, vertexArray->indexCount(), GL_UNSIGNED_INT, nullptr);
+  }
+
+  void OpenGLRenderDispatcher::setDepthTest(bool enabled) {
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    if (enabled) {
+      gl->Enable(GL_DEPTH_TEST);
+    } else {
+      gl->Disable(GL_DEPTH_TEST);
+    }
   }
 }

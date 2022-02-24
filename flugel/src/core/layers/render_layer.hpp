@@ -1,11 +1,8 @@
 #pragma once
 
 #include "layer.hpp"
-#include "core/renderer/vertex_array/vertex_array.hpp"
-#include "core/renderer/shader.hpp"
-#include "core/renderer/framebuffer/frame_buffer.hpp"
 
-#include "util/color/color.hpp"
+#include "core/renderer/renderer.hpp"
 
 namespace fge {
   class FGE_API RenderLayer : public Layer {
@@ -15,6 +12,12 @@ namespace fge {
   private:
     // Rendering
     Color clearColor_{0x00FF00FF}; // 0x2D2A2AFF
+
+    // App Frame
+    Shared<VertexArray> frameQuad_;
+    Shared<Shader> frameShader_;
+    Shared<FrameBuffer> frameBuffer_;
+    Shared<TextureBuffer> frameTexture_;
 
     bool onRenderEvent(RenderEvent& e) override;
   };

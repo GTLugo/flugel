@@ -9,7 +9,8 @@
 namespace fge {
   class OpenGLFrameBuffer : public FrameBuffer {
   public:
-    OpenGLFrameBuffer();
+    OpenGLFrameBuffer(TextureBuffer::Format format, i32 width, i32 height, void* data);
+    explicit OpenGLFrameBuffer(const Shared<TextureBuffer>& textureBuffer);
     ~OpenGLFrameBuffer() override;
 
     void bind() const final;

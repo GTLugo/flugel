@@ -1,6 +1,5 @@
 #include "app.hpp"
 
-#include "util/color/color.hpp"
 #include "core/layers/render_layer.hpp"
 #include "core/imgui/imgui_layer.hpp"
 

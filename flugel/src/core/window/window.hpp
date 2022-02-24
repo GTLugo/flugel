@@ -36,6 +36,7 @@ namespace fge {
     virtual void setFullscreen(bool enabled) = 0;
     //virtual void setContextCurrent(bool isCurrent) = 0;
 
+    [[nodiscard]] std::string title() const { return data_.title; }
     [[nodiscard]] ivec2 pos() const { return data_.windowPos; }
     [[nodiscard]] ivec2 dims() const { return data_.windowDims; }
     [[nodiscard]] bool isVSync() const { return data_.vSync; }
