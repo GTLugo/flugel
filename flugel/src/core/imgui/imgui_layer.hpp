@@ -1,5 +1,6 @@
 #pragma once
 
+#include <imgui.h>
 #include "core/layers/layer.hpp"
 #include "core/renderer/renderer.hpp"
 
@@ -22,10 +23,13 @@ namespace fge {
     bool blockAppEvents_{false};
     //bool dockSpaceOpen_{true};
     bool vsyncEnabled_{false};
+    static inline float aspectRatio_{16.f / 9.f};
+    static inline vec2 appWinSize_{0,0};
+    static inline vec2 appImageSize_{0,0};
 
     u64 clickCount_{0};
 
-
     static void setDarkThemeColors();
+    static void keepAspect(ImGuiSizeCallbackData* data);
   };
 }

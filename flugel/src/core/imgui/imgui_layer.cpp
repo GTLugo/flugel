@@ -117,13 +117,41 @@ namespace fge {
           ImGui::EndMenuBar();
         } ImGui::End();
 
-        ImGui::Begin("App"); { // https://gamedev.stackexchange.com/questions/140693/how-can-i-render-an-opengl-scene-into-an-imgui-window
-          ImGui::BeginChild("GameRender");
+        ImGui::Begin("App", nullptr, ImGuiWindowFlags_NoScrollbar); { // https://gamedev.stackexchange.com/questions/140693/how-can-i-render-an-opengl-scene-into-an-imgui-window
           ImVec2 winSize{ImGui::GetWindowSize()};
+
+          // TODO: Fix aspect ratio
+//          appWinSize = vec2{winSize.x, winSize.y};
+//
+//
+//          if (data->DesiredSize.x >= appWinSize_.x && data->DesiredSize.y >= appWinSize_.y) {
+//            float widthRatio{appWinSize_.x / data->CurrentSize.x};
+//            float heightRatio{appWinSize_.y / data->CurrentSize.y};
+//            if (widthRatio >= heightRatio) {
+//              data->DesiredSize.x = appImageSize_.x = data->CurrentSize.x * aspectRatio_;
+//              data->DesiredSize.y = appImageSize_.y = appWinSize_.y;
+//            } else {
+//              data->DesiredSize.x = appImageSize_.x = appWinSize_.x;
+//              data->DesiredSize.y = appImageSize_.y = data->CurrentSize.y / aspectRatio_;
+//            }
+//          } else if (data->DesiredSize.x >= appWinSize_.x) {
+//            data->DesiredSize.x = appImageSize_.x = data->CurrentSize.x * aspectRatio_;
+//            data->DesiredSize.y = appImageSize_.y = appWinSize_.y;
+//          } else {
+//            data->DesiredSize.x = appImageSize_.x = appWinSize_.x;
+//            data->DesiredSize.y = appImageSize_.y = data->CurrentSize.y / aspectRatio_;
+//          }
+//          ImGui::SetNextWindowSize()
+//          ImGui::SetNextWindowSizeConstraints(
+//              ImVec2(0, 0),
+//              ImVec2(FLT_MIN, FLT_MAX),
+//              ImGuiLayer::keepAspect);
+          ImGui::BeginChild("GameRender");
+          ImVec2 winSizeNew{ImGui::GetWindowSize()};
           if (Shared<FrameBuffer> fb = Renderer::defaultFrameBuffer().lock()) {
             ImGui::Image(
                 (ImTextureID)reinterpret_cast<u32>(fb->textureBuffer()->handle()),
-                winSize,
+                winSizeNew, //{appImageSize_.x, appImageSize_.y},
                 ImVec2{0, 1},
                 ImVec2{1, 0});
           }
@@ -188,6 +216,34 @@ namespace fge {
       return io.WantCaptureMouse;
     }
     return false;
+  }
+
+  void ImGuiLayer::keepAspect(ImGuiSizeCallbackData* data) {
+    // Find minimum size that keeps aspect ratio
+    float startRatio{data->CurrentSize.x / data->CurrentSize.y};
+    FGE_DEBUG_ENG("WIN width: {} height: {}", appWinSize_.x, appWinSize_.y);
+    FGE_DEBUG_ENG("START width: {} height: {} ratio: {}", data->CurrentSize.x, data->CurrentSize.y, startRatio);
+
+    if (data->DesiredSize.x >= appWinSize_.x && data->DesiredSize.y >= appWinSize_.y) {
+      float widthRatio{appWinSize_.x / data->CurrentSize.x};
+      float heightRatio{appWinSize_.y / data->CurrentSize.y};
+      if (widthRatio >= heightRatio) {
+        data->DesiredSize.x = appImageSize_.x = data->CurrentSize.x * aspectRatio_;
+        data->DesiredSize.y = appImageSize_.y = appWinSize_.y;
+      } else {
+        data->DesiredSize.x = appImageSize_.x = appWinSize_.x;
+        data->DesiredSize.y = appImageSize_.y = data->CurrentSize.y / aspectRatio_;
+      }
+    } else if (data->DesiredSize.x >= appWinSize_.x) {
+      data->DesiredSize.x = appImageSize_.x = data->CurrentSize.x * aspectRatio_;
+      data->DesiredSize.y = appImageSize_.y = appWinSize_.y;
+    } else {
+      data->DesiredSize.x = appImageSize_.x = appWinSize_.x;
+      data->DesiredSize.y = appImageSize_.y = data->CurrentSize.y / aspectRatio_;
+    }
+
+    float endRatio{data->DesiredSize.x / data->DesiredSize.y};
+    FGE_DEBUG_ENG("END width: {} height: {} ratio: {}", data->DesiredSize.x, data->DesiredSize.y, endRatio);
   }
 
 	void ImGuiLayer::setDarkThemeColors() {

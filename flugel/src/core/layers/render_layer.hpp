@@ -17,7 +17,6 @@ namespace fge {
     Shared<VertexArray> frameQuad_;
     Shared<Shader> frameShader_;
     Shared<FrameBuffer> frameBuffer_;
-    Shared<TextureBuffer> frameTexture_;
 
     bool onRenderEvent(RenderEvent& e) override;
   };
