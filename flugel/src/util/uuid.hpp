@@ -6,13 +6,18 @@
 namespace fge {
   class FGE_API UUID {
   public:
-    UUID();
-    UUID(uint64_t uuid);
+    UUID()
+      : uuid_{Random::intBetween(std::numeric_limits<u128>::min(), std::numeric_limits<u128>::max())} {}
+    explicit UUID(u128 uuid)
+      : uuid_(std::move(uuid)) {}
     UUID(const UUID&) = default;
 
-    operator uint64_t() const { return uuid_; }
+    explicit operator u128() const { return uuid_; }
+    friend std::ostream& operator<<(std::ostream& o, const UUID& uuid) {
+      return o << uuid.uuid_;
+    }
   private:
-    uint64_t uuid_;
+    u128 uuid_;
   };
 }
 
@@ -21,7 +26,7 @@ namespace std {
   template<>
   struct hash<fge::UUID> {
     std::size_t operator()(const fge::UUID& uuid) const {
-      return hash<uint64_t>()((uint64_t)uuid);
+      return hash<fge::u128>()((fge::u128)uuid);
     }
   };
 }

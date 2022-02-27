@@ -16,7 +16,7 @@ namespace fge {
     }
   }
 
-  Color::Color(unsigned int hexValue) {
+  Color::Color(u32 hexValue) {
     // RRGGBBAA
     r = static_cast<float>((hexValue >> 24) & 0xFF) / 255.0f;  // Extract the RR byte
     g = static_cast<float>((hexValue >> 16) & 0xFF) / 255.0f;   // Extract the GG byte
@@ -46,10 +46,10 @@ namespace fge {
     }
   }
 
-  float Color::r_srgb() { return linearToSrgb(r); }
-  float Color::g_srgb() { return linearToSrgb(g); }
-  float Color::b_srgb() { return linearToSrgb(b); }
-  float Color::r_linear() { return srgbToLinear(r); }
-  float Color::g_linear() { return srgbToLinear(g); }
-  float Color::b_linear() { return srgbToLinear(b); }
+  float Color::r_srgb() const { return linearToSrgb(r); }
+  float Color::g_srgb() const { return linearToSrgb(g); }
+  float Color::b_srgb() const { return linearToSrgb(b); }
+  float Color::r_linear() const { return srgbToLinear(r); }
+  float Color::g_linear() const { return srgbToLinear(g); }
+  float Color::b_linear() const { return srgbToLinear(b); }
 }

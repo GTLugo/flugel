@@ -21,13 +21,10 @@ namespace fge {
       dest.append(some_txt.data(), some_txt.data() + some_txt.size());
     }
 
-    std::unique_ptr<custom_flag_formatter> clone() const override {
+    [[nodiscard]] std::unique_ptr<custom_flag_formatter> clone() const override {
       return spdlog::details::make_unique<level_formatter_flag>();
     }
   };
-  
-  std::shared_ptr<spdlog::logger> Log::engineLogger_;
-  std::shared_ptr<spdlog::logger> Log::appLogger_;
 
   void Log::init() {
     #if defined(DEBUG) || defined(RELDEB)

@@ -30,7 +30,7 @@ namespace fge {
 
     FGE_TRACE_ENG("Creating window...");
     if (glfwWindowCount_s == 0) {
-      int32_t glfwInitSuccess = glfwInit();
+      i32 glfwInitSuccess = glfwInit();
       FGE_ASSERT_ENG(glfwInitSuccess, "Failed to initialize GLFW!");
       glfwSetErrorCallback(glfwErrorCallback);
     }
@@ -41,36 +41,40 @@ namespace fge {
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
     glfwWindowHint(GLFW_DECORATED, !data_.customDecor);
     glfwWindow_ = glfwCreateWindow(
-      (int32_t)data_.windowDims.x,
-      (int32_t)data_.windowDims.y,
+      (i32)data_.windowDims.x,
+      (i32)data_.windowDims.y,
       data_.title.c_str(),
       nullptr,
       nullptr
     );
     ++glfwWindowCount_s;
 
-    switch (data_.renderApi) {
-      case RenderAPI::OpenGL: {
+    switch (Renderer::api()) {
+      case Renderer::API::None: {
+        FGE_ASSERT_ENG(false, "Running with no API not implemented!");
+        break;
+      }
+      case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
           context_ = makeUnique<OpenGLContext>(glfwWindow_);
         #else
-          FGE_ASSERT_ENG(false, "OpenGL not enabled in compilation!");
+          FGE_ASSERT_ENG(false, "OpenGL not supported!");
         #endif
         break;
       }
-      case RenderAPI::Vulkan: {
+      case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
           FGE_ASSERT_ENG(false, "Vulkan not implemented!");
         #else
-          FGE_ASSERT_ENG(false, "Vulkan not enabled in compilation!");
+          FGE_ASSERT_ENG(false, "Vulkan not supported!");
         #endif
         break;
       }
-      case RenderAPI::D3D11: {
+      case Renderer::API::D3D11: {
         #if defined(FLUGEL_USE_D3D11)
           FGE_ASSERT_ENG(false, "D3D11 not implemented!");
         #else
-          FGE_ASSERT_ENG(false, "D3D11 not enabled in compilation!");
+          FGE_ASSERT_ENG(false, "D3D11 not supported!");
         #endif
         break;
       }
@@ -96,13 +100,13 @@ namespace fge {
       WindowCloseEvent e{};
       data.eventCallback(e);
     });
-    glfwSetWindowSizeCallback(glfwWindow_, [](GLFWwindow* window, int32_t width, int32_t height) {
+    glfwSetWindowSizeCallback(glfwWindow_, [](GLFWwindow* window, i32 width, i32 height) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       data.windowDims = {width, height};
       WindowResizeEvent e{data.windowDims.x, data.windowDims.y};
       data.eventCallback(e);
     });
-    glfwSetWindowPosCallback(glfwWindow_, [](GLFWwindow* window, int32_t xPos, int32_t yPos) {
+    glfwSetWindowPosCallback(glfwWindow_, [](GLFWwindow* window, i32 xPos, i32 yPos) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       data.windowPos = {xPos, yPos};
       WindowMovedEvent e{data.windowPos.x, data.windowPos.y};
@@ -110,7 +114,7 @@ namespace fge {
     });
 
     // KEYBOARD
-    glfwSetKeyCallback(glfwWindow_, [](GLFWwindow* window, int32_t key, int32_t scanCode, int32_t action, int32_t mods) {
+    glfwSetKeyCallback(glfwWindow_, [](GLFWwindow* window, i32 key, i32 scanCode, i32 action, i32 mods) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
@@ -135,7 +139,7 @@ namespace fge {
     });
 
     // MOUSE
-    glfwSetMouseButtonCallback(glfwWindow_, [](GLFWwindow* window, int32_t button, int32_t action, int32_t mods) {
+    glfwSetMouseButtonCallback(glfwWindow_, [](GLFWwindow* window, i32 button, i32 action, i32 mods) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
@@ -181,19 +185,19 @@ namespace fge {
     glfwPollEvents();
   }
   
-  void GlfwWindow::dragWindow(vector2_t windowCursorOffset) {
-    int32_t x, y;
+  void GlfwWindow::dragWindow(ivec2 windowCursorOffset) {
+    i32 x, y;
     glfwGetWindowPos(glfwWindow_, &x, &y);
-    setPos(x + glm::floor(Input::cursorPos().x) - windowCursorOffset.x, 
-           y + glm::floor(Input::cursorPos().y) - windowCursorOffset.y);
+    setPos(static_cast<i32>(x + glm::floor(Input::cursorPos().x) - windowCursorOffset.x),
+           static_cast<i32>(y + glm::floor(Input::cursorPos().y) - windowCursorOffset.y));
   }
 
-  void GlfwWindow::setIcon(uint8_t* image, int32_t width, int32_t height) {
+  void GlfwWindow::setIcon(u8* image, i32 width, i32 height) {
     icons_[0] = GLFWimage{width, height, image};
     glfwSetWindowIcon(glfwWindow_, 1, icons_);
   }
 
-  void GlfwWindow::setPos(double xPos, double yPos) {
+  void GlfwWindow::setPos(i32 xPos, i32 yPos) {
     glfwSetWindowPos(glfwWindow_, xPos, yPos);
   }
 

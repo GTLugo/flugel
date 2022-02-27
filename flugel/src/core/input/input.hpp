@@ -8,7 +8,7 @@ namespace fge {
   public:
     static bool isPressed(Key::Code key);
     static bool isPressed(Mouse::Code button);
-    //static bool isPressed(Modifier::Codes mods);
-    static vector2_t cursorPos();
+    static bool isPressed(Modifier::BitCodes mods);
+    static dvec2 cursorPos();
   };
 }

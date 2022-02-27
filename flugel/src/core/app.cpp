@@ -1,6 +1,7 @@
 #include "app.hpp"
 
-#include "core/input/input.hpp"
+#include "core/layers/render_layer.hpp"
+#include "core/imgui/imgui_layer.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -9,25 +10,29 @@
 #include <boost/range/adaptor/reversed.hpp>
 
 namespace fge {
-  App* App::instance_ = nullptr;
-
   App::App(const WindowProperties& props) {
     FGE_DEBUG_ENG("Current working directory: {}", std::filesystem::current_path());
     FGE_TRACE_ENG("Constructing App...");
     instance_ = this;
+    Time::init(tickRate_);
     window_ = Window::create(props);
     window_->setEventCallback(FGE_BIND(eventDispatch));
-    
-    int32_t width, height;
+    Color::using_srgb_color_space = true;
+
+    i32 width, height;
     // boost::gil::rgb8_image_t icon;
     // boost::gil::
-    uint8_t* icon = stbi_load("res/flugel/icon.png", &width, &height, 0, 4);
+    u8* icon = stbi_load("res/flugel/icon.png", &width, &height, nullptr, 4);
     window_->setIcon(icon, width, height);
     stbi_image_free(icon);
     
     // engine layer should be first layer (last to check)
-    engineLayer_ = new EngineLayer{};
-    pushLayer(engineLayer_);
+    pushLayer(new EngineLayer{});
+    layerStack_.pushBottomStack(new ImGuiLayer{});
+    layerStack_.pushBottomStack(new RenderLayer{});
+
+    //#if defined(DEBUG) || defined(RELDEB)
+    //#endif
   }
 
   App::~App() {
@@ -42,20 +47,46 @@ namespace fge {
     layerStack_.pushOverlay(overlay);
   }
 
+  void App::toggleImGui(bool enabled) {
+    (*(layerStack_.end() - 2))->toggle(enabled);
+  }
+
   void App::run() {
     FGE_TRACE_ENG("Started main thread (ID: {})", std::this_thread::get_id());
+    AppEvent mainStartEvent{AppEvent::Start};
+    eventDispatch(mainStartEvent);
+
     threadPool_.initialize();
     threadPool_.pushJob(FGE_BIND(gameLoop));
     threadPool_.pushJob(FGE_BIND(renderLoop));
-
+    //window_->context().setCurrent(true);
+    //
+    //// RENDER THREAD
+    //RenderStartEvent renderStartEvent{};
+    //eventDispatch(renderStartEvent);
     // MAIN THREAD
     while (!shouldClose_) {
-      pollEvents();
+      AppEvent pollEvent{AppEvent::Poll};
+      eventDispatch(pollEvent);
+
+      AppEvent mainUpdateEvent{AppEvent::Update};
+      eventDispatch(mainUpdateEvent);
+      //RenderBeginFrameEvent beginFrameEvent{};
+      //eventDispatch(beginFrameEvent);
+      //RenderBeginImGuiEvent beginImGuiEvent{};
+      //eventDispatch(beginImGuiEvent);
+      //RenderEndImGuiEvent endImGuiEvent{};
+      //eventDispatch(endImGuiEvent);
+      //RenderEndFrameEvent endFrameEvent{};
+      //eventDispatch(endFrameEvent);
     }
 
     renderCondition_.notify_all();
     threadPool_.shutdown();
-    FGE_TRACE_ENG("Ended main thread");
+    
+    AppEvent mainEndEvent{AppEvent::Stop};
+    eventDispatch(mainEndEvent);
+    FGE_TRACE_ENG("Stopped main thread");
   }
 
   void App::close() {
@@ -67,99 +98,119 @@ namespace fge {
     window_->context().setCurrent(true);
     
     // RENDER THREAD
-    AppRenderStartEvent renderStartEvent{};
+    RenderEvent renderStartEvent{RenderEvent::Start};
     eventDispatch(renderStartEvent);
     while (!shouldClose_) {
       waitForRenderJob();
     }
+    RenderEvent renderEndEvent{RenderEvent::Stop};
+    eventDispatch(renderEndEvent);
 
-    FGE_TRACE_ENG("Ended render thread");
+    FGE_TRACE_ENG("Stopped render thread");
   }
   
   void App::gameLoop() {
     FGE_TRACE_ENG("Started game thread (ID: {})", std::this_thread::get_id());
 
-    // GAME THREAD
-    AppStartEvent startEvent{};
+    // GAME LOGIC THREAD
+    LogicEvent startEvent{LogicEvent::Start};
     eventDispatch(startEvent);
     while (!shouldClose_) {
-      time_.tick();
-
       // This loop will only occur once every fixedTimeStep, being skipped for every
       // frame which happens between each timestep. If the deltaTime per frame is too
       // long, then for each frame, this loop will occur more than once in order to
       // "catch up" with the proper pacing of physics.
       // Source: https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
       //FGE_TRACE_ENG("UPDATE");
-      while (time_.shouldDoFixedStep()) {
-        time_.tickLag();
-        
+      while (Time::shouldDoTick()) {
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
-        AppFixedUpdateEvent fixedUpdateEvent{};
-        eventDispatch(fixedUpdateEvent);
+        LogicEvent tickEvent{LogicEvent::Tick};
+        eventDispatch(tickEvent);
+
+        Time::tick();
       }
       // Timestep INSENSITIVE stuff happens out here, where pacing goes as fast as possible
-      AppUpdateEvent updateEvent{};
+      LogicEvent updateEvent{LogicEvent::Update};
       eventDispatch(updateEvent);
 
-      AppRenderUpdateEvent renderUpdateEvent{};
-      pushRenderJob(renderUpdateEvent);
-    }
-    AppEndEvent endEvent{};
-    eventDispatch(endEvent);
+      pushRenderJob(new RenderEvents{
+        RenderEvent{RenderEvent::BeginFrame},
+        RenderEvent{RenderEvent::AppStep},
+        RenderEvent{RenderEvent::ImGuiStep},
+        RenderEvent{RenderEvent::EndFrame}
+      });
 
-    FGE_TRACE_ENG("Ended game thread");
+      Time::update();
+    }
+    LogicEvent stopEvent{LogicEvent::Stop};
+    eventDispatch(stopEvent);
+
+    FGE_TRACE_ENG("Stopped game thread");
   }
 
   void App::waitForRenderJob() {
-    AppRenderUpdateEvent event;
+    RenderEvents* renderEvents{nullptr};
 
     {
       std::unique_lock<std::mutex> lock{renderMutex_};
       //FGE_DEBUG_ENG("Render thread waiting...");
       renderCondition_.wait(lock, [this]{
-        return !renderQueue_.empty() || shouldClose_;
+        return renderQueue_.size() >= maxFramesInFlight_ || shouldClose_;
       });
 
-      if (!shouldClose_) {
-        event = renderQueue_.front();
+      if (renderQueue_.size() >= maxFramesInFlight_) {
+        renderEvents = renderQueue_.front();
         renderQueue_.pop();
       }
       //FGE_INFO_ENG("Render thread done waiting!");
     }
 
-    if (!shouldClose_) {
+    if (renderEvents) {
       //FGE_TRACE_ENG("Starting render job!");
-      eventDispatch(event);
+      for (auto& renderEvent : *renderEvents) {
+        eventDispatch(renderEvent);
+      }
+      delete renderEvents;
     }
   }
 
-  void App::pushRenderJob(AppRenderUpdateEvent& event) {
+  void App::pushRenderJob(RenderEvents* renderEvents) {
     { // Mutex lock scope
       std::unique_lock<std::mutex> lock{renderMutex_};
-      if (renderQueue_.size() < 2) {
-        renderQueue_.push(event);
+      if (renderQueue_.size() < maxFramesInFlight_) {
+        renderQueue_.push(renderEvents);
       }
     } // Unlock mutex
 
     renderCondition_.notify_all();
   }
-
-  void App::pollEvents() {
-    window_->pollEvents();
-  }
   
   void App::eventDispatch(Event& e) {
-    //EventDispatcher dispatcher{e};
-    
-    // LAYER EVENT FNs
-    for (auto& layer : boost::adaptors::reverse(layerStack_)) {
-      layer->onEvent(e);
-      //FGE_DEBUG_ENG("{0}: {1}", layer->name(), e);
-      if (e.wasHandled() && layer != *layerStack_.begin()) {
-        (*layerStack_.begin())->onEvent(e); // engine layer should always run
-        break;
+    //bool inputEvent = (e.category() | Event::Category::Input);
+    if (e.type() == Event::Render) {
+      for (auto itr = layerStack_.begin(); itr != layerStack_.end(); ++itr) {
+//        if ((*itr)->name() == "imgui_layer") {
+//          FGE_TRACE_ENG("{}: {}", (*itr)->name(), e);
+//        }
+        if (e.wasHandled()) {
+          break;
+        }
+        (*itr)->onEvent(e);
+      }
+    } else {
+      for (auto ritr = layerStack_.rbegin(); ritr != layerStack_.rend(); ++ritr) {
+        //FGE_TRACE_ENG("{}: {}", (*ritr)->name(), e);
+        if (e.wasHandled()) {
+          break;
+        }
+        (*ritr)->onEvent(e);
       }
     }
+
+//    auto& engineLayer = *layerStack_.begin();
+//    if (!(inputEvent && e.wasHandled())) {
+//      engineLayer->onEvent(e);
+//    }
+    //FGE_TRACE_ENG("{}: {}", engineLayer->name(), e);
   }
 }

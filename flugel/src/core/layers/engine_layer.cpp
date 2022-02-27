@@ -8,8 +8,8 @@
 namespace fge {
   bool EngineLayer::onWindowEvent(WindowEvent& e) {
     //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    switch (e.type()) {
-      case WindowEventType::Close: {
+    switch (e.action()) {
+      case WindowEvent::Close: {
         FGE_DEBUG_ENG("{0}: {1}", name_, e);
         App::instance().close();
         return true;
@@ -19,45 +19,11 @@ namespace fge {
       }
     }
   }
-
+  
   bool EngineLayer::onAppEvent(AppEvent& e) {
-    switch (e.type()) {
-      case AppEventType::RenderStart: {
-        // Vertex Array
-        auto gl = static_cast<GladGLContext*>(App::instance().window().context().nativeContext());
-        gl->GenVertexArrays(1, &vertexArray_);
-        gl->BindVertexArray(vertexArray_);
-
-        // Vertex Buffer
-        gl->GenBuffers(1, &vertexBuffer_);
-        gl->BindBuffer(GL_ARRAY_BUFFER, vertexBuffer_); // bind buffer to bound vertex array;
-        float verts[3 * 3]{
-          -.5, -.5,  0.,
-           .5, -.5,  0.,
-           0.,  .5,  0.
-        };
-        gl->BufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
-        gl->EnableVertexAttribArray(0);
-        gl->VertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr);
-
-        // Index Buffer
-        gl->GenBuffers(1, &indexBuffer_);
-        gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer_); // bind buffer to bound vertex array;
-        uint32_t indices[3]{
-          0, 1, 2
-        };
-        gl->BufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-        return false;
-      }
-      case AppEventType::RenderUpdate: {  
-        auto gl = static_cast<GladGLContext*>(App::instance().window().context().nativeContext());
-        gl->ClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a);
-        gl->Clear(GL_COLOR_BUFFER_BIT);
-
-        gl->BindVertexArray(vertexArray_);
-        gl->DrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-
-        App::instance().window().context().swapBuffers();
+    switch (e.action()) {
+      case AppEvent::Poll: {
+        App::instance().window().pollEvents();
         return false;
       }
       default: {
@@ -66,9 +32,17 @@ namespace fge {
     }
   }
 
+  bool EngineLayer::onRenderEvent(RenderEvent& e) {
+    switch (e.action()) {
+      default: {
+        return false;
+      }
+    }
+  }
+
   bool EngineLayer::onKeyboardEvent(KeyboardEvent& e) {
     //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    if (Input::isPressed(Key::Enter) && Input::isPressed(Key::LeftAlt)) {
+    if (Input::isPressed(Key::Enter) && Input::isPressed(Modifier::Alt)) {
       FGE_DEBUG_ENG("{0}: Fullscreen({1})", name_, !App::instance().window().isFullscreen());
       App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
     }
@@ -76,7 +50,6 @@ namespace fge {
   }
 
   bool EngineLayer::onMouseEvent(MouseEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     // custom dragging and close button
     if (App::instance().window().isUsingCustomDecor()) {
       pollCustomDecor(e);

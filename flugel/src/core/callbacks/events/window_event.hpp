@@ -3,29 +3,30 @@
 #include "event.hpp"
 
 namespace fge {
-  enum class WindowEventType {
-    None = 0,
-    Close, Resize, Focus, LostFocus, Moved,
-  };
 
   class FGE_API WindowEvent : public Event {
   public:
-    EVENT_CATEGORY(EventCategory::Window)
+    enum Action {
+      None = 0,
+      Close, Resize, Focus, LostFocus, Moved,
+    };
 
-    WindowEventType type() const { return type_; }
+    EVENT_TYPE(Event::Type::Window)
+
+    [[nodiscard]] Action action() const { return action_; }
   protected:
-    const WindowEventType type_;
+    const Action action_;
 
-    WindowEvent(WindowEventType type)
-      : type_{type} {}
+    explicit WindowEvent(Action action)
+        : action_{action} {}
   };
 
   class FGE_API WindowCloseEvent : public WindowEvent {
   public:
     WindowCloseEvent()
-     : WindowEvent{WindowEventType::Close} {}
+     : WindowEvent{Action::Close} {}
 
-    std::string toString() const override {
+    [[nodiscard]] std::string toString() const override {
       std::stringstream ss;
       ss << "Event <Window> (CLOSE)";
       return ss.str();
@@ -34,35 +35,35 @@ namespace fge {
 
   class FGE_API WindowResizeEvent : public WindowEvent {
   public:
-    WindowResizeEvent(uint32_t width, uint32_t height)
-      : WindowEvent{WindowEventType::Resize}, width_{width}, height_{height} {}
+    WindowResizeEvent(i32 width, i32 height)
+      : WindowEvent{Action::Resize}, width_{width}, height_{height} {}
 
-    uint32_t width() const { return width_; }
-    uint32_t height() const { return height_; }
+    [[nodiscard]] i32 width() const { return width_; }
+    [[nodiscard]] i32 height() const { return height_; }
 
-    std::string toString() const override {
+    [[nodiscard]] std::string toString() const override {
       std::stringstream ss;
       ss << "Event <Window> (RESIZE: " << width_ << ", " << height_ << ")";
       return ss.str();
     }
   private:
-    const uint32_t width_, height_;
+    const i32 width_, height_;
   };
 
   class FGE_API WindowMovedEvent : public WindowEvent {
   public:
-    WindowMovedEvent(int32_t xPos, int32_t yPos)
-      : WindowEvent{WindowEventType::Resize}, xPos_{xPos}, yPos_{yPos} {}
+    WindowMovedEvent(i32 xPos, i32 yPos)
+      : WindowEvent{Action::Resize}, xPos_{xPos}, yPos_{yPos} {}
 
-    uint32_t xPos() const { return xPos_; }
-    uint32_t yPos() const { return yPos_; }
+    [[nodiscard]] i32 xPos() const { return xPos_; }
+    [[nodiscard]] i32 yPos() const { return yPos_; }
 
-    std::string toString() const override {
+    [[nodiscard]] std::string toString() const override {
       std::stringstream ss;
       ss << "Event <Window> (MOVED: " << xPos_ << ", " << yPos_ << ")";
       return ss.str();
     }
   private:
-    const int32_t xPos_, yPos_;
+    const i32 xPos_, yPos_;
   };
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/renderer/render_context.hpp"
+#include "core/renderer/context.hpp"
 
 struct GLFWwindow;
 struct GladGLContext;
@@ -8,16 +8,14 @@ struct GladGLContext;
 namespace fge {
   class OpenGLContext : public RenderContext {
   public:
-    OpenGLContext(GLFWwindow* windowHandle);
+    explicit OpenGLContext(GLFWwindow* windowHandle);
     ~OpenGLContext();
 
     virtual void* nativeContext() override { return context_; }
-    virtual void setCurrent(bool isCurrent) override;
-    virtual void swapBuffers() override;
+    void setCurrent(bool isCurrent) final;
+    void swapBuffers() final;
   private:
     GLFWwindow* windowHandle_;
     GladGLContext* context_;
-
-    virtual void init() override;
   };
 }

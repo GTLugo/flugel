@@ -1,28 +1,25 @@
-#include "test_layer.hpp"
-
 #include "flugel.hpp"
+#include "entry_point.hpp"
+
+#include "test_layer.hpp"
 
 namespace sbx {
   class Sandbox : public fge::App {
     public:
       Sandbox()
         : fge::App{{
-          "SANDBOX", // title
-          800, // width
-          450, // height
-          fge::RenderAPI::OpenGL,
-          false, // vsync
-          false, // fullscreen
-          false, // borderless
-          true // custom window decorations
+          .title       = "SANDBOX", // title
+          .width       = 800, // width
+          .height      = 450, // height
+          .renderApi   = fge::Renderer::API::OpenGL,
+          .customDecor = false
         }} {
         FGE_TRACE("Constructing sandbox...");
-
-        
+        //toggleImGui(false);
         pushLayer(new TestLayer{});
       }
 
-      virtual ~Sandbox() override {
+      ~Sandbox() override {
         FGE_TRACE("Destructing sandbox...");
       };
   };

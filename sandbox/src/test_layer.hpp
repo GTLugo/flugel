@@ -4,35 +4,26 @@
 
 namespace sbx {
   class TestLayer : public fge::Layer {
+    using Input = fge::Input;
+    using Key = fge::Key;
+    using Modifier = fge::Modifier;
   public:
     TestLayer()
-      : Layer{"test_layer"} {}
-
-    virtual bool onAppEvent(fge::AppEvent& e) override {
-      switch (e.type()) {
-        case fge::AppEventType::FixedUpdate: {
-          if (fge::Input::isPressed(fge::Key::Space) && !fge::Input::isPressed(fge::Key::LeftShift)) {
-            FGE_TRACE("UwU");
-          }
-          if (fge::Input::isPressed(fge::Key::Space) && fge::Input::isPressed(fge::Key::LeftShift)) {
-            FGE_TRACE("OwO");
-          }
-          return false;
-        }
-        default: {
-          return false;
-        }
-      }
+      : Layer{"test_layer"} {
+      FGE_DEBUG("{}", fge::UUID{});
     }
 
-    virtual bool onMouseEvent(fge::MouseEvent& e) override {
-      //FGE_DEBUG("{}: {}", name_, e);
-      return true;
-    }
+    bool onRenderEvent(fge::RenderEvent& e) final;
+    bool onLogicEvent(fge::LogicEvent& e) final;
+    bool onKeyboardEvent(fge::KeyboardEvent& e) final;
+    bool onMouseEvent(fge::MouseEvent& e) final;
+    bool onScrollEvent(fge::ScrollEvent& e) final;
 
-    virtual bool onKeyboardEvent(fge::KeyboardEvent& e) override {
-      //FGE_DEBUG("{}: {}", name_, e);
-      return true;
-    }
+  private:
+    fge::Shared<fge::VertexArray> vao_;
+    fge::Shared<fge::VertexArray> background_;
+    fge::Shared<fge::Shader> shader_;
+    bool left_{false};
+    fge::vec3 pos_{0, 0, 0};
   };
 }
