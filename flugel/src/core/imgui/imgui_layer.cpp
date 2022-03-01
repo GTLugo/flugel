@@ -106,7 +106,7 @@ namespace fge {
         ImGui::PopStyleVar(2);
 
         ImGuiID dockspaceId{ImGui::GetID("Engine Dock Space")};
-        ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockspaceFlags);
+        ImGui::DockSpace(dockspaceId, {0.0f, 0.0f}, dockspaceFlags);
 
         if (ImGui::BeginMenuBar()) {
           if (ImGui::BeginMenu("Menu")) {
@@ -117,41 +117,25 @@ namespace fge {
           ImGui::EndMenuBar();
         } ImGui::End();
 
-        ImGui::Begin("App", nullptr, ImGuiWindowFlags_NoScrollbar); { // https://gamedev.stackexchange.com/questions/140693/how-can-i-render-an-opengl-scene-into-an-imgui-window
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {10, 5});
+        ImGui::Begin("App", nullptr, ImGuiWindowFlags_NoScrollbar);
+        ImGui::PopStyleVar(); { // https://gamedev.stackexchange.com/questions/140693/how-can-i-render-an-opengl-scene-into-an-imgui-window
+          ImVec2 winPos{ImGui::GetWindowPos()};
           ImVec2 winSize{ImGui::GetWindowSize()};
-
-          // TODO: Fix aspect ratio
-//          appWinSize = vec2{winSize.x, winSize.y};
-//
-//
-//          if (data->DesiredSize.x >= appWinSize_.x && data->DesiredSize.y >= appWinSize_.y) {
-//            float widthRatio{appWinSize_.x / data->CurrentSize.x};
-//            float heightRatio{appWinSize_.y / data->CurrentSize.y};
-//            if (widthRatio >= heightRatio) {
-//              data->DesiredSize.x = appImageSize_.x = data->CurrentSize.x * aspectRatio_;
-//              data->DesiredSize.y = appImageSize_.y = appWinSize_.y;
-//            } else {
-//              data->DesiredSize.x = appImageSize_.x = appWinSize_.x;
-//              data->DesiredSize.y = appImageSize_.y = data->CurrentSize.y / aspectRatio_;
-//            }
-//          } else if (data->DesiredSize.x >= appWinSize_.x) {
-//            data->DesiredSize.x = appImageSize_.x = data->CurrentSize.x * aspectRatio_;
-//            data->DesiredSize.y = appImageSize_.y = appWinSize_.y;
-//          } else {
-//            data->DesiredSize.x = appImageSize_.x = appWinSize_.x;
-//            data->DesiredSize.y = appImageSize_.y = data->CurrentSize.y / aspectRatio_;
-//          }
-//          ImGui::SetNextWindowSize()
-//          ImGui::SetNextWindowSizeConstraints(
-//              ImVec2(0, 0),
-//              ImVec2(FLT_MIN, FLT_MAX),
-//              ImGuiLayer::keepAspect);
+          appWinSize_ = vec2{winSize.x, winSize.y};
+          ImGui::SetNextWindowSizeConstraints(
+              {0, 0},
+              {FLT_MIN, FLT_MAX},
+              ImGuiLayer::keepAspect);
+          float magicVerticalPaddingNumberIHaveNoIdeaWhyExists{10};
+          ImGui::SetNextWindowPos({winPos.x + (appWinSize_.x / 2.f) - (appImageSize_.x / 2.f),
+                                   winPos.y + (appWinSize_.y / 2.f) - (appImageSize_.y / 2.f)
+                                   + magicVerticalPaddingNumberIHaveNoIdeaWhyExists});
           ImGui::BeginChild("GameRender");
-          ImVec2 winSizeNew{ImGui::GetWindowSize()};
           if (Shared<FrameBuffer> fb = Renderer::defaultFrameBuffer().lock()) {
             ImGui::Image(
                 (ImTextureID)reinterpret_cast<u32>(fb->textureBuffer()->handle()),
-                winSizeNew, //{appImageSize_.x, appImageSize_.y},
+                {appImageSize_.x, appImageSize_.y},
                 ImVec2{0, 1},
                 ImVec2{1, 0});
           }
@@ -220,30 +204,13 @@ namespace fge {
 
   void ImGuiLayer::keepAspect(ImGuiSizeCallbackData* data) {
     // Find minimum size that keeps aspect ratio
-    float startRatio{data->CurrentSize.x / data->CurrentSize.y};
-    FGE_DEBUG_ENG("WIN width: {} height: {}", appWinSize_.x, appWinSize_.y);
-    FGE_DEBUG_ENG("START width: {} height: {} ratio: {}", data->CurrentSize.x, data->CurrentSize.y, startRatio);
-
-    if (data->DesiredSize.x >= appWinSize_.x && data->DesiredSize.y >= appWinSize_.y) {
-      float widthRatio{appWinSize_.x / data->CurrentSize.x};
-      float heightRatio{appWinSize_.y / data->CurrentSize.y};
-      if (widthRatio >= heightRatio) {
-        data->DesiredSize.x = appImageSize_.x = data->CurrentSize.x * aspectRatio_;
-        data->DesiredSize.y = appImageSize_.y = appWinSize_.y;
-      } else {
-        data->DesiredSize.x = appImageSize_.x = appWinSize_.x;
-        data->DesiredSize.y = appImageSize_.y = data->CurrentSize.y / aspectRatio_;
-      }
-    } else if (data->DesiredSize.x >= appWinSize_.x) {
-      data->DesiredSize.x = appImageSize_.x = data->CurrentSize.x * aspectRatio_;
-      data->DesiredSize.y = appImageSize_.y = appWinSize_.y;
-    } else {
-      data->DesiredSize.x = appImageSize_.x = appWinSize_.x;
-      data->DesiredSize.y = appImageSize_.y = data->CurrentSize.y / aspectRatio_;
+    data->DesiredSize.x = appImageSize_.x = data->CurrentSize.y * aspectRatio_;
+    data->DesiredSize.y = appImageSize_.y = data->CurrentSize.y;
+    float widthRatio{data->DesiredSize.x / appWinSize_.x};
+    if (widthRatio > 1) {
+      data->DesiredSize.x = appImageSize_.x /= widthRatio;
+      data->DesiredSize.y = appImageSize_.y /= widthRatio;
     }
-
-    float endRatio{data->DesiredSize.x / data->DesiredSize.y};
-    FGE_DEBUG_ENG("END width: {} height: {} ratio: {}", data->DesiredSize.x, data->DesiredSize.y, endRatio);
   }
 
 	void ImGuiLayer::setDarkThemeColors() {
