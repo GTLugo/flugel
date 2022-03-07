@@ -79,34 +79,21 @@ namespace fge {
       }
       case RenderEvent::ImGuiStep: {
         ImGuiIO& io{ImGui::GetIO()};
-
-        ImGuiDockNodeFlags dockspaceFlags =
-            ImGuiDockNodeFlags_None /*|
-            ImGuiDockNodeFlags_AutoHideTabBar*/;
-        ImGuiWindowFlags dockspaceWindowFlags =
-            ImGuiWindowFlags_MenuBar |
-            ImGuiWindowFlags_NoDocking |
-            ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoCollapse |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoNavFocus;
-        const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGuiViewport* viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->WorkPos);
         ImGui::SetNextWindowSize(viewport->WorkSize);
         ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.0f, 0.0f});
 
         std::string title{"Flugel Engine | " + App::instance().window().title()};
-        ImGui::Begin(title.c_str(), nullptr, dockspaceWindowFlags);
+        ImGui::Begin(title.c_str(), nullptr, dockspaceWindowFlags_);
         ImGui::PopStyleVar();
         ImGui::PopStyleVar(2);
 
         ImGuiID dockspaceId{ImGui::GetID("Engine Dock Space")};
-        ImGui::DockSpace(dockspaceId, {0.0f, 0.0f}, dockspaceFlags);
+        ImGui::DockSpace(dockspaceId, {0.0f, 0.0f}, dockspaceFlags_);
 
         if (ImGui::BeginMenuBar()) {
           if (ImGui::BeginMenu("Menu")) {
@@ -128,9 +115,10 @@ namespace fge {
               {FLT_MIN, FLT_MAX},
               ImGuiLayer::keepAspect);
           float magicVerticalPaddingNumberIHaveNoIdeaWhyExists{10};
-          ImGui::SetNextWindowPos({winPos.x + (appWinSize_.x / 2.f) - (appImageSize_.x / 2.f),
-                                   winPos.y + (appWinSize_.y / 2.f) - (appImageSize_.y / 2.f)
-                                   + magicVerticalPaddingNumberIHaveNoIdeaWhyExists});
+          ImGui::SetNextWindowPos({
+            winPos.x + (appWinSize_.x / 2.f) - (appImageSize_.x / 2.f),
+            winPos.y + (appWinSize_.y / 2.f) - (appImageSize_.y / 2.f) //+ magicVerticalPaddingNumberIHaveNoIdeaWhyExists
+          });
           ImGui::BeginChild("GameRender");
           if (Shared<FrameBuffer> fb = Renderer::defaultFrameBuffer().lock()) {
             ImGui::Image(
