@@ -234,7 +234,7 @@ if(FLUGEL_OPENGL)
   target_sources(${TARGET_NAME} PRIVATE ${OPENGL_FILES})
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_OPENGL=1)
   # glad
-  set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
+  set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad)
   add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
   set(GLAD_LIBRARY glad_gl_core_mx_global_46)
   glad_add_library(${GLAD_LIBRARY}
@@ -251,7 +251,7 @@ if(FLUGEL_VULKAN)
   target_sources(${TARGET_NAME} PRIVATE ${VULKAN_FILES})
   target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_VULKAN=1)
   # glad
-  set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad2)
+  set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad)
   add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
   set(GLAD_LIBRARY glad_vulkan_12)
   glad_add_library(${GLAD_LIBRARY}
