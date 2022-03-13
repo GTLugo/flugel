@@ -14,10 +14,6 @@
 #include "core/callbacks/events/mouse_event.hpp"
 
 namespace fge {
-  struct AppState {
-    
-  };
-
   class FGE_API App {
     using RenderEvents = std::array<RenderEvent, 4>;
   public:
@@ -39,7 +35,6 @@ namespace fge {
   private:
     static inline App* instance_{nullptr};
     // Util
-    AppState state_[2]{}; // double buffered app state
     const u32 maxFramesInFlight_{2};
     float tickRate_{128.};
     // Window

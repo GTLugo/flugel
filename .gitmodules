@@ -1,19 +1,19 @@
 [submodule "flugel/vendor/spdlog"]
-	path = flugel/vendor/spdlog
+	path = vendor/spdlog
 	url = https://github.com/gabime/spdlog
 [submodule "flugel/vendor/glfw"]
-	path = flugel/vendor/glfw
+	path = vendor/glfw
 	url = https://github.com/glfw/glfw
 [submodule "flugel/vendor/imgui"]
-	path = flugel/vendor/imgui
+	path = vendor/imgui
 	url = https://github.com/GTLugo/imgui
 [submodule "flugel/vendor/glm"]
-	path = flugel/vendor/glm
+	path = vendor/glm
 	url = https://github.com/g-truc/glm
 [submodule "flugel/vendor/sdl"]
-	path = flugel/vendor/sdl
+	path = vendor/sdl
 	url = https://github.com/libsdl-org/SDL
 [submodule "flugel/vendor/glad2"]
-	path = flugel/vendor/glad2
+	path = vendor/glad
 	url = https://github.com/Dav1dde/glad
 	branch = glad2
