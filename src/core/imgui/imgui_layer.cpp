@@ -140,7 +140,7 @@ namespace fge {
           ImGui::BeginChild("GameRender", {}, false, mainAppWindowFlags_); {
             if (Shared<FrameBuffer> fb = Renderer::defaultFrameBuffer().lock()) {
               ImGui::Image(
-                  (ImTextureID)reinterpret_cast<u32>(fb->textureBuffer()->handle()),
+                  fb->textureBuffer()->handle(),
                   {appImageSize_.x, appImageSize_.y},
                   ImVec2{0, 1},
                   ImVec2{1, 0});
