@@ -2,9 +2,9 @@
 
 #include "event.hpp"
 
-namespace fge {
+namespace ff {
 
-  class FGE_API AppEvent : public Event {
+  class AppEvent : public Event {
   public:
     enum Action { // Order of Main thread
       None = 0,
@@ -45,7 +45,7 @@ namespace fge {
     const Action action_;
   };
 
-//  class FGE_API AppStartEvent : public AppEvent {
+//  class FF_API AppStartEvent : public AppEvent {
 //  public:
 //    AppStartEvent()
 //      : AppEvent{AppEventType::Start} {}
@@ -57,7 +57,7 @@ namespace fge {
 //    }
 //  };
 //
-//  class FGE_API AppPollEvent : public AppEvent {
+//  class FF_API AppPollEvent : public AppEvent {
 //  public:
 //    AppPollEvent()
 //      : AppEvent{AppEventType::Poll} {}
@@ -69,7 +69,7 @@ namespace fge {
 //    }
 //  };
 //
-//  class FGE_API AppUpdateEvent : public AppEvent {
+//  class FF_API AppUpdateEvent : public AppEvent {
 //  public:
 //    AppUpdateEvent()
 //      : AppEvent{AppEventType::Update} {}
@@ -81,7 +81,7 @@ namespace fge {
 //    }
 //  };
 //
-//  class FGE_API AppStopEvent : public AppEvent {
+//  class FF_API AppStopEvent : public AppEvent {
 //  public:
 //    AppStopEvent()
 //      : AppEvent{AppEventType::Stop} {}

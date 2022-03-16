@@ -3,12 +3,12 @@
 // BASED HEAVILY ON TheCherno's IMPLEMENTATION IN HIS GAME ENGINE SERIES
 // https://thecherno.com/engine
 
-namespace fge {
+namespace ff {
 
   #define EVENT_TYPE(event_cat) static Type typeStatic() { return event_cat; }\
                                    virtual Type type() const override { return typeStatic(); }
   
-  class FGE_API Event {
+  class Event {
     friend class EventDispatcher;
   public:
     enum Type {

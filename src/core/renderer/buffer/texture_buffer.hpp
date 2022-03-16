@@ -4,8 +4,8 @@
 
 #pragma once
 
-namespace fge {
-  class FGE_API TextureBuffer {
+namespace ff {
+  class TextureBuffer {
   public:
     enum class Format {
       None = 0,
@@ -16,7 +16,7 @@ namespace fge {
 
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
-    [[nodiscard]] virtual void* handle() const = 0;
+    [[nodiscard]] virtual u32 handle() const = 0;
 
     static Shared<TextureBuffer> create(Format format, i32 width, i32 height, void* data);
   };

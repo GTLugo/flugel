@@ -6,51 +6,50 @@
 
 #include "core/renderer/renderer.hpp"
 
-namespace fge {
+namespace ff {
   Shared<VertexArray> VertexArray::create(Shared<VertexBuffer> vertexBuffer, Shared<IndexBuffer> indexBuffer) {
-    
     switch (Renderer::api()) {
       case Renderer::API::None: {
-        FGE_ASSERT_ENG(false, "Running with no API not implemented!");
+        FF_ASSERT_E(false, "Running with no API not implemented!");
         return nullptr;
       }
       case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
           return makeShared<OpenGLVertexArray>(vertexBuffer, indexBuffer);
         #else
-          FGE_ASSERT_ENG(false, "OpenGL not supported!");
+        FF_ASSERT_E(false, "OpenGL not supported!");
           return nullptr;
         #endif
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-          FGE_ASSERT_ENG(false, "Vulkan not implemented!");
+        FF_ASSERT_E(false, "Vulkan not implemented!");
           return nullptr;
         #else
-          FGE_ASSERT_ENG(false, "Vulkan not supported!");
+        FF_ASSERT_E(false, "Vulkan not supported!");
           return nullptr;
         #endif
       }
       case Renderer::API::D3D11: {
         #if defined(FLUGEL_USE_D3D11)
-          FGE_ASSERT_ENG(false, "D3D11 not implemented!");
+        FF_ASSERT_E(false, "D3D11 not implemented!");
           return nullptr;
         #else
-          FGE_ASSERT_ENG(false, "D3D11 not supported!");
+        FF_ASSERT_E(false, "D3D11 not supported!");
           return nullptr;
         #endif
       }
       default: {
-        FGE_ASSERT_ENG(false, "Unknown render api!");
+        FF_ASSERT_E(false, "Unknown render api!");
         return nullptr;
       }
     }
   }
 
   Shared<VertexArray> VertexArray::create(float* vertices, u32 vertBitSize,
-                                          const BufferLayout& layout,
+                                          const VertexBufferLayout& layout,
                                           u32* indices, u32 count) {
-    FGE_ASSERT_ENG(vertices, "No vertices found for vertex array!");
+    FF_ASSERT_E(vertices, "No vertices found for vertex array!");
     auto vbo = VertexBuffer::create(vertices, vertBitSize);
     vbo->bind();
     vbo->setLayout(layout);
@@ -62,9 +61,9 @@ namespace fge {
   }
 
   Shared<VertexArray> VertexArray::create(std::vector<float>& vertices,
-                                          const BufferLayout& layout,
+                                          const VertexBufferLayout& layout,
                                           std::vector<u32>& indices) {
-    FGE_ASSERT_ENG(vertices.size(), "No vertices found for vertex array!");
+    FF_ASSERT_E(vertices.size(), "No vertices found for vertex array!");
     auto vbo = VertexBuffer::create(vertices);
     vbo->bind();
     vbo->setLayout(layout);
@@ -76,9 +75,9 @@ namespace fge {
   }
 
   Shared<VertexArray> VertexArray::create(const std::initializer_list<float>& vertices,
-                                          const BufferLayout& layout,
+                                          const VertexBufferLayout& layout,
                                           const std::initializer_list<u32>& indices) {
-    FGE_ASSERT_ENG(vertices.size(), "No vertices found for vertex array!");
+    FF_ASSERT_E(vertices.size(), "No vertices found for vertex array!");
     auto vbo = VertexBuffer::create(vertices);
     vbo->bind();
     vbo->setLayout(layout);

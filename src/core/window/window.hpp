@@ -6,8 +6,8 @@
 #include "core/renderer/context.hpp"
 #include "core/callbacks/events/event.hpp"
 
-namespace fge {
-  struct FGE_API WindowProperties {
+namespace ff {
+  struct WindowProperties {
     const std::string title{"FLUGEL ENGINE"};
     const i32 width{800};
     const i32 height{450};
@@ -18,7 +18,7 @@ namespace fge {
     const bool customDecor{false};
   };
 
-  class FGE_API Window {
+  class Window {
   protected:
     using EventCallbackFn = std::function<void(Event&)>;
   public:

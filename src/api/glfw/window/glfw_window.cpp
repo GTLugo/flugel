@@ -9,11 +9,11 @@
 #include "core/callbacks/events/mouse_event.hpp"
 #include "core/callbacks/events/keyboard_event.hpp"
 
-namespace fge {
+namespace ff {
   static uint8_t glfwWindowCount_s{0};
 
   static void glfwErrorCallback(int error, const char* message) {
-    FGE_ERROR_ENG("GFLW Error {0} | {1}", error, message);
+    Log::debug_e("GFLW Error {0} | {1}", error, message);
   }
 
   GlfwWindow::GlfwWindow(const WindowProperties& props)
@@ -22,21 +22,21 @@ namespace fge {
   }
 
   GlfwWindow::~GlfwWindow() {
-    FGE_TRACE_ENG("Destructing GlfwWindow...");
+    Log::trace_e("Destructing GlfwWindow...");
     shutdown();
   }
 
   void GlfwWindow::init() {
 
-    FGE_TRACE_ENG("Creating window...");
+    Log::trace_e("Creating window...");
     if (glfwWindowCount_s == 0) {
       i32 glfwInitSuccess = glfwInit();
-      FGE_ASSERT_ENG(glfwInitSuccess, "Failed to initialize GLFW!");
+      FF_ASSERT_E(glfwInitSuccess, "Failed to initialize GLFW!");
       glfwSetErrorCallback(glfwErrorCallback);
     }
     int major, minor, revision;
     glfwGetVersion(&major, &minor, &revision);
-    FGE_INFO_ENG("Using GLFW {}.{}.{}!", major, minor, revision);
+    Log::info_e("Using GLFW {}.{}.{}!", major, minor, revision);
 
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
     glfwWindowHint(GLFW_DECORATED, !data_.customDecor);
@@ -51,35 +51,35 @@ namespace fge {
 
     switch (Renderer::api()) {
       case Renderer::API::None: {
-        FGE_ASSERT_ENG(false, "Running with no API not implemented!");
+        FF_ASSERT_E(false, "Running with no API not implemented!");
         break;
       }
       case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
-          context_ = makeUnique<OpenGLContext>(glfwWindow_);
+        context_ = makeUnique<OpenGLContext>(glfwWindow_);
         #else
-          FGE_ASSERT_ENG(false, "OpenGL not supported!");
+        FF_ASSERT_E(false, "OpenGL not supported!");
         #endif
         break;
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-          FGE_ASSERT_ENG(false, "Vulkan not implemented!");
+        FF_ASSERT_E(false, "Vulkan not implemented!");
         #else
-          FGE_ASSERT_ENG(false, "Vulkan not supported!");
+        FF_ASSERT_E(false, "Vulkan not supported!");
         #endif
         break;
       }
       case Renderer::API::D3D11: {
         #if defined(FLUGEL_USE_D3D11)
-          FGE_ASSERT_ENG(false, "D3D11 not implemented!");
+        FF_ASSERT_E(false, "D3D11 not implemented!");
         #else
-          FGE_ASSERT_ENG(false, "D3D11 not supported!");
+        FF_ASSERT_E(false, "D3D11 not supported!");
         #endif
         break;
       }
       default: {
-        FGE_ASSERT_ENG(false, "Unknown render api!");
+        FF_ASSERT_E(false, "Unknown render api!");
         break;
       }
     }
@@ -91,7 +91,7 @@ namespace fge {
     setCallbacks();
 
     context_->setCurrent(false); // Prepare for context transfer to render thread
-    FGE_DEBUG_ENG("Created window: {} ({}, {})", data_.title, data_.windowDims.x, data_.windowDims.y);
+    Log::debug_e("Created window: {} ({}, {})", data_.title, data_.windowDims.x, data_.windowDims.y);
   }
 
   void GlfwWindow::setCallbacks() {
@@ -161,7 +161,7 @@ namespace fge {
       data.cursorPosOld = data.cursorPos;
       data.cursorPos = {xPos, yPos};
       data.cursorDelta = data.cursorPos - data.cursorPosOld;
-      //FGE_DEBUG_ENG("Delta: ({0}, {1})", data.cursorDelta.x, data.cursorDelta.y);
+      //Log::debug_e("Delta: ({0}, {1})", data.cursorDelta.x, data.cursorDelta.y);
 
       CursorEvent e{xPos, yPos};
       data.eventCallback(e);

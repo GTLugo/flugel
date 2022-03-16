@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "core/renderer/framebuffer/frame_buffer.hpp"
+#include "core/renderer/buffer/frame_buffer.hpp"
 
-namespace fge {
+namespace ff {
   class OpenGLFrameBuffer : public FrameBuffer {
   public:
     OpenGLFrameBuffer(TextureBuffer::Format format, i32 width, i32 height, void* data);

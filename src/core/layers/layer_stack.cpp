@@ -1,6 +1,6 @@
 #include "layer_stack.hpp"
 
-namespace fge {
+namespace ff {
   LayerStack::~LayerStack() {
     for (auto ritr = rbegin(); ritr != rend(); ++ritr) {
       (*ritr)->detach();

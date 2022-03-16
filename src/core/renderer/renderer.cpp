@@ -10,41 +10,41 @@
   #include "api/opengl/opengl_render_dispatcher.hpp"
 #endif
 
-namespace fge {
+namespace ff {
   void Renderer::setApi(Renderer::API api) {
     renderingAPI_ = api;
-    FGE_INFO("Selected Rendering API: {}", api);
+    Log::info_e("Selected Rendering API: {}", api);
     switch (api) {
       case Renderer::API::None: {
-        FGE_ASSERT_ENG(false, "Running with no API not implemented!");
+        FF_ASSERT_E(false, "Running with no API not implemented!");
         break;
       }
       case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
         renderDispatcher_ = makeUnique<OpenGLRenderDispatcher>();
         #else
-        FGE_ASSERT_ENG(false, "OpenGL not supported!");
+        FF_ASSERT_E(false, "OpenGL not supported!");
         #endif
         break;
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FGE_ASSERT_ENG(false, "Vulkan not implemented!");
+        FF_ASSERT_E(false, "Vulkan not implemented!");
         #else
-        FGE_ASSERT_ENG(false, "Vulkan not supported!");
+        FF_ASSERT_E(false, "Vulkan not supported!");
         #endif
         break;
       }
       case Renderer::API::D3D11: {
         #if defined(FLUGEL_USE_D3D11)
-        FGE_ASSERT_ENG(false, "D3D11 not implemented!");
+        FF_ASSERT_E(false, "D3D11 not implemented!");
         #else
-        FGE_ASSERT_ENG(false, "D3D11 not supported!");
+        FF_ASSERT_E(false, "D3D11 not supported!");
         #endif
         break;
       }
       default: {
-        FGE_ASSERT_ENG(false, "Unknown render api!");
+        FF_ASSERT_E(false, "Unknown render api!");
         break;
       }
     }

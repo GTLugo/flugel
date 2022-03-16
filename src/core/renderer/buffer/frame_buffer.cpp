@@ -9,41 +9,41 @@
 
 #include "core/renderer/renderer.hpp"
 
-namespace fge {
+namespace ff {
   Shared<FrameBuffer> FrameBuffer::create(TextureBuffer::Format format, i32 width, i32 height, void* data) {
     switch (Renderer::api()) {
       case Renderer::API::None: {
-        FGE_ASSERT_ENG(false, "Running with no API not implemented!");
+        FF_ASSERT_E(false, "Running with no API not implemented!");
         return nullptr;
       }
       case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
         return makeShared<OpenGLFrameBuffer>(format, width, height, data);
         #else
-        FGE_ASSERT_ENG(false, "OpenGL not supported!");
+        FF_ASSERT_E(false, "OpenGL not supported!");
           return nullptr;
         #endif
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FGE_ASSERT_ENG(false, "Vulkan not implemented!");
+        FF_ASSERT_E(false, "Vulkan not implemented!");
           return nullptr;
         #else
-        FGE_ASSERT_ENG(false, "Vulkan not supported!");
+        FF_ASSERT_E(false, "Vulkan not supported!");
         return nullptr;
         #endif
       }
       case Renderer::API::D3D11: {
         #if defined(FLUGEL_USE_D3D11)
-        FGE_ASSERT_ENG(false, "D3D11 not implemented!");
+        FF_ASSERT_E(false, "D3D11 not implemented!");
           return nullptr;
         #else
-        FGE_ASSERT_ENG(false, "D3D11 not supported!");
+        FF_ASSERT_E(false, "D3D11 not supported!");
         return nullptr;
         #endif
       }
       default: {
-        FGE_ASSERT_ENG(false, "Unknown render api!");
+        FF_ASSERT_E(false, "Unknown render api!");
         return nullptr;
       }
     }
@@ -52,7 +52,7 @@ namespace fge {
   Shared<FrameBuffer> FrameBuffer::create(const Shared<TextureBuffer>& textureBuffer) {
     switch (Renderer::api()) {
       case Renderer::API::None: {
-        FGE_ASSERT_ENG(false, "Running with no API not implemented!");
+        FF_ASSERT_E(false, "Running with no API not implemented!");
         return nullptr;
       }
       case Renderer::API::OpenGL: {
@@ -68,7 +68,7 @@ namespace fge {
         FGE_ASSERT_ENG(false, "Vulkan not implemented!");
           return nullptr;
         #else
-        FGE_ASSERT_ENG(false, "Vulkan not supported!");
+        FF_ASSERT_E(false, "Vulkan not supported!");
         return nullptr;
         #endif
       }
@@ -77,12 +77,12 @@ namespace fge {
         FGE_ASSERT_ENG(false, "D3D11 not implemented!");
           return nullptr;
         #else
-        FGE_ASSERT_ENG(false, "D3D11 not supported!");
+        FF_ASSERT_E(false, "D3D11 not supported!");
         return nullptr;
         #endif
       }
       default: {
-        FGE_ASSERT_ENG(false, "Unknown render api!");
+        FF_ASSERT_E(false, "Unknown render api!");
         return nullptr;
       }
     }

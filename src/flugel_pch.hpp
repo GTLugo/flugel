@@ -48,6 +48,7 @@
 /*----------------------
   VENDOR LIBRARIES
 ----------------------*/
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/matrix.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -61,6 +62,7 @@
   FLUGEL LIBRARY
 ----------------------*/
 
+#include "util/types.hpp"
 #include "util/utilities.hpp"
 #include "util/logging/log.hpp"
 #include "util/time.hpp"

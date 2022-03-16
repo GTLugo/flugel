@@ -1,7 +1,7 @@
 #pragma once
 
-namespace fge {
-  class FGE_API Shader {
+namespace ff {
+  class Shader {
   public:
     enum Type {
       Vertex,

@@ -16,12 +16,12 @@
 
 #include "core/callbacks/events/event.hpp"
 
-namespace fge {
+namespace ff {
   // Notifier sends notifications for a single type of event
   // Usage: Create a member variable of this class in whatever class should be
   //        sending out notifications.
   template<typename Event_T>
-  class FGE_API Notifier {
+  class Notifier {
     using EventFn = std::function<bool(Event_T&)>;
     /// TODO: change u64 for UUID
     using SubscriberCollection = std::map<UUID, EventFn>;
@@ -37,13 +37,13 @@ namespace fge {
     UUID subscribe(EventFn eventFn) {
       UUID id{};
       subscribers_.insert(std::pair<UUID, EventFn>(id, eventFn));
-      FGE_DEBUG_ENG("Subscribed: <{0}> {1}", Event_T::getStaticName(), id);
+      Log::debug_e("Subscribed: <{0}> {1}", Event_T::getStaticName(), id);
       return id;
     }
 
     void unsubscribe(const UUID& id) {
       subscribers_.erase(id);
-      FGE_DEBUG_ENG("Unsubscribed: <{0}> {1}", Event_T::getStaticName(), id);
+      Log::debug_e("Unsubscribed: <{0}> {1}", Event_T::getStaticName(), id);
     }
 
     // Notify should be called from within the class. It should never be called from

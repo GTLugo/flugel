@@ -4,7 +4,7 @@
 
 #include <glad/gl.h>
 
-namespace fge {
+namespace ff {
 
   // VERTEX BUFFER --------------------------- //
 

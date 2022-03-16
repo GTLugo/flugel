@@ -5,7 +5,7 @@
 #include "core/app.hpp"
 #include <glad/gl.h>
 
-namespace fge {
+namespace ff {
   OpenGLShader::OpenGLShader(const std::string &shaderFilePath) {
     auto sources = parseFile(shaderFilePath);
     init(sources[Shader::Vertex], sources[Shader::Fragment]);
@@ -43,8 +43,8 @@ namespace fge {
       gl->DeleteShader(vertexShader);
 
       // Use the infoLog as you see fit.
-      FGE_ERROR_ENG("SHADER ERROR | {}", infoLog.data());
-      FGE_ASSERT_ENG(false, "Failed to compile vertex shader!");
+      Log::debug_e("SHADER ERROR | {}", infoLog.data());
+      FF_ASSERT_E(false, "Failed to compile vertex shader!");
 
       // In this simple program, we'll just leave
       return;
@@ -76,8 +76,8 @@ namespace fge {
       gl->DeleteShader(vertexShader);
 
       // Use the infoLog as you see fit.
-      FGE_ERROR_ENG("SHADER ERROR | {}", infoLog.data());
-      FGE_ASSERT_ENG(false, "Failed to compile fragment shader!");
+      Log::debug_e("SHADER ERROR | {}", infoLog.data());
+      FF_ASSERT_E(false, "Failed to compile fragment shader!");
 
       // In this simple program, we'll just leave
       return;
@@ -113,8 +113,8 @@ namespace fge {
       gl->DeleteShader(fragmentShader);
 
       // Use the infoLog as you see fit.
-      FGE_ERROR_ENG("SHADER ERROR | {}", infoLog.data());
-      FGE_ASSERT_ENG(false, "Failed to link shader!");
+      Log::debug_e("SHADER ERROR | {}", infoLog.data());
+      FF_ASSERT_E(false, "Failed to link shader!");
 
       // In this simple program, we'll just leave
       return;
@@ -141,7 +141,7 @@ namespace fge {
   }
 
   std::unordered_map<Shader::Type, std::string> OpenGLShader::parseFile(const std::string& shaderFilePath) {
-    FGE_TRACE_ENG("Parsing \"{}\"", shaderFilePath);
+    Log::trace_e("Parsing \"{}\"", shaderFilePath);
     std::unordered_map<Shader::Type, std::string> srcs;
 
     std::ifstream shaderFile{shaderFilePath};
@@ -153,8 +153,8 @@ namespace fge {
         // Grab type of shader
         std::string type;
         shaderFile >> type;
-        FGE_ASSERT_ENG(types.find(type) != types.end(), "Shader type \"", type, "\" is not supported!");
-        FGE_TRACE_ENG("Building {} in \"{}\"", type, shaderFilePath);
+        FF_ASSERT_E(types.find(type) != types.end(), "Shader type \"", type, "\" is not supported!");
+        Log::trace_e("Building {} in \"{}\"", type, shaderFilePath);
 
         // Loop through shader section body
         shaderFile >> nextWord;

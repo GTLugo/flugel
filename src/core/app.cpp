@@ -9,20 +9,20 @@
 // #include <boost/gil/extension/io/png.hpp>
 #include <boost/range/adaptor/reversed.hpp>
 
-namespace fge {
+namespace ff {
   App::App(const WindowProperties& props) {
-    FGE_DEBUG_ENG("Current working directory: {}", std::filesystem::current_path());
-    FGE_TRACE_ENG("Constructing App...");
+    Log::debug_e("Current working directory: {}", std::filesystem::current_path());
+    Log::trace_e("Constructing App...");
     instance_ = this;
     Time::init(tickRate_);
     window_ = Window::create(props);
-    window_->setEventCallback(FGE_BIND(eventDispatch));
+    window_->setEventCallback(FF_BIND_AS_LAMBDA(eventDispatch));
     Color::using_srgb_color_space = true;
 
     i32 width, height;
     // boost::gil::rgb8_image_t icon;
     // boost::gil::
-    u8* icon = stbi_load("res/flugel/icon.png", &width, &height, nullptr, 4);
+    u8* icon{stbi_load("res/flugel/icon.png", &width, &height, nullptr, 4)};
     window_->setIcon(icon, width, height);
     stbi_image_free(icon);
     
@@ -36,7 +36,7 @@ namespace fge {
   }
 
   App::~App() {
-    FGE_TRACE_ENG("Destructing App...");
+    Log::trace_e("Destructing App...");
   }
 
   void App::pushLayer(Layer* layer) {
@@ -47,18 +47,14 @@ namespace fge {
     layerStack_.pushOverlay(overlay);
   }
 
-  void App::toggleImGui(bool enabled) {
-    (*(layerStack_.end() - 2))->toggle(enabled);
-  }
-
   void App::run() {
-    FGE_TRACE_ENG("Started main thread (ID: {})", std::this_thread::get_id());
+    Log::trace_e("Started main thread (ID: {})", std::this_thread::get_id());
     AppEvent mainStartEvent{AppEvent::Start};
     eventDispatch(mainStartEvent);
 
     threadPool_.initialize();
-    threadPool_.pushJob(FGE_BIND(gameLoop));
-    threadPool_.pushJob(FGE_BIND(renderLoop));
+    threadPool_.pushJob(FF_BIND_AS_LAMBDA(gameLoop));
+    threadPool_.pushJob(FF_BIND_AS_LAMBDA(renderLoop));
     //window_->context().setCurrent(true);
     //
     //// RENDER THREAD
@@ -86,7 +82,7 @@ namespace fge {
     
     AppEvent mainEndEvent{AppEvent::Stop};
     eventDispatch(mainEndEvent);
-    FGE_TRACE_ENG("Stopped main thread");
+    Log::trace_e("Stopped main thread");
   }
 
   void App::close() {
@@ -94,7 +90,7 @@ namespace fge {
   }
   
   void App::renderLoop() {
-    FGE_TRACE_ENG("Started render thread (ID: {})", std::this_thread::get_id());
+    Log::trace_e("Started render thread (ID: {})", std::this_thread::get_id());
     window_->context().setCurrent(true);
     
     // RENDER THREAD
@@ -106,11 +102,11 @@ namespace fge {
     RenderEvent renderEndEvent{RenderEvent::Stop};
     eventDispatch(renderEndEvent);
 
-    FGE_TRACE_ENG("Stopped render thread");
+    Log::trace_e("Stopped render thread");
   }
   
   void App::gameLoop() {
-    FGE_TRACE_ENG("Started game thread (ID: {})", std::this_thread::get_id());
+    Log::trace_e("Started game thread (ID: {})", std::this_thread::get_id());
 
     // GAME LOGIC THREAD
     LogicEvent startEvent{LogicEvent::Start};
@@ -121,7 +117,7 @@ namespace fge {
       // long, then for each frame, this loop will occur more than once in order to
       // "catch up" with the proper pacing of physics.
       // Source: https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
-      //FGE_TRACE_ENG("UPDATE");
+      //Log::trace_e("UPDATE");
       while (Time::shouldDoTick()) {
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
         LogicEvent tickEvent{LogicEvent::Tick};
@@ -145,7 +141,7 @@ namespace fge {
     LogicEvent stopEvent{LogicEvent::Stop};
     eventDispatch(stopEvent);
 
-    FGE_TRACE_ENG("Stopped game thread");
+    Log::trace_e("Stopped game thread");
   }
 
   void App::waitForRenderJob() {
@@ -153,7 +149,7 @@ namespace fge {
 
     {
       std::unique_lock<std::mutex> lock{renderMutex_};
-      //FGE_DEBUG_ENG("Render thread waiting...");
+      //Log::debug_e("Render thread waiting...");
       renderCondition_.wait(lock, [this]{
         return renderQueue_.size() >= maxFramesInFlight_ || shouldClose_;
       });
@@ -166,7 +162,7 @@ namespace fge {
     }
 
     if (renderEvents) {
-      //FGE_TRACE_ENG("Starting render job!");
+      //Log::trace_e("Starting render job!");
       for (auto& renderEvent : *renderEvents) {
         eventDispatch(renderEvent);
       }
@@ -190,7 +186,7 @@ namespace fge {
     if (e.type() == Event::Render) {
       for (auto itr = layerStack_.begin(); itr != layerStack_.end(); ++itr) {
 //        if ((*itr)->name() == "imgui_layer") {
-//          FGE_TRACE_ENG("{}: {}", (*itr)->name(), e);
+//          Log::trace_e("{}: {}", (*itr)->name(), e);
 //        }
         if (e.wasHandled()) {
           break;
@@ -199,7 +195,7 @@ namespace fge {
       }
     } else {
       for (auto ritr = layerStack_.rbegin(); ritr != layerStack_.rend(); ++ritr) {
-        //FGE_TRACE_ENG("{}: {}", (*ritr)->name(), e);
+        //Log::trace_e("{}: {}", (*ritr)->name(), e);
         if (e.wasHandled()) {
           break;
         }
@@ -211,6 +207,6 @@ namespace fge {
 //    if (!(inputEvent && e.wasHandled())) {
 //      engineLayer->onEvent(e);
 //    }
-    //FGE_TRACE_ENG("{}: {}", engineLayer->name(), e);
+    //Log::trace_e("{}: {}", engineLayer->name(), e);
   }
 }

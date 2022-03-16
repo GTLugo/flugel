@@ -1,7 +1,7 @@
 // https://stackoverflow.com/a/32593825/17004103
 #pragma once
 
-namespace fge {
+namespace ff {
   class ThreadPool {
     using JobFn = std::function<void()>;
   public:

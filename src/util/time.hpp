@@ -7,7 +7,7 @@
 #include <chrono>
 #include <iostream>
 
-namespace fge {
+namespace ff {
 
   // duration types
   using NanoSeconds = std::chrono::duration<double, std::nano>;

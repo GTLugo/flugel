@@ -1,6 +1,6 @@
 #include "mouse_codes.hpp"
 
-namespace fge{
+namespace ff{
   std::map<Mouse::Code, std::string> Mouse::nameMap_{
     {Mouse::Unknown, "Unknown"},
     {Mouse::_1,      "Mouse1"}, 

@@ -4,6 +4,6 @@
 
 #include "notifier.hpp"
 
-namespace fge {
+namespace ff {
 }
 

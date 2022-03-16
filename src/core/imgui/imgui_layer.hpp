@@ -1,11 +1,12 @@
 #pragma once
 
-#include <imgui.h>
 #include "core/layers/layer.hpp"
 #include "core/renderer/renderer.hpp"
 
-namespace fge {
-  class FGE_API ImGuiLayer : public Layer {
+#include <imgui.h>
+
+namespace ff {
+  class ImGuiLayer : public Layer {
   public:
     ImGuiLayer();
 
@@ -30,8 +31,8 @@ namespace fge {
     static inline vec2 appImageSize_{0,0};
 
     ImGuiDockNodeFlags dockspaceFlags_ =
-        ImGuiDockNodeFlags_None |
-        ImGuiDockNodeFlags_AutoHideTabBar;
+        ImGuiDockNodeFlags_None /*|
+        ImGuiDockNodeFlags_AutoHideTabBar*/;
     ImGuiWindowFlags dockspaceWindowFlags_ =
         //ImGuiWindowFlags_MenuBar |
         ImGuiWindowFlags_NoDocking |
@@ -51,5 +52,12 @@ namespace fge {
 
     static void setDarkThemeColors();
     static void keepAspect(ImGuiSizeCallbackData* data);
+
+    static void rendererInit();
+    static void windowInit();
+    static void newFrame();
+    static void renderDrawData();
+    static void shutdownRenderer();
+    static void shutdownWindow();
   };
 }

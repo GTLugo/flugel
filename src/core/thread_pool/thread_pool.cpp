@@ -1,6 +1,6 @@
 #include "thread_pool.hpp"
 
-namespace fge {
+namespace ff {
   void ThreadPool::threadLoop() {
     while (!killPool) {
       JobFn job;
@@ -17,7 +17,7 @@ namespace fge {
       } // Unlock mutex
 
       if (job != nullptr) {
-        FGE_TRACE_ENG("Starting job on thread: {0}", std::this_thread::get_id());
+        Log::trace_e("Starting job on thread: {0}", std::this_thread::get_id());
         job();
       }
     }
@@ -25,13 +25,13 @@ namespace fge {
    
   void ThreadPool::initialize(u32 numThreads) {
     for (u32 i = 0; i < numThreads; ++i) {
-      threadPool_.push_back(std::thread{FGE_BIND(threadLoop)});
+      threadPool_.emplace_back(FF_BIND_AS_LAMBDA(threadLoop));
     }
-    FGE_DEBUG_ENG("Initialized thread pool! Number of threads: {0}", threadPool_.size());
+    Log::debug_e("Initialized thread pool! Number of threads: {0}", threadPool_.size());
   }
    
   void ThreadPool::shutdown() {
-    FGE_TRACE_ENG("Shutting down thread pool...");
+    Log::trace_e("Shutting down thread pool...");
     { // Mutex lock scope
       std::unique_lock<std::mutex> lock{threadPoolMutex_};
       killPool = true;
@@ -39,7 +39,7 @@ namespace fge {
 
     queueCondition_.notify_all(); // wake up threads;
 
-    FGE_TRACE_ENG("Joining threads...");
+    Log::trace_e("Joining threads...");
     for (auto& thread : threadPool_) {
       thread.join();
     }

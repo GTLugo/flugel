@@ -2,9 +2,9 @@
 
 #include "event.hpp"
 
-namespace fge {
+namespace ff {
 
-  class FGE_API RenderEvent : public Event {
+  class RenderEvent : public Event {
   public:
     enum Action { // Order of Render thread
       None = 0,

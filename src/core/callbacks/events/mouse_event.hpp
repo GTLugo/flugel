@@ -3,8 +3,8 @@
 #include "event.hpp"
 #include "core/input/input.hpp"
 
-namespace fge {
-  class FGE_API MouseEvent : public Event {
+namespace ff {
+  class MouseEvent : public Event {
   public:
     EVENT_TYPE(Event::Type::Mouse)
 
@@ -39,7 +39,7 @@ namespace fge {
     Modifier::BitCodes mods_;
   };
 
-  class FGE_API CursorEvent : public Event {
+  class CursorEvent : public Event {
   public:
     EVENT_TYPE(Event::Type::Cursor)
 
@@ -58,7 +58,7 @@ namespace fge {
     double xPos_, yPos_;
   };
 
-  class FGE_API ScrollEvent : public Event {
+  class ScrollEvent : public Event {
   public:
     EVENT_TYPE(Event::Type::Scroll)
 

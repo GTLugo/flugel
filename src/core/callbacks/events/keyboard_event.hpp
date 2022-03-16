@@ -3,8 +3,8 @@
 #include "event.hpp"
 #include "core/input/input.hpp"
 
-namespace fge {
-  class FGE_API KeyboardEvent : public Event {
+namespace ff {
+  class KeyboardEvent : public Event {
   public:
     EVENT_TYPE(Event::Type::Keyboard)
 

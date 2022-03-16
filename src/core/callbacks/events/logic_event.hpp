@@ -2,9 +2,9 @@
 
 #include "event.hpp"
 
-namespace fge {
+namespace ff {
 
-  class FGE_API LogicEvent : public Event {
+  class LogicEvent : public Event {
   public:
     enum Action { // Order of Game thread
       None = 0,

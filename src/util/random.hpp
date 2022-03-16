@@ -4,8 +4,8 @@
 //
 
 
-namespace fge {
-  class FGE_API Random {
+namespace ff {
+  class Random {
     using random_device = boost::random_device;
     template<class T>
     using uniform_real_dist = boost::random::uniform_real_distribution<T>;

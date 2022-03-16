@@ -8,8 +8,8 @@
 #include "core/callbacks/events/keyboard_event.hpp"
 #include "core/callbacks/events/mouse_event.hpp"
 
-namespace fge {
-  class FGE_API Layer {
+namespace ff {
+  class Layer {
   public:
     explicit Layer(std::string name = "layer");
     virtual ~Layer();
@@ -24,16 +24,16 @@ namespace fge {
       if (!enabled_) return;
 
       EventDispatcher d{e};
-      //FGE_DEBUG_ENG("{0}: {1}", name_, e);
+      //Log::debug_e("{0}: {1}", name_, e);
       switch (e.type()) { // Input events
-        case Event::Keyboard: { return d.dispatch<KeyboardEvent>(FGE_BIND(onKeyboardEvent)); }
-        case Event::Mouse:    { return d.dispatch<MouseEvent>   (FGE_BIND(onMouseEvent));    }
-        case Event::Cursor:   { return d.dispatch<CursorEvent>  (FGE_BIND(onCursorEvent));   }
-        case Event::Scroll:   { return d.dispatch<ScrollEvent>  (FGE_BIND(onScrollEvent));   }
-        case Event::App:      { return d.dispatch<AppEvent>     (FGE_BIND(onAppEvent));      }
-        case Event::Render:   { return d.dispatch<RenderEvent>  (FGE_BIND(onRenderEvent));   }
-        case Event::Logic:    { return d.dispatch<LogicEvent>   (FGE_BIND(onLogicEvent));    }
-        case Event::Window:   { return d.dispatch<WindowEvent>  (FGE_BIND(onWindowEvent));   }
+        case Event::Keyboard: { return d.dispatch<KeyboardEvent>(FF_BIND_AS_LAMBDA(onKeyboardEvent)); }
+        case Event::Mouse:    { return d.dispatch<MouseEvent>   (FF_BIND_AS_LAMBDA(onMouseEvent));    }
+        case Event::Cursor:   { return d.dispatch<CursorEvent>  (FF_BIND_AS_LAMBDA(onCursorEvent));   }
+        case Event::Scroll:   { return d.dispatch<ScrollEvent>  (FF_BIND_AS_LAMBDA(onScrollEvent));   }
+        case Event::App:      { return d.dispatch<AppEvent>     (FF_BIND_AS_LAMBDA(onAppEvent));      }
+        case Event::Render:   { return d.dispatch<RenderEvent>  (FF_BIND_AS_LAMBDA(onRenderEvent));   }
+        case Event::Logic:    { return d.dispatch<LogicEvent>   (FF_BIND_AS_LAMBDA(onLogicEvent));    }
+        case Event::Window:   { return d.dispatch<WindowEvent>  (FF_BIND_AS_LAMBDA(onWindowEvent));   }
         default: break;
       }
 //      switch (e.category()) { // App events

@@ -2,9 +2,9 @@
 
 #include "event.hpp"
 
-namespace fge {
+namespace ff {
 
-  class FGE_API WindowEvent : public Event {
+  class WindowEvent : public Event {
   public:
     enum Action {
       None = 0,
@@ -21,7 +21,7 @@ namespace fge {
         : action_{action} {}
   };
 
-  class FGE_API WindowCloseEvent : public WindowEvent {
+  class WindowCloseEvent : public WindowEvent {
   public:
     WindowCloseEvent()
      : WindowEvent{Action::Close} {}
@@ -33,7 +33,7 @@ namespace fge {
     }
   };
 
-  class FGE_API WindowResizeEvent : public WindowEvent {
+  class WindowResizeEvent : public WindowEvent {
   public:
     WindowResizeEvent(i32 width, i32 height)
       : WindowEvent{Action::Resize}, width_{width}, height_{height} {}
@@ -50,7 +50,7 @@ namespace fge {
     const i32 width_, height_;
   };
 
-  class FGE_API WindowMovedEvent : public WindowEvent {
+  class WindowMovedEvent : public WindowEvent {
   public:
     WindowMovedEvent(i32 xPos, i32 yPos)
       : WindowEvent{Action::Resize}, xPos_{xPos}, yPos_{yPos} {}

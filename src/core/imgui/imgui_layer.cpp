@@ -8,35 +8,20 @@
 #include <imgui_internal.h>
 
 // TODO: Swap all of this for switch cases
-// WINDOW API
-#if defined(FLUGEL_USE_GLFW)
-  #include <backends/imgui_impl_glfw.h>
-  #define IMGUI_SHUTDOWN_WINDOW() ImGui_ImplGlfw_Shutdown()
-  // RENDER API
-  #if defined(FLUGEL_USE_OPENGL)
-    #include <backends/imgui_impl_opengl3.h>
-    #define IMGUI_RENDER_IMPL_INIT(glslVersion) ImGui_ImplOpenGL3_Init(glslVersion)
-    #define IMGUI_WINDOW_IMPL_INIT(window, installCallbacks) ImGui_ImplGlfw_InitForOpenGL(window, installCallbacks)
-    #define IMGUI_NEW_FRAME() ImGui_ImplOpenGL3_NewFrame(); ImGui_ImplGlfw_NewFrame()
-    #define IMGUI_RENDER_DRAW_DATA(draw_data) ImGui_ImplOpenGL3_RenderDrawData(draw_data)
-    #define IMGUI_SHUTDOWN_RENDERER() ImGui_ImplOpenGL3_Shutdown()
-  #endif
-  #if defined(FLUGEL_USE_VULKAN)
-    #include <backends/imgui_impl_vulkan.h>
-  #endif
-  #if defined(FLUGEL_USE_D3D11)
-    #include <backends/imgui_impl_dx11.h>
-  #endif
+#include <backends/imgui_impl_glfw.h>
+// RENDER API
+#ifdef FLUGEL_USE_OPENGL
+  #include <backends/imgui_impl_opengl3.h>
 #endif
-#if defined(FLUGEL_USE_SDL2)
-#include <backends/imgui_impl_sdl.h>
+#ifdef FLUGEL_USE_VULKAN
+  #include <backends/imgui_impl_vulkan.h>
 #endif
-#if defined(FLUGEL_USE_WIN32)
-#include <backends/imgui_impl_win32.h>
+#ifdef FLUGEL_USE_D3D11
+  #include <backends/imgui_impl_dx11.h>
 #endif
   
 
-namespace fge {
+namespace ff {
   ImGuiLayer::ImGuiLayer::ImGuiLayer() 
     : Layer{"imgui_layer"} {
     app = &App::instance();
@@ -55,9 +40,8 @@ namespace fge {
 
         ImGui::StyleColorsDark();
         setDarkThemeColors();
-		    auto* window = static_cast<GLFWwindow*>(app->window().nativeWindow());
 
-        IMGUI_WINDOW_IMPL_INIT(window, true);
+        windowInit();
         return false;
       }
       default: {
@@ -69,18 +53,17 @@ namespace fge {
   bool ImGuiLayer::onRenderEvent(RenderEvent& e) {
     switch (e.action()) {
       case RenderEvent::Start: {
-        IMGUI_RENDER_IMPL_INIT("#version 460");
+        rendererInit();
         vsyncEnabled_ = app->window().isVSync();
         return false;
       }
       case RenderEvent::BeginFrame: {
         ImGuiIO& io{ImGui::GetIO()};
-        io.DisplaySize = ImVec2(app->window().dims().x, app->window().dims().y);
-        io.DeltaTime = Time::delta<Seconds>();
+        io.DisplaySize = ImVec2(static_cast<float>(app->window().dims().x), static_cast<float>(app->window().dims().y));
+        io.DeltaTime = static_cast<float>(Time::delta<Seconds>());
         //FGE_DEBUG("Time: {}", app.time().deltaTime<Seconds>());
 
-        IMGUI_NEW_FRAME();
-        ImGui::NewFrame();
+        newFrame();
         return false;
       }
       case RenderEvent::ImGuiStep: {
@@ -118,7 +101,7 @@ namespace fge {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
         ImGuiWindowClass windowClass;
-        //windowClass.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+        windowClass.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoDockingOverMe;
         ImGui::SetNextWindowClass(&windowClass);
         ImGui::Begin("MainApp", nullptr, mainAppWindowFlags_); ImGui::PopStyleVar(3); {
           ImVec2 winPos{ImGui::GetWindowPos()};
@@ -140,7 +123,7 @@ namespace fge {
           ImGui::BeginChild("GameRender", {}, false, mainAppWindowFlags_); {
             if (Shared<FrameBuffer> fb = Renderer::defaultFrameBuffer().lock()) {
               ImGui::Image(
-                  fb->textureBuffer()->handle(),
+                  reinterpret_cast<ImTextureID*>(static_cast<u64>(fb->textureBuffer()->handle())),
                   {appImageSize_.x, appImageSize_.y},
                   ImVec2{0, 1},
                   ImVec2{1, 0});
@@ -162,7 +145,7 @@ namespace fge {
       case RenderEvent::EndFrame: {
         ImGuiIO& io{ImGui::GetIO()};
         ImGui::Render();
-        IMGUI_RENDER_DRAW_DATA(ImGui::GetDrawData());
+        renderDrawData();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
           // Update and Render additional Platform Windows
           // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
@@ -174,8 +157,8 @@ namespace fge {
         return false;
       }
       case RenderEvent::Stop: {
-        IMGUI_SHUTDOWN_RENDERER();
-        IMGUI_SHUTDOWN_WINDOW();
+        shutdownRenderer();
+        shutdownWindow();
 		    ImGui::DestroyContext();
         return false;
       }
@@ -250,4 +233,199 @@ namespace fge {
 		colors[ImGuiCol_TitleBgActive]    = dark1;
 		colors[ImGuiCol_TitleBgCollapsed] = dark1;
 	}
+
+  void ImGuiLayer::rendererInit() {
+    auto* window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
+    switch (Renderer::api()) {
+      case Renderer::API::None: {
+        FF_ASSERT_E(false, "Running with no API not implemented!");
+        break;
+      }
+      case Renderer::API::OpenGL: {
+        #if defined(FLUGEL_USE_OPENGL)
+        ImGui_ImplOpenGL3_Init("#version 460");
+        #else
+        FF_ASSERT_E(false, "OpenGL not supported!");
+        #endif
+        break;
+      }
+      case Renderer::API::Vulkan: {
+        #if defined(FLUGEL_USE_VULKAN)
+        FF_ASSERT_E(false, "Vulkan not implemented!");
+        #else
+        FF_ASSERT_E(false, "Vulkan not supported!");
+        #endif
+        break;
+      }
+      case Renderer::API::D3D11: {
+        #if defined(FLUGEL_USE_D3D11)
+        FF_ASSERT_E(false, "D3D11 not implemented!");
+        #else
+        FF_ASSERT_E(false, "D3D11 not supported!");
+        #endif
+        break;
+      }
+      default: {
+        FF_ASSERT_E(false, "Unknown render api!");
+        break;
+      }
+    }
+  }
+
+  void ImGuiLayer::windowInit() {
+    auto* window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
+    switch (Renderer::api()) {
+      case Renderer::API::None: {
+        FF_ASSERT_E(false, "Running with no API not implemented!");
+        break;
+      }
+      case Renderer::API::OpenGL: {
+        #if defined(FLUGEL_USE_OPENGL)
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        #else
+        FF_ASSERT_E(false, "OpenGL not supported!");
+        #endif
+        break;
+      }
+      case Renderer::API::Vulkan: {
+        #if defined(FLUGEL_USE_VULKAN)
+        FF_ASSERT_E(false, "Vulkan not implemented!");
+        #else
+        FF_ASSERT_E(false, "Vulkan not supported!");
+        #endif
+        break;
+      }
+      case Renderer::API::D3D11: {
+        #if defined(FLUGEL_USE_D3D11)
+        FF_ASSERT_E(false, "D3D11 not implemented!");
+        #else
+        FF_ASSERT_E(false, "D3D11 not supported!");
+        #endif
+        break;
+      }
+      default: {
+        FF_ASSERT_E(false, "Unknown render api!");
+        break;
+      }
+    }
+  }
+
+  void ImGuiLayer::newFrame() {
+    switch (Renderer::api()) {
+      case Renderer::API::None: {
+        FF_ASSERT_E(false, "Running with no API not implemented!");
+        break;
+      }
+      case Renderer::API::OpenGL: {
+        #if defined(FLUGEL_USE_OPENGL)
+        ImGui_ImplOpenGL3_NewFrame();
+        #else
+        FF_ASSERT_E(false, "OpenGL not supported!");
+        #endif
+        break;
+      }
+      case Renderer::API::Vulkan: {
+        #if defined(FLUGEL_USE_VULKAN)
+        FF_ASSERT_E(false, "Vulkan not implemented!");
+        #else
+        FF_ASSERT_E(false, "Vulkan not supported!");
+        #endif
+        break;
+      }
+      case Renderer::API::D3D11: {
+        #if defined(FLUGEL_USE_D3D11)
+        FF_ASSERT_E(false, "D3D11 not implemented!");
+        #else
+        FF_ASSERT_E(false, "D3D11 not supported!");
+        #endif
+        break;
+      }
+      default: {
+        FF_ASSERT_E(false, "Unknown render api!");
+        break;
+      }
+    }
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+  }
+
+  void ImGuiLayer::renderDrawData() {
+    auto* window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
+    switch (Renderer::api()) {
+      case Renderer::API::None: {
+        FF_ASSERT_E(false, "Running with no API not implemented!");
+        break;
+      }
+      case Renderer::API::OpenGL: {
+        #if defined(FLUGEL_USE_OPENGL)
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        #else
+        FF_ASSERT_E(false, "OpenGL not supported!");
+        #endif
+        break;
+      }
+      case Renderer::API::Vulkan: {
+        #if defined(FLUGEL_USE_VULKAN)
+        FF_ASSERT_E(false, "Vulkan not implemented!");
+        #else
+        FF_ASSERT_E(false, "Vulkan not supported!");
+        #endif
+        break;
+      }
+      case Renderer::API::D3D11: {
+        #if defined(FLUGEL_USE_D3D11)
+        FF_ASSERT_E(false, "D3D11 not implemented!");
+        #else
+        FF_ASSERT_E(false, "D3D11 not supported!");
+        #endif
+        break;
+      }
+      default: {
+        FF_ASSERT_E(false, "Unknown render api!");
+        break;
+      }
+    }
+  }
+
+  void ImGuiLayer::shutdownRenderer() {
+    auto* window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
+    switch (Renderer::api()) {
+      case Renderer::API::None: {
+        FF_ASSERT_E(false, "Running with no API not implemented!");
+        break;
+      }
+      case Renderer::API::OpenGL: {
+        #if defined(FLUGEL_USE_OPENGL)
+        ImGui_ImplOpenGL3_Shutdown();
+        #else
+        FF_ASSERT_E(false, "OpenGL not supported!");
+        #endif
+        break;
+      }
+      case Renderer::API::Vulkan: {
+        #if defined(FLUGEL_USE_VULKAN)
+        FF_ASSERT_E(false, "Vulkan not implemented!");
+        #else
+        FF_ASSERT_E(false, "Vulkan not supported!");
+        #endif
+        break;
+      }
+      case Renderer::API::D3D11: {
+        #if defined(FLUGEL_USE_D3D11)
+        FF_ASSERT_E(false, "D3D11 not implemented!");
+        #else
+        FF_ASSERT_E(false, "D3D11 not supported!");
+        #endif
+        break;
+      }
+      default: {
+        FF_ASSERT_E(false, "Unknown render api!");
+        break;
+      }
+    }
+  }
+
+  void ImGuiLayer::shutdownWindow() {
+    ImGui_ImplGlfw_Shutdown();
+  }
 }

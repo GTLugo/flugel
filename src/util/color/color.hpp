@@ -3,7 +3,7 @@
 //
 #pragma once
 
-namespace fge {
+namespace ff {
   struct Color {
     float r, g, b, a;
     bool is_linear = false;

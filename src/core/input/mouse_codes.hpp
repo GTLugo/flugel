@@ -1,6 +1,6 @@
 #pragma once
 
-namespace fge {
+namespace ff {
   class Mouse {
   public:
     enum State : i32 {

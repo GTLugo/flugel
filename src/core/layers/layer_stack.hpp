@@ -2,13 +2,13 @@
 
 #include "layer.hpp"
 
-namespace fge {
+namespace ff {
   // Engine,
   // ...(AppLayers)...,
   // ...(AppOverlays)...,
   // ImGui,
   // Render
-  class FGE_API LayerStack {
+  class LayerStack {
     using LayerCollection = std::vector<Layer*>;
   public:
     using iterator = LayerCollection::iterator;

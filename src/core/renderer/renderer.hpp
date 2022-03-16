@@ -4,11 +4,11 @@
 
 #include "core/renderer/shader.hpp"
 #include "core/renderer/vertex_array/vertex_array.hpp"
-#include "core/renderer/framebuffer/frame_buffer.hpp"
+#include "core/renderer/buffer/frame_buffer.hpp"
 
-namespace fge {
+namespace ff {
 
-  class FGE_API Renderer {
+  class Renderer {
   public:
     enum class API {
       None = 0,
@@ -38,7 +38,5 @@ namespace fge {
     static inline Weak<TextureBuffer> frameTexture_;
 
     static void draw(const Shared<VertexArray>& vertexArray);
-
-    i32 amount = 2880. - 664.44 - 766.03 - 1133.15;
   };
 }

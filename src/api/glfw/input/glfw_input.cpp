@@ -6,7 +6,7 @@
 
 #include <GLFW/glfw3.h>
 
-namespace fge {
+namespace ff {
   bool Input::isPressed(Key::Code key) {
     auto window = static_cast<GLFWwindow*>(App::instance().window().nativeWindow());
     auto state = glfwGetKey(window, Key::toNative(key));

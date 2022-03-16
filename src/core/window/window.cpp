@@ -9,7 +9,7 @@
 #endif
 
 
-namespace fge {
+namespace ff {
   Unique<Window> Window::create(const WindowProperties& props) {
     #if defined(FLUGEL_USE_GLFW)
       return makeUnique<GlfwWindow>(props);

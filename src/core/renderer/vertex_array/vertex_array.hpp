@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/renderer/vertex_array/buffer.hpp"
+#include "core/renderer/buffer/buffer.hpp"
 
-namespace fge {
-  class FGE_API VertexArray {
+namespace ff {
+  class VertexArray {
   public:
     virtual ~VertexArray() = default;
 
@@ -18,13 +18,13 @@ namespace fge {
     static Shared<VertexArray> create(Shared<VertexBuffer> vertexBuffer,
                                       Shared<IndexBuffer> indexBuffer);
     static Shared<VertexArray> create(float* vertices, u32 vertBitSize,
-                                      const BufferLayout& layout,
+                                      const VertexBufferLayout& layout,
                                       u32* indices, u32 count);
     static Shared<VertexArray> create(std::vector<float>& vertices,
-                                      const BufferLayout& layout,
+                                      const VertexBufferLayout& layout,
                                       std::vector<u32>& indices);
     static Shared<VertexArray> create(const std::initializer_list<float>& vertices,
-                                      const BufferLayout& layout,
+                                      const VertexBufferLayout& layout,
                                       const std::initializer_list<u32>& indices);
   };
 }

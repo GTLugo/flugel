@@ -4,7 +4,7 @@
 
 #include <GLFW/glfw3.h>
 
-namespace fge {
+namespace ff {
   std::map<Key::Code, i32> Key::keyMap_{
     {Key::Unknown,      GLFW_KEY_UNKNOWN},
     //num row

@@ -2,7 +2,7 @@
 
 #include "core/renderer/shader.hpp"
 
-namespace fge {
+namespace ff {
   class OpenGLShader : public Shader {
   public:
     explicit OpenGLShader(const std::string& shaderFilePath);

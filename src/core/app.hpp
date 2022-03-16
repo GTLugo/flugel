@@ -13,8 +13,8 @@
 #include "core/callbacks/events/window_event.hpp"
 #include "core/callbacks/events/mouse_event.hpp"
 
-namespace fge {
-  class FGE_API App {
+namespace ff {
+  class App {
     using RenderEvents = std::array<RenderEvent, 4>;
   public:
     explicit App(const WindowProperties& props = {});
@@ -26,8 +26,6 @@ namespace fge {
     void pushLayer(Layer* layer);
     void pushOverlay(Layer* overlay);
 
-    void toggleImGui(bool enabled);
-
     void run();
     void close();
 
@@ -35,7 +33,7 @@ namespace fge {
   private:
     static inline App* instance_{nullptr};
     // Util
-    const u32 maxFramesInFlight_{2};
+    const u32 maxFramesInFlight_{1};
     float tickRate_{128.};
     // Window
     Unique<Window> window_;

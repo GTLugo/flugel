@@ -7,8 +7,8 @@
 #include "texture_buffer.hpp"
 
 
-namespace fge {
-  class FGE_API FrameBuffer {
+namespace ff {
+  class FrameBuffer {
   public:
     virtual ~FrameBuffer() = default;
 

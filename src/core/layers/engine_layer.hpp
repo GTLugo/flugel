@@ -2,11 +2,10 @@
 
 #include "layer.hpp"
 
-namespace fge {
-  class FGE_API EngineLayer : public Layer {
+namespace ff {
+  class EngineLayer : public Layer {
   public:
-    EngineLayer()
-      : Layer{"fge_engine_layer"} {}
+    EngineLayer() : Layer{"fge_engine_layer"} {}
   private:
     vec2 windowDragOffset_{}; // cursor position at time of clicking to drag window
     bool draggingWindowDecor_{false};

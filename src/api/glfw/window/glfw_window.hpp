@@ -5,7 +5,7 @@
 
 #include <GLFW/glfw3.h>
 
-namespace fge {
+namespace ff {
   class GlfwWindow : public Window {
   public:
     explicit GlfwWindow(const WindowProperties& props);
