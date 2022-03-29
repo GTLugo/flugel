@@ -47,6 +47,7 @@ namespace ff {
 
   void JobSystem::init() {
     if (instance_) return;
+    Log::trace_e("Initializing Job System...");
     instance_ = new JobSystem{};
     for (size_t i{0}; i < instance_->workerThreadCount_; ++i) {
       instance_->workers_.emplace_back(&JobSystem::workerThread, instance_);

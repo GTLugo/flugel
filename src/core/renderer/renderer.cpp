@@ -13,13 +13,14 @@
 namespace ff {
   void Renderer::setApi(Renderer::API api) {
     renderingAPI_ = api;
-    Log::info_e("Selected Rendering API: {}", api);
     switch (api) {
       case Renderer::API::None: {
+        Log::info_e("Selected Rendering API: None");
         FF_ASSERT_E(false, "Running with no API not implemented!");
         break;
       }
       case Renderer::API::OpenGL: {
+        Log::info_e("Selected Rendering API: OpenGL");
         #if defined(FLUGEL_USE_OPENGL)
         renderDispatcher_ = makeUnique<OpenGLRenderDispatcher>();
         #else
@@ -28,6 +29,7 @@ namespace ff {
         break;
       }
       case Renderer::API::Vulkan: {
+        Log::info_e("Selected Rendering API: Vulkan");
         #if defined(FLUGEL_USE_VULKAN)
         FF_ASSERT_E(false, "Vulkan not implemented!");
         #else
@@ -36,6 +38,7 @@ namespace ff {
         break;
       }
       case Renderer::API::D3D11: {
+        Log::info_e("Selected Rendering API: Direct3D 11");
         #if defined(FLUGEL_USE_D3D11)
         FF_ASSERT_E(false, "D3D11 not implemented!");
         #else

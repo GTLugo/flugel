@@ -34,7 +34,7 @@ namespace ff {
     }
     int major, minor, revision;
     glfwGetVersion(&major, &minor, &revision);
-    Log::info_e("Using GLFW {}.{}.{}!", major, minor, revision);
+    Log::info_e("Using GLFW {}.{}.{}", major, minor, revision);
 
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
     glfwWindowHint(GLFW_DECORATED, !data_.customDecor);

@@ -13,6 +13,7 @@ namespace ff {
 
     static void init(EventCallbackFn callbackFn) {
       if (instance_) return;
+      Log::trace_e("Initializing Event System...");
       instance_ = new EventSystem{};
       instance_->eventCallback_ = std::move(callbackFn);
     }
