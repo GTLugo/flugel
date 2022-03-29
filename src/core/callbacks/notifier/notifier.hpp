@@ -20,12 +20,12 @@ namespace ff {
   // Notifier sends notifications for a single type of event
   // Usage: Create a member variable of this class in whatever class should be
   //        sending out notifications.
-  template<typename Event_T>
+  template<typename Event_t>
   class Notifier {
-    using EventFn = std::function<bool(Event_T&)>;
-    /// TODO: change u64 for UUID
-    using SubscriberCollection = std::map<UUID, EventFn>;
   public:
+    using EventFn = std::function<bool(const Event_t&)>;
+    using SubscriberCollection = std::map<UUID, EventFn>;
+
     Notifier() = default;
     virtual ~Notifier() {
       if (!subscribers_.empty()) {
@@ -37,37 +37,26 @@ namespace ff {
     UUID subscribe(EventFn eventFn) {
       UUID id{};
       subscribers_.insert(std::pair<UUID, EventFn>(id, eventFn));
-      Log::debug_e("Subscribed: <{0}> {1}", Event_T::getStaticName(), id);
       return id;
     }
 
     void unsubscribe(const UUID& id) {
       subscribers_.erase(id);
-      Log::debug_e("Unsubscribed: <{0}> {1}", Event_T::getStaticName(), id);
     }
 
     // Notify should be called from within the class. It should never be called from
     // outside the class as that would introduce coupling and risk runaway events
-    // void notify(Event_T& event) {
-    //   callSubscribers(event);
-    // }
 
-    void notify(Event_T event) {
-      callSubscribers(event);
+    bool notify(const Event_t& event) {
+      bool handled{false};
+      for (const auto& [id, sub] : subscribers_) {
+        handled = sub(event);
+        /// TODO: implement ordering events based on priority and skipping when handled already
+      }
+      return handled;
     }
   private:
     SubscriberCollection subscribers_;
-  private:
-    void callSubscribers(Event_T& event) {
-      bool handled{false};
-      for (auto& [id, sub] : subscribers_) {
-        handled = sub(event);
-        /// TODO: implement ordering events based on priority and skipping when handled already
-        if (handled) {
-          break;
-        }
-      }
-    }
   };
 }
 

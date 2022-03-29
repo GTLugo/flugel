@@ -12,7 +12,7 @@ namespace ff {
       Tick, Update,
     };
 
-    explicit LogicEvent(Action action)
+    LogicEvent(Action action)
         : action_{action} {}
 
     EVENT_TYPE(Event::Type::Logic)

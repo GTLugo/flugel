@@ -26,15 +26,15 @@ namespace ff {
     void pushBottomStack(Layer* layer);
     void popBottomStack(Layer* layer);
 
-    iterator begin() { return layers_.begin(); }
-    iterator end() { return layers_.end(); }
-    reverse_iterator rbegin() { return layers_.rbegin(); }
-    reverse_iterator rend() { return layers_.rend(); }
+    [[nodiscard]] iterator begin() { return layers_.begin(); }
+    [[nodiscard]] iterator end() { return layers_.end(); }
+    [[nodiscard]] reverse_iterator rbegin() { return layers_.rbegin(); }
+    [[nodiscard]] reverse_iterator rend() { return layers_.rend(); }
 
-    const_iterator begin() const { return layers_.begin(); }
-    const_iterator end() const { return layers_.end(); }
-    const_reverse_iterator rbegin() const { return layers_.rbegin(); }
-    const_reverse_iterator rend() const { return layers_.rend(); }
+    [[nodiscard]] const_iterator begin() const { return layers_.begin(); }
+    [[nodiscard]] const_iterator end() const { return layers_.end(); }
+    [[nodiscard]] const_reverse_iterator rbegin() const { return layers_.rbegin(); }
+    [[nodiscard]] const_reverse_iterator rend() const { return layers_.rend(); }
   private:
     LayerCollection layers_;
 		u32 layerInsertIndex_{0};

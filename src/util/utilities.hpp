@@ -29,7 +29,7 @@
 
 #define BIT(x) (1 << x)
 
-#define FF_BIND_AS_LAMBDA(fn) [this](auto&&... args) { return this->fn(std::forward<decltype(args)>(args)...); }
+#define FF_LAMBDA(fn) [this](auto&&... args) { return this->fn(std::forward<decltype(args)>(args)...); }
 
 namespace ff {
   template<typename T, typename D = std::default_delete<T>>

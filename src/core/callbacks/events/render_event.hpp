@@ -12,7 +12,7 @@ namespace ff {
       BeginFrame, AppStep, ImGuiStep, EndFrame,
     };
 
-    explicit RenderEvent(Action action)
+    RenderEvent(Action action)
         : action_{action} {}
     
     EVENT_TYPE(Event::Type::Render)

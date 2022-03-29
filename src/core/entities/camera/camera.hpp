@@ -9,8 +9,8 @@
 namespace ff {
   class Camera {
   public:
-    Camera(float left, float right, float bottom, float top, float near_ = -1.f, float far_ = 1.f);
-    Camera(float fovY, float aspectRatio, float near, float far);
+    Camera(float left, float right, float bottom, float top, float near_, float far_);
+    Camera(float fovY, float aspectRatio, float near_, float far_);
 
     void setPosition(const vec3& pos) { transform_.setPosition(pos); }
     [[nodiscard]] const vec3& position() const { return transform_.position(); }
@@ -20,15 +20,14 @@ namespace ff {
 
     [[nodiscard]] const mat4& projMat() const { return projMatrix_; }
     [[nodiscard]] const mat4& viewMat() const { return viewMatrix_; }
-    [[nodiscard]] mat4 pvMat() const { return projMatrix_ * viewMatrix_; }
-    [[nodiscard]] mat4 vpMat() const { return viewMatrix_ * projMatrix_; }
+
+    [[nodiscard]] mat4 viewProjMatrix() const;
   private:
     bool mainCamera_{true};
     Transform transform_{};
 
     mat4 projMatrix_{};
     mat4 viewMatrix_{};
-    // mat4 viewProjMatrix_{};
 
     void recalculateViewMatrix();
   };

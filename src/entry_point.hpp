@@ -9,7 +9,7 @@ int main(int argCount = 0, char* args[] = nullptr) {
   try {
     app->run();
   } catch(const std::exception& e) {
-    ff::Log::error("EXCEPTION CAUGHT: {}", e.what());
+    ff::Log::error(e.what());
     return EXIT_FAILURE;
   }
 

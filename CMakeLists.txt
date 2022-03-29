@@ -17,7 +17,6 @@ set(SOURCE_FILES
     src/core/input/mouse_codes.cpp
     src/core/input/key_codes.cpp
     src/core/layers/engine_layer.cpp
-    src/core/layers/render_layer.cpp
     src/core/layers/layer_stack.cpp
     src/core/layers/layer.cpp
     src/core/renderer/buffer/buffer.cpp
@@ -29,7 +28,8 @@ set(SOURCE_FILES
     src/core/renderer/render_dispatcher.cpp
     src/core/renderer/shader.cpp
     src/core/entities/camera/camera.cpp
-    src/core/thread_pool/thread_pool.cpp
+    src/core/threading/thread_pool.cpp
+    src/core/threading/job_system.cpp
     src/core/window/window.cpp
     src/core/app.cpp
     src/util/color/srgb_transform/srgb_transform.cpp
@@ -160,41 +160,7 @@ target_link_libraries(${TARGET_NAME}
     Boost::random
     )
 
-# HEADER-ONLYS
-# stb
-find_path(STB_INCLUDE_DIRS "stb.h" REQUIRED)
-target_include_directories(${TARGET_NAME}
-    PRIVATE
-    ${STB_INCLUDE_DIRS}
-    )
-
 # SUBMODULES
-# imgui
-target_include_directories(${TARGET_NAME}
-    PUBLIC
-    "vendor/imgui"
-    )
-target_sources(${TARGET_NAME}
-    PUBLIC
-    vendor/imgui/imgui_demo.cpp
-    vendor/imgui/imgui_draw.cpp
-    vendor/imgui/imgui_tables.cpp
-    vendor/imgui/imgui_widgets.cpp
-    vendor/imgui/imgui.cpp
-    )
-# IMGUI RENDER
-if("OPENGL" IN_LIST FLUGEL_RENDERING_API)
-  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_opengl3.cpp)
-endif()
-if("VULKAN" IN_LIST FLUGEL_RENDERING_API)
-  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_vulkan.cpp)
-endif()
-if("D3D11" IN_LIST FLUGEL_RENDERING_API)
-  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_dx11.cpp)
-endif()
-# IMGUI WINDOW
-target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_glfw.cpp)
-
 # glm
 add_subdirectory(vendor/glm)
 target_include_directories(${TARGET_NAME}
@@ -224,6 +190,32 @@ target_link_libraries(${TARGET_NAME}
 #    $<$<CXX_COMPILER_ID:MSVC>:/w>
 #    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
 #    )
+
+# imgui
+target_include_directories(${TARGET_NAME}
+    PUBLIC
+    "vendor/imgui"
+    )
+target_sources(${TARGET_NAME}
+    PUBLIC
+    vendor/imgui/imgui_demo.cpp
+    vendor/imgui/imgui_draw.cpp
+    vendor/imgui/imgui_tables.cpp
+    vendor/imgui/imgui_widgets.cpp
+    vendor/imgui/imgui.cpp
+    )
+# IMGUI RENDER
+if("OPENGL" IN_LIST FLUGEL_RENDERING_API)
+  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_opengl3.cpp)
+endif()
+if("VULKAN" IN_LIST FLUGEL_RENDERING_API)
+  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_vulkan.cpp)
+endif()
+if("D3D11" IN_LIST FLUGEL_RENDERING_API)
+  target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_dx11.cpp)
+endif()
+# IMGUI WINDOW
+target_sources(${TARGET_NAME} PRIVATE vendor/imgui/backends/imgui_impl_glfw.cpp)
 
 # ===================================================
 # API SPECIFICS

@@ -24,6 +24,7 @@ namespace ff {
     
   private:
     GLFWwindow* glfwWindow_{};
+    static inline u8 glfwWindowCount_{0};
     const GLFWvidmode* vidMode_{};
 
     GLFWimage icons_[1]{};

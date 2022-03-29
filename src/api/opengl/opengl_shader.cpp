@@ -23,17 +23,17 @@ namespace ff {
 
     // Send the vertex shader source code to GL
     // Note that std::string's .c_str is NULL character terminated.
-    const char* source = vertSrc.c_str();
+    const char* source{vertSrc.c_str()};
     gl->ShaderSource(vertexShader, 1, &source, nullptr);
 
     // Compile the vertex shader
     gl->CompileShader(vertexShader);
 
-    i32 isCompiled = 0;
+    i32 isCompiled{0};
     gl->GetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
     if(!isCompiled) {
-      i32 maxLength = 0;
-      gl->GetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+      i32 maxLength{1};
+      //gl->GetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
 
       // The maxLength includes the NULL character
       std::vector<char> infoLog(maxLength);
@@ -43,7 +43,7 @@ namespace ff {
       gl->DeleteShader(vertexShader);
 
       // Use the infoLog as you see fit.
-      Log::debug_e("SHADER ERROR | {}", infoLog.data());
+      Log::error_e("SHADER ERROR | {}", infoLog.data());
       FF_ASSERT_E(false, "Failed to compile vertex shader!");
 
       // In this simple program, we'll just leave
@@ -63,7 +63,7 @@ namespace ff {
 
     gl->GetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
     if (!isCompiled) {
-      i32 maxLength = 0;
+      i32 maxLength{1};
       gl->GetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
 
       // The maxLength includes the NULL character
@@ -76,7 +76,7 @@ namespace ff {
       gl->DeleteShader(vertexShader);
 
       // Use the infoLog as you see fit.
-      Log::debug_e("SHADER ERROR | {}", infoLog.data());
+      Log::error_e("SHADER ERROR | {}", infoLog.data());
       FF_ASSERT_E(false, "Failed to compile fragment shader!");
 
       // In this simple program, we'll just leave
@@ -96,10 +96,10 @@ namespace ff {
     gl->LinkProgram(shaderId_);
 
     // Note the different functions here: glGetProgram* instead of glGetShader*.
-    i32 isLinked = 0;
+    i32 isLinked{0};
     gl->GetProgramiv(shaderId_, GL_LINK_STATUS, (int *)&isLinked);
     if (!isLinked) {
-      i32 maxLength = 0;
+      i32 maxLength{1};
       gl->GetProgramiv(shaderId_, GL_INFO_LOG_LENGTH, &maxLength);
 
       // The maxLength includes the NULL character
@@ -137,6 +137,13 @@ namespace ff {
 
   void OpenGLShader::unbind() const {
     auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->UseProgram(0);
+  }
+
+  void OpenGLShader::pushMat4(const mat4& matrix, const std::string& name) const {
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->UseProgram(shaderId_);
+    gl->UniformMatrix4fv(gl->GetUniformLocation(shaderId_, name.c_str()), 1, false, glm::value_ptr(matrix));
     gl->UseProgram(0);
   }
 

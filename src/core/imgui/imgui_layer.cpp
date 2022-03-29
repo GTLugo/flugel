@@ -27,7 +27,7 @@ namespace ff {
     app = &App::instance();
   }
 
-  bool ImGuiLayer::onAppEvent(AppEvent& e) {
+  bool ImGuiLayer::onAppEvent(const AppEvent& e) {
     switch (e.action()) {
       case AppEvent::Start: {
         IMGUI_CHECKVERSION();
@@ -50,7 +50,7 @@ namespace ff {
     }
   }
 
-  bool ImGuiLayer::onRenderEvent(RenderEvent& e) {
+  bool ImGuiLayer::onRenderEvent(const RenderEvent& e) {
     switch (e.action()) {
       case RenderEvent::Start: {
         rendererInit();
@@ -168,7 +168,7 @@ namespace ff {
     }
   }
 
-  bool ImGuiLayer::onKeyboardEvent(KeyboardEvent& e) {
+  bool ImGuiLayer::onKeyboardEvent(const KeyboardEvent& e) {
     if (blockInputEvents_) {
       ImGuiIO& io = ImGui::GetIO();
       return io.WantCaptureKeyboard;
@@ -176,7 +176,7 @@ namespace ff {
     return false;
   }
 
-  bool ImGuiLayer::onMouseEvent(MouseEvent& e) {
+  bool ImGuiLayer::onMouseEvent(const MouseEvent& e) {
     if (blockInputEvents_) {
       ImGuiIO& io = ImGui::GetIO();
       return io.WantCaptureMouse;

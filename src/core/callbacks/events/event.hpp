@@ -7,20 +7,23 @@ namespace ff {
 
   #define EVENT_TYPE(event_cat) static Type typeStatic() { return event_cat; }\
                                    virtual Type type() const override { return typeStatic(); }
+
   
   class Event {
-    friend class EventDispatcher;
+  protected:
+    template<typename Event_t>
+    using EventHandlerFn = std::function<bool(const Event_t&)>;
   public:
     enum Type {
       None     = 0,
-      Window   = 1 << 0,
-      App      = 1 << 1,
-      Logic    = 1 << 2,
-      Render   = 1 << 3,
-      Keyboard = 1 << 4,
-      Mouse    = 1 << 5,
-      Cursor   = 1 << 6,
-      Scroll   = 1 << 7,
+      Window   = BIT(0),
+      App      = BIT(1),
+      Logic    = BIT(2),
+      Render   = BIT(3),
+      Keyboard = BIT(4),
+      Mouse    = BIT(5),
+      Cursor   = BIT(6),
+      Scroll   = BIT(7),
 
       // These might be best to separate out to avoid confusion
       Pipeline = App | Logic | Render,
@@ -30,27 +33,17 @@ namespace ff {
     [[nodiscard]] virtual Type type() const = 0;
     [[nodiscard]] virtual std::string toString() const = 0;
     [[nodiscard]] virtual bool wasHandled() const { return wasHandled_; }
+
+    template<typename Event_t>
+    void tryHandleAs(EventHandlerFn<Event_t> handlerFn) const {
+      wasHandled_ = handlerFn(dynamic_cast<const Event_t&>(*this));
+    }
+
   protected:
-    bool wasHandled_{false};
+    mutable bool wasHandled_{false};
   };
 
   inline std::ostream& operator<<(std::ostream& out, const Event& e) {
     return out << e.toString();
   }
-
-  // Takes an event and conditionally dispatches it to a handler if it matches the category type
-  class EventDispatcher {
-    template<typename Event_t>
-    using EventHandlerFn = std::function<bool(Event_t&)>;
-  public:
-    explicit EventDispatcher(Event& e)
-      : event_{e} {}
-    
-    template<typename Event_t>
-    void dispatch(EventHandlerFn<Event_t> handlerFn) {
-      event_.wasHandled_ = handlerFn(dynamic_cast<Event_t&>(event_));
-    }
-  private:
-    Event& event_;
-  };
 }

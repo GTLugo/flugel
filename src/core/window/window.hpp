@@ -5,6 +5,10 @@
 #include "core/renderer/renderer.hpp"
 #include "core/renderer/context.hpp"
 #include "core/callbacks/events/event.hpp"
+#include "core/callbacks/events/window_event.hpp"
+#include "core/callbacks/events/keyboard_event.hpp"
+#include "core/callbacks/events/mouse_event.hpp"
+#include "core/callbacks/notifier/notifier.hpp"
 
 namespace ff {
   struct WindowProperties {
@@ -20,8 +24,10 @@ namespace ff {
 
   class Window {
   protected:
-    using EventCallbackFn = std::function<void(Event&)>;
+    using EventCallbackFn = std::function<void(const Event&)>;
   public:
+    static Window& instance() { return *instance_; }
+
     virtual ~Window() = default;
     
     virtual void pollEvents() = 0;
@@ -46,8 +52,11 @@ namespace ff {
     
     static Unique<Window> create(const WindowProperties& props = {});
   protected:
+    static inline Window* instance_{nullptr};
+
     explicit Window(const WindowProperties& props)
       : data_{props} {
+      instance_ = this;
       Renderer::setApi(props.renderApi);
     }
 

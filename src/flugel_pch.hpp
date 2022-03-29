@@ -19,6 +19,7 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <ranges>
 #include <future>
 #include <ctime>
 #include <chrono>
@@ -52,6 +53,7 @@
 #include <glm/glm.hpp>
 #include <glm/matrix.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/algorithm/clamp.hpp>

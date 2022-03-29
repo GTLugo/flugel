@@ -25,7 +25,7 @@ namespace ff {
    
   void ThreadPool::initialize(u32 numThreads) {
     for (u32 i = 0; i < numThreads; ++i) {
-      threadPool_.emplace_back(FF_BIND_AS_LAMBDA(threadLoop));
+      threadPool_.emplace_back(FF_LAMBDA(threadLoop));
     }
     Log::debug_e("Initialized thread pool! Number of threads: {0}", threadPool_.size());
   }

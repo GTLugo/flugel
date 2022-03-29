@@ -13,6 +13,7 @@ namespace ff {
     UUID(const UUID&) = default;
 
     explicit operator u128() const { return uuid_; }
+    bool operator<(const UUID& rhs) const { return uuid_ < rhs.uuid_; }
     friend std::ostream& operator<<(std::ostream& o, const UUID& uuid) {
       return o << uuid.uuid_;
     }

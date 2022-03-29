@@ -11,6 +11,8 @@ namespace ff {
 
     void bind() const override;
     void unbind() const override;
+
+    void pushMat4(const mat4& matrix, const std::string& name) const override;
   private:
     u32 shaderId_{};
 
