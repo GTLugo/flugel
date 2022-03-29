@@ -58,5 +58,45 @@ namespace ff {
   private:
     SubscriberCollection subscribers_;
   };
+
+//  class NotifierNew {
+//  public:
+//    template<typename Event_t>
+//    using EventFn = std::function<bool(const Event_t&)>;
+//    template<typename Event_t>
+//    using SubscriberCollection = std::map<UUID, EventFn<Event_t>>;
+//
+//    NotifierNew() = default;
+//    virtual ~NotifierNew() {
+//      if (!subscribers_.empty()) {
+//        subscribers_.clear();
+//      }
+//    };
+//
+//    // Subscribe and Unsubscribe should be given wrappers in the notifying class
+//    UUID subscribe(EventFn eventFn) {
+//      UUID id{};
+//      subscribers_.insert(std::pair<UUID, EventFn>(id, eventFn));
+//      return id;
+//    }
+//
+//    void unsubscribe(const UUID& id) {
+//      subscribers_.erase(id);
+//    }
+//
+//    // Notify should be called from within the class. It should never be called from
+//    // outside the class as that would introduce coupling and risk runaway events
+//
+//    bool notify(const Event_t& event) {
+//      bool handled{false};
+//      for (const auto& [id, sub] : subscribers_) {
+//        handled = sub(event);
+//        /// TODO: implement ordering events based on priority and skipping when handled already
+//      }
+//      return handled;
+//    }
+//  private:
+//    SubscriberCollection subscribers_;
+//  };
 }
 

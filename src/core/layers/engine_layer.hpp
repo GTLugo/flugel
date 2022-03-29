@@ -11,7 +11,7 @@ namespace ff {
     vec2 windowDragOffset_{}; // cursor position at time of clicking to drag window
     bool draggingWindowDecor_{false};
     bool closingWindowDecor_{false};
-    Color clearColor_{0x00FF00FF}; // 0x2D2A2AFF
+    Color clearColor_{0x696969FF}; // 0x2D2A2AFF
     Shared<FrameBuffer> defaultFrameBuffer_;
     
     bool onAppEvent(const AppEvent& e) final;

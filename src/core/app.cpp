@@ -64,8 +64,9 @@ namespace ff {
   void App::run() {
     Log::trace_e("Started main thread (ID: {})", std::this_thread::get_id());
 
+    // GAME THREAD - App logic & rendering
     std::thread gameThread{&App::gameLoop, this};
-    // MAIN THREAD
+    // MAIN THREAD - OS message pump & main thread sensitive items
     EventSystem::handleEvent(AppEvent{AppEvent::Start});
     while (!shouldClose_) {
       EventSystem::handleEvent(AppEvent{AppEvent::Poll});

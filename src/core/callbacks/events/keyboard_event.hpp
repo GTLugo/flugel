@@ -19,6 +19,8 @@ namespace ff {
 
     template<Key::Code C>
     [[nodiscard]] bool check(Key::State state) const { return key() == C && keyState() == state; }
+    template<Modifier::Code C>
+    [[nodiscard]] bool check(Key::State state) const { return (state == Key::Released) ? !(mods() & C) : mods() & C; }
     
     [[nodiscard]] std::string toString() const override {
       std::stringstream ss;

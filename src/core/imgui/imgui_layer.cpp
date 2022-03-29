@@ -27,9 +27,9 @@ namespace ff {
     app = &App::instance();
   }
 
-  bool ImGuiLayer::onAppEvent(const AppEvent& e) {
+  bool ImGuiLayer::onRenderEvent(const RenderEvent& e) {
     switch (e.action()) {
-      case AppEvent::Start: {
+      case RenderEvent::Start: {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
@@ -42,17 +42,6 @@ namespace ff {
         setDarkThemeColors();
 
         windowInit();
-        return false;
-      }
-      default: {
-        return false;
-      }
-    }
-  }
-
-  bool ImGuiLayer::onRenderEvent(const RenderEvent& e) {
-    switch (e.action()) {
-      case RenderEvent::Start: {
         rendererInit();
         vsyncEnabled_ = app->window().isVSync();
         return false;
@@ -61,7 +50,6 @@ namespace ff {
         ImGuiIO& io{ImGui::GetIO()};
         io.DisplaySize = ImVec2(static_cast<float>(app->window().dims().x), static_cast<float>(app->window().dims().y));
         io.DeltaTime = static_cast<float>(Time::delta<Seconds>());
-        //FGE_DEBUG("Time: {}", app.time().deltaTime<Seconds>());
 
         newFrame();
         return false;
@@ -132,13 +120,15 @@ namespace ff {
         } ImGui::End();
 
         // Stats overlay
-        ImGui::Begin("Engine Stats"); {
+        if (showStats_) {
+          ImGui::Begin("Engine Stats");
           ImGui::Checkbox("Vsync", &vsyncEnabled_);
           app->window().setVSync(vsyncEnabled_);
           ImGui::SameLine();
           ImGui::Text("| FPS: %i", static_cast<int>(floor(io.Framerate)));
           ImGui::Text("Frametime: %.3f ms", 1000. / io.Framerate);
-        } ImGui::End();
+          ImGui::End();
+        }
 
         return false;
       }
@@ -169,6 +159,11 @@ namespace ff {
   }
 
   bool ImGuiLayer::onKeyboardEvent(const KeyboardEvent& e) {
+    if (e.check<Key::Accent>(Key::Pressed) && e.check<Modifier::Control>(Key::Pressed)) {
+      showStats_ = !showStats_;
+      Log::debug_e("Show Stats: {}", showStats_);
+    }
+
     if (blockInputEvents_) {
       ImGuiIO& io = ImGui::GetIO();
       return io.WantCaptureKeyboard;

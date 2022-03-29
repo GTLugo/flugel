@@ -14,7 +14,6 @@ namespace ff {
     // for some reason, clang is just broken and thinks
     // these functions are not implemented when they
     // very much are implemented
-    bool onAppEvent(const AppEvent& e) final;
     bool onRenderEvent(const RenderEvent& e) final;
     bool onKeyboardEvent(const KeyboardEvent& e) final;
     bool onMouseEvent(const MouseEvent& e) final;
@@ -23,7 +22,7 @@ namespace ff {
     App* app;
 		bool blockInputEvents_{false};
     bool blockAppEvents_{false};
-    //bool dockSpaceOpen_{true};
+    bool showStats_{false};
     bool vsyncEnabled_{false};
     bool enforceAspectRatio_{false};
     // these should probably be moved sometime
