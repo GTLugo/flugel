@@ -30,6 +30,7 @@ namespace ff {
   bool ImGuiLayer::onRenderEvent(const RenderEvent& e) {
     switch (e.action()) {
       case RenderEvent::Start: {
+        vsyncEnabled_ = app->window().isVSync();
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
@@ -43,7 +44,6 @@ namespace ff {
 
         windowInit();
         rendererInit();
-        vsyncEnabled_ = app->window().isVSync();
         return false;
       }
       case RenderEvent::BeginFrame: {

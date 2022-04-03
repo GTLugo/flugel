@@ -131,11 +131,9 @@ namespace ff {
     }
 
     [[nodiscard]] static bool shouldDoTick() {
-      #ifndef NDEBUG
       if (stepCount_ >= bailCount_) {
-          std::cerr << "Struggling to catch up with physics rate!\n";
-        }
-      #endif
+        Log::warning_e("Struggling to catch up with physics rate!\n");
+      }
 
       return lag_.count() >= fixedTimeStep_.count() && stepCount_ < bailCount_;
     }

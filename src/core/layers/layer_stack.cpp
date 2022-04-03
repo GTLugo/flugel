@@ -18,7 +18,7 @@ namespace ff {
     overlay->attach();
   }
 
-  void LayerStack::pushBottomStack(Layer *layer) {
+  void LayerStack::pushBottomStack(Layer* layer) {
     layers_.emplace_back(layer);
     layer->attach();
   }
@@ -41,7 +41,7 @@ namespace ff {
     }
   }
 
-  void LayerStack::popBottomStack(Layer *layer) {
+  void LayerStack::popBottomStack(Layer* layer) {
     auto itr = std::find(begin(), end(), layer);
     if (itr != end()) {
       layer->detach();

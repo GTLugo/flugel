@@ -56,14 +56,14 @@ namespace ff {
     template<typename... Args>
     static inline void warning(fmt::format_string<Args...> fmt, Args &&...args) {
       #if defined(DEBUG) or defined(RELDEB)
-      appLogger()->warning(fmt, std::forward<Args>(args)...);
+      appLogger()->warn(fmt, std::forward<Args>(args)...);
       #endif
     }
 
     template<typename... Args>
     static inline void warning_e(fmt::format_string<Args...> fmt, Args &&...args) {
       #if defined(DEBUG) or defined(RELDEB)
-      engineLogger()->warning(fmt, std::forward<Args>(args)...);
+      engineLogger()->warn(fmt, std::forward<Args>(args)...);
       #endif
     }
 

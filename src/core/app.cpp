@@ -1,11 +1,14 @@
 #include "app.hpp"
 
+#include "core/layers/engine_layer.hpp"
+#include "core/layers/world_layer.hpp"
 #include "core/imgui/imgui_layer.hpp"
+#include "core/ecs/components/transform.hpp"
 
 // #include <boost/gil.hpp>
 // #include <boost/gil/extension/io/png.hpp>
 #include <boost/range/adaptor/reversed.hpp>
-#include <utility>
+
 
 namespace ff {
   App::App(const WindowProperties& props) {
@@ -15,24 +18,11 @@ namespace ff {
     JobSystem::init();
 
     // These are pointless, but just show how to use the job system
-    JobContract timeInit{};
-    TimeJobArgs timeArgs{tickRate_};
-    JobSystem::kickJob({&timeInit, [] (void* data) {
-      auto args{reinterpret_cast<TimeJobArgs*>(data)};
-      Time::init(args->tickRate);
-      return nullptr;
-    }, reinterpret_cast<void*>(&timeArgs)});
-
-    JobContract eventSystemInit{};
-    EventSystemJobArgs eventSystemArgs{FF_LAMBDA(eventHandler)};
-    JobSystem::kickJob({&eventSystemInit, [] (void* data) {
-      auto args{reinterpret_cast<EventSystemJobArgs*>(data)};
-      EventSystem::init(std::move(args->callbackFn));
-      return nullptr;
-    }, reinterpret_cast<void*>(&eventSystemArgs)});
-    
-    timeInit.wait();
-    eventSystemInit.wait();
+    TimeJob timeJob{128.f};
+    EventSystemJob eventSystemJob{FF_LAMBDA(eventHandler)};
+    JobSystem::kickJob({&timeJob, &eventSystemJob});
+    timeJob.wait();
+    eventSystemJob.wait();
 
     window_ = Window::create(props);
     window_->setEventCallback(FF_LAMBDA(eventHandler));
@@ -44,6 +34,7 @@ namespace ff {
     
     // engine layer should be first layer (last to check)
     pushLayer(new EngineLayer{});
+    pushLayer(new WorldLayer{});
     layerStack_.pushBottomStack(new ImGuiLayer{});
   }
 
@@ -65,7 +56,7 @@ namespace ff {
     Log::trace_e("Started main thread (ID: {})", std::this_thread::get_id());
 
     // GAME THREAD - App logic & rendering
-    std::thread gameThread{&App::gameLoop, this};
+    std::jthread gameThread{FF_LAMBDA(App::gameLoop)}; // jthread automatically joins on destruction
     // MAIN THREAD - OS message pump & main thread sensitive items
     EventSystem::handleEvent(AppEvent{AppEvent::Start});
     while (!shouldClose_) {
@@ -73,7 +64,7 @@ namespace ff {
       EventSystem::handleEvent(AppEvent{AppEvent::Update});
     }
     EventSystem::handleEvent(AppEvent{AppEvent::Stop});
-    gameThread.join();
+    gameThread.request_stop();
 
     Log::trace_e("Stopped main thread");
   }
@@ -82,27 +73,24 @@ namespace ff {
     shouldClose_ = true;
   }
 
-  void App::gameLoop() {
+  void App::gameLoop(const std::stop_token& stopToken) {
     Log::trace_e("Started game thread (ID: {})", std::this_thread::get_id());
     window_->context().setCurrent(true);
 
     EventSystem::handleEvent(LogicEvent{LogicEvent::Start});
     EventSystem::handleEvent(RenderEvent{RenderEvent::Start});
-    while (!shouldClose_) {
+    while (!stopToken.stop_requested()) {
+      // Logic
       while (Time::shouldDoTick()) {
-        // This loop will only occur once every fixedTimeStep, being skipped for every
-        // frame which happens between each timestep. If the deltaTime per frame is too
-        // long, then for each frame, this loop will occur more than once in order to
-        // "catch up" with the proper pacing of physics.
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
         // Source: https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
         EventSystem::handleEvent(LogicEvent{LogicEvent::Tick});
 
         Time::tick();
       }
-      // Timestep INSENSITIVE stuff happens out here, where pacing goes as fast as possible
       EventSystem::handleEvent(LogicEvent{LogicEvent::Update});
 
+      // Rendering
       EventSystem::handleEvent(RenderEvent{RenderEvent::BeginFrame});
       EventSystem::handleEvent(RenderEvent{RenderEvent::AppStep});
       EventSystem::handleEvent(RenderEvent{RenderEvent::ImGuiStep});

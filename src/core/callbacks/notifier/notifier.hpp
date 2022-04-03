@@ -51,7 +51,6 @@ namespace ff {
       bool handled{false};
       for (const auto& [id, sub] : subscribers_) {
         handled = sub(event);
-        /// TODO: implement ordering events based on priority and skipping when handled already
       }
       return handled;
     }
@@ -61,10 +60,8 @@ namespace ff {
 
 //  class NotifierNew {
 //  public:
-//    template<typename Event_t>
-//    using EventFn = std::function<bool(const Event_t&)>;
-//    template<typename Event_t>
-//    using SubscriberCollection = std::map<UUID, EventFn<Event_t>>;
+//    using EventFn = std::function<bool(const Event&)>;
+//    using SubscriberCollection = std::map<UUID, EventFn>;
 //
 //    NotifierNew() = default;
 //    virtual ~NotifierNew() {
@@ -87,11 +84,10 @@ namespace ff {
 //    // Notify should be called from within the class. It should never be called from
 //    // outside the class as that would introduce coupling and risk runaway events
 //
-//    bool notify(const Event_t& event) {
+//    bool notify(const Event& event) {
 //      bool handled{false};
 //      for (const auto& [id, sub] : subscribers_) {
 //        handled = sub(event);
-//        /// TODO: implement ordering events based on priority and skipping when handled already
 //      }
 //      return handled;
 //    }

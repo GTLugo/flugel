@@ -3,8 +3,6 @@
 #include "core/app.hpp"
 #include "core/input/input.hpp"
 
-#include <glad/gl.h>
-
 namespace ff {
   bool EngineLayer::onWindowEvent(const WindowEvent& e) {
     //Log::debug_e("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
@@ -24,7 +22,7 @@ namespace ff {
     switch (e.action()) {
       case AppEvent::Poll: {
         App::instance().window().pollEvents();
-        return false;
+        return true;
       }
       default: {
         return false;
@@ -43,20 +41,20 @@ namespace ff {
             nullptr);
         Renderer::setDefaultFrameBuffer(defaultFrameBuffer_);
 
-        return false;
+        return true;
       }
       case RenderEvent::BeginFrame: {
         Renderer::clear(clearColor_);
         Renderer::beginScene();
 
-        return false;
+        return true;
       }
       case RenderEvent::EndFrame: {
         Renderer::endScene();
         //Renderer::flush();
         App::instance().window().context().swapBuffers();
 
-        return false;
+        return true;
       }
       default: {
         return false;
@@ -65,7 +63,6 @@ namespace ff {
   }
 
   bool EngineLayer::onKeyboardEvent(const KeyboardEvent& e) {
-    //Log::debug_e("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     if (Input::isPressed(Key::Enter) && Input::isPressed(Modifier::Alt)) {
       Log::debug_e("{0}: Fullscreen({1})", name_, !App::instance().window().isFullscreen());
       App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
@@ -82,7 +79,6 @@ namespace ff {
   }
 
   bool EngineLayer::onCursorEvent(const CursorEvent& e) {
-    //Log::debug_e("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
     if (draggingWindowDecor_) {
       App::instance().window().dragWindow(windowDragOffset_);
     }
@@ -90,8 +86,6 @@ namespace ff {
   }
 
   bool EngineLayer::onScrollEvent(const ScrollEvent& e) {
-    //Log::debug_e("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    
     return true;
   }
   void EngineLayer::pollCustomDecor(const MouseEvent& e) {

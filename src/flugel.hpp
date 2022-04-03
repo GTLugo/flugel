@@ -15,8 +15,8 @@
 #include "core/input/input.hpp"
 #include "core/input/mouse_codes.hpp"
 #include "core/input/key_codes.hpp"
-#include "core/entities/transform/transform.hpp"
-#include "core/entities/camera/camera.hpp"
+#include "core/ecs/components/transform.hpp"
+#include "core/ecs/components/camera.hpp"
 // events
 #include "core/callbacks/events/event.hpp"
 #include "core/callbacks/events/app_event.hpp"

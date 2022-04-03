@@ -5,32 +5,25 @@
 #include "camera.hpp"
 
 #include "core/renderer/renderer.hpp"
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace ff {
   Camera::Camera(float left, float right, float bottom, float top, float near_, float far_)
-      : projMatrix_{glm::ortho(left, right, bottom, top, near_, far_)} {
-    recalculateViewMatrix();
+      : projMatrix{glm::ortho(left, right, bottom, top, near_, far_)} {
   }
 
   Camera::Camera(float fovY, float aspectRatio, float near_, float far_)
-      : projMatrix_{glm::perspective(fovY, aspectRatio, near_, far_)} {
-    recalculateViewMatrix();
-  }
-
-  void Camera::recalculateViewMatrix() {
-    viewMatrix_ = glm::inverse(transform_.matrix());
+      : projMatrix{glm::perspective(fovY, aspectRatio, near_, far_)} {
   }
 
   mat4 Camera::viewProjMatrix() const {
     switch (Renderer::api()) {
       case Renderer::API::None: {
         FF_ASSERT_E(false, "Running with no API not implemented!");
-        return projMatrix_ * viewMatrix_;
+        return projMatrix * viewMatrix;
       }
       case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
-        return projMatrix_ * viewMatrix_;
+        return projMatrix * viewMatrix;
         #else
         FF_ASSERT_E(false, "OpenGL not supported!");
         return mat4{1.f};
@@ -56,7 +49,7 @@ namespace ff {
       }
       default: {
         FF_ASSERT_E(false, "Unknown render api!");
-        return projMatrix_ * viewMatrix_;
+        return projMatrix * viewMatrix;
       }
     }
   }

@@ -28,7 +28,6 @@ namespace ff {
   private:
     static inline EventSystem* instance_{nullptr};
 
-    bool killSystem_{false};
     EventCallbackFn eventCallback_;
 
     EventSystem() = default;

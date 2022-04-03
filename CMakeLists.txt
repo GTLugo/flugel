@@ -13,10 +13,12 @@ message(STATUS "Configuring: ${PROJECT_NAME}")
 
 set(SOURCE_FILES
     src/core/callbacks/notifier/notifier.cpp
+    src/core/callbacks/subscribable.cpp
     src/core/imgui/imgui_layer.cpp
     src/core/input/mouse_codes.cpp
     src/core/input/key_codes.cpp
     src/core/layers/engine_layer.cpp
+    src/core/layers/world_layer.cpp
     src/core/layers/layer_stack.cpp
     src/core/layers/layer.cpp
     src/core/renderer/buffer/buffer.cpp
@@ -27,8 +29,10 @@ set(SOURCE_FILES
     src/core/renderer/renderer.cpp
     src/core/renderer/render_dispatcher.cpp
     src/core/renderer/shader.cpp
-    src/core/entities/camera/camera.cpp
-    src/core/threading/thread_pool.cpp
+    src/core/ecs/ecs.cpp
+    src/core/ecs/world.cpp
+    src/core/ecs/components/camera.cpp
+    src/core/ecs/components/component.cpp
     src/core/threading/job_system.cpp
     src/core/window/window.cpp
     src/core/app.cpp
@@ -139,7 +143,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # PACKAGES
 # boost
-#set(Boost_USE_STATIC_RUNTIME ON)
+set(Boost_USE_STATIC_RUNTIME ON)
 find_package(Boost REQUIRED
     COMPONENTS
     container
@@ -158,6 +162,10 @@ target_link_libraries(${TARGET_NAME}
     Boost::system
     Boost::thread
     Boost::random
+    )
+target_compile_definitions(${TARGET_NAME}
+    PRIVATE
+    BOOST_UUID_FORCE_AUTO_LINK=1
     )
 
 # SUBMODULES

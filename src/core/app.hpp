@@ -1,8 +1,11 @@
 #pragma once
 
+#include <utility>
+
 #include "core/window/window.hpp"
 #include "core/layers/layer_stack.hpp"
-#include "core/layers/engine_layer.hpp"
+
+#include "core/threading/job_system.hpp"
 
 #include "core/callbacks/event_system.hpp"
 #include "core/callbacks/events/event.hpp"
@@ -11,7 +14,7 @@
 #include "core/callbacks/events/logic_event.hpp"
 #include "core/callbacks/notifier/notifier.hpp"
 
-#include "core/threading/job_system.hpp"
+#include "core/ecs/world.hpp"
 
 namespace ff {
   class App {
@@ -21,6 +24,11 @@ namespace ff {
 
     static App& instance() { return *instance_; }
     Window& window() { return *window_; }
+
+    void insertWorld(Unique<World> world) { worlds_.insert({world->name(), std::move(world)}); }
+    World* activeWorld() { return activeWorld_; }
+    void setActiveWorld(const std::string& name) { activeWorld_ = worlds_[name].get(); }
+    //ECSManager& activeEntityManager() { return activeWorld_->entityManager(); } // helper function
 
     void pushLayer(Layer* layer);
     void pushOverlay(Layer* overlay);
@@ -33,31 +41,39 @@ namespace ff {
   private:
     static inline App* instance_{nullptr};
 
-    // Util
-    float tickRate_{128.f};
-
     // Window
     Unique<Window> window_;
     bool shouldClose_{false};
-    vec2 windowDragOffset_{}; // cursor position at time of clicking to drag window
-    bool draggingWindowDecor_{false};
-    bool closingWindowDecor_{false};
-    Color clearColor_{0x00FF00FF}; // 0x2D2A2AFF
-    Shared<FrameBuffer> defaultFrameBuffer_;
 
     // Layers
     LayerStack layerStack_;
 
-    void gameLoop();
+    // Misc
+    std::unordered_map<std::string, Unique<World>> worlds_{};
+    World* activeWorld_{nullptr};
+
+    void gameLoop(const std::stop_token& stopToken);
 
     void eventHandler(const Event& e);
 
-    struct TimeJobArgs {
-      float tickRate{128.f};
+    struct TimeJob : Job {
+      float tickRate{};
+
+      TimeJob(float tickRate) : tickRate{tickRate} {}
+
+      void execute() override {
+        Time::init(tickRate);
+      }
     };
 
-    struct EventSystemJobArgs {
+    struct EventSystemJob : Job {
       EventSystem::EventCallbackFn callbackFn;
+
+      EventSystemJob(EventSystem::EventCallbackFn callbackFn) : callbackFn{std::move(callbackFn)} {}
+
+      void execute() override {
+        EventSystem::init(std::move(callbackFn));
+      }
     };
   };
 

@@ -10,11 +10,36 @@ namespace ff {
   template<typename T, size_t capacity>
   class ConcurrentRingBuffer {
   public:
+    class Iterator {
+      using iterator_category = std::forward_iterator_tag;
+      using value_type = T;
+      using difference_type = T;
+      using pointer = T*;
+      using reference = T&;
+    public:
+      Iterator(pointer x) : p(x) {}
+      Iterator(const Iterator& mit) : p(mit.p) {}
+      Iterator& operator++() {
+        ++p;
+        return *this;
+      }
+      Iterator operator++(value_type) {
+        Iterator tmp(*this);
+        operator++();
+        return tmp;
+      }
+      bool operator==(const Iterator& rhs) const { return p == rhs.p; }
+      bool operator!=(const Iterator& rhs) const { return p != rhs.p; }
+      reference operator*() {return *p;}
+    private:
+      pointer p;
+    };
+
     // Push an item to the end if there is free space
-    //  Returns true if succesful
+    //  Returns true if successful
     //  Returns false if there is not enough space
-    inline bool push_back(const T& item) {
-      bool result = false;
+    bool push(const T& item) {
+      bool result{false};
       std::lock_guard<std::mutex> lock{mutex_};
       size_t next = (head_ + 1) % capacity;
       if (next != tail_) {
@@ -26,18 +51,20 @@ namespace ff {
     }
 
     // Get an item if there are any
-    //  Returns true if succesful
-    //  Returns false if there are no items
-    inline bool pop_front(T& item) {
-      bool result = false;
+    //  Returns value if successful
+    //  Returns empty if there are no items
+    std::optional<T> pop() {
       std::lock_guard<std::mutex> lock{mutex_};
-      if (tail_ != head_) {
-        item = data_[tail_];
-        tail_ = (tail_ + 1) % capacity;
-        result = true;
+      if (tail_ == head_) {
+        return {};
       }
-      return result;
+      T item = data_[tail_];
+      tail_ = (tail_ + 1) % capacity;;
+      return item;
     }
+
+    Iterator begin() { return Iterator{head_}; }
+    Iterator end() { return Iterator{tail_}; }
 
   private:
     T data_[capacity];
