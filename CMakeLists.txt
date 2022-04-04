@@ -3,7 +3,7 @@
 # ===================================================
 cmake_minimum_required(VERSION 3.16)
 project(flugel VERSION 0.1.0)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(TARGET_NAME "flugel")
 message(STATUS "Configuring: ${PROJECT_NAME}")
 
@@ -33,6 +33,8 @@ set(SOURCE_FILES
     src/core/ecs/world.cpp
     src/core/ecs/components/camera.cpp
     src/core/ecs/components/component.cpp
+    src/core/ecs/systems/camera_system.cpp
+    src/core/ecs/systems/render_system.cpp
     src/core/threading/job_system.cpp
     src/core/window/window.cpp
     src/core/app.cpp

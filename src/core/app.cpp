@@ -58,6 +58,7 @@ namespace ff {
     // GAME THREAD - App logic & rendering
     std::jthread gameThread{FF_LAMBDA(App::gameLoop)}; // jthread automatically joins on destruction
     // MAIN THREAD - OS message pump & main thread sensitive items
+    EventSystem::handleEvent(AppEvent{AppEvent::Awake});
     EventSystem::handleEvent(AppEvent{AppEvent::Start});
     while (!shouldClose_) {
       EventSystem::handleEvent(AppEvent{AppEvent::Poll});
@@ -77,7 +78,9 @@ namespace ff {
     Log::trace_e("Started game thread (ID: {})", std::this_thread::get_id());
     window_->context().setCurrent(true);
 
+    EventSystem::handleEvent(LogicEvent{LogicEvent::Awake});
     EventSystem::handleEvent(LogicEvent{LogicEvent::Start});
+    EventSystem::handleEvent(RenderEvent{RenderEvent::Awake});
     EventSystem::handleEvent(RenderEvent{RenderEvent::Start});
     while (!stopToken.stop_requested()) {
       // Logic
@@ -105,9 +108,9 @@ namespace ff {
   }
 
   void App::eventHandler(const Event& e) {
-    for (auto ritr{layerStack_.rbegin()}; ritr != layerStack_.rend(); ++ritr) {
+    for (auto& layer : layerStack_ | std::views::reverse) {
       if (e.wasHandled()) break;
-      (*ritr)->onEvent(e);
+      layer->onEvent(e);
     }
   }
 }

@@ -8,7 +8,7 @@ namespace ff {
   public:
     enum Action { // Order of Main thread
       None = 0,
-      Start, Stop,
+      Awake, Start, Stop,
       Poll, Update,
     };
 
@@ -23,6 +23,9 @@ namespace ff {
       std::stringstream ss;
       ss << "Event <App> ";
       switch (action_) {
+        case Action::Awake:
+          ss << "(AWAKE)";
+          break;
         case Action::Start:
           ss << "(START)";
           break;

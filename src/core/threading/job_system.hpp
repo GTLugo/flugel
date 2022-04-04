@@ -42,13 +42,15 @@ namespace ff {
     static void kickJob(Job* job);
     static void kickJob(const std::vector<Job*>& jobs);
 
+    static size_t workerCount() { return instance_->workerThreadCount_; }
+
     JobSystem(const JobSystem& other) = delete;
     JobSystem& operator=(const JobSystem& other) = delete;
   private:
     static inline JobSystem* instance_{nullptr};
 
-    const u32 hardwareThreadCount_{std::thread::hardware_concurrency()};
-    const u32 workerThreadCount_{hardwareThreadCount_ - 2};
+    const size_t hardwareThreadCount_{std::thread::hardware_concurrency()};
+    const size_t workerThreadCount_{hardwareThreadCount_ - 2};
 
     JobSystem() = default;
     ~JobSystem() = default;

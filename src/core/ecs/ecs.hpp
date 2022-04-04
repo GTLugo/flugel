@@ -17,6 +17,7 @@
 namespace ff {
 
   struct Entity {
+    friend class ECSManager;
   public:
     using ID = UUID;
     using BitSet = std::bitset<ComponentBase::maxComponents>;
@@ -25,28 +26,37 @@ namespace ff {
 
     ~Entity();
 
+    void kill();
+
     [[nodiscard]] ID id() const { return id_; }
 
     [[nodiscard]] const Entity::BitSet& components() const;
 
-    template<class C>
-    Entity& addComponent(C component);
+    template<class C, typename... Args>
+    Entity& add(Args&& ...args);
 
     template<class C>
-    Entity& removeComponent();
+    Entity& remove();
 
     template<class C>
-    C& component();
+    C& getRef();
+
+    template<class C>
+    const C& get() const;
+
+    template<class C, typename... Args>
+    void set(Args&& ...args);
 
     bool operator<(const Entity& rhs) const { return id_ < rhs.id_; }
-
     bool operator==(const Entity& rhs) const { return id_ == rhs.id_; }
 
-  private:
+  protected:
     ID id_{};
+    //Entity_::BitSet bitSet_{};
     ECSManager* ecsManager_;
   };
 }
+
 
 // Allow hashing
 namespace std {
@@ -63,7 +73,7 @@ namespace ff {
   public:
     virtual ~SystemBase() = default;
 
-    std::unordered_map<Entity::ID, Entity> entities{};
+    std::vector<Entity> entities{};
     [[nodiscard]] const Entity::BitSet& components() const { return bitSet_; }
 
     virtual void onUpdate() = 0;
@@ -85,13 +95,13 @@ namespace ff {
     class ComponentMapBase {
     public:
       virtual ~ComponentMapBase() = default;
-      virtual void onEntityRemoved(const Entity& entity) = 0;
+      virtual void onEntityRemoved(Entity& entity) = 0;
     };
 
     template<class C>
     class ComponentMap : public ComponentMapBase {
     public:
-      void add(const Entity& entity, C component) {
+      void add(Entity& entity, C component) {
         FF_ASSERT_E(!entityToComponent_.contains(entity.id()), "Attempted component override upon existent data.");
         Log::debug_e(R"(Adding component "{0}" to entity "{1}")", typeid(C).name(), entity.id());
 
@@ -100,7 +110,7 @@ namespace ff {
         components_.push_back(std::move(component));
       }
 
-      void remove(const Entity& entity) {
+      void remove(Entity& entity) {
         FF_ASSERT_E(entityToComponent_.contains(entity.id()), "Attempted component removal upon non-existent data.");
         Log::debug_e(R"(Removing component "{0}" from entity "{1}")", typeid(C).name(), entity.id());
 
@@ -120,13 +130,21 @@ namespace ff {
         components_.pop_back();
       }
 
-      C& data(const Entity& entity) {
-        //Log::debug_e(R"(Accessing component "{0}" on entity "{1}")", typeid(C).name(), entity.id());
+      C& data(Entity& entity) {
+        //Log::debug_e(R"(Accessing component "{0}" on entity "{1}")", typeid(C).name(),
+        //                     (entity.components().test(Component<Name>::id())) ? entity.component<Name>().name : to_string(entity.id()));
         FF_ASSERT_E(entityToComponent_.contains(entity.id()), "Attempted component access of non-existent data.");
         return components_[entityToComponent_[entity.id()]];
       }
 
-      void onEntityRemoved(const Entity& entity) override {
+      const C& data(const Entity& entity) const {
+        //Log::debug_e(R"(Accessing component "{0}" on entity "{1}")", typeid(C).name(),
+        //                     (entity.components().test(Component<Name>::id())) ? entity.component<Name>().name : to_string(entity.id()));
+        FF_ASSERT_E(entityToComponent_.contains(entity.id()), "Attempted component access of non-existent data.");
+        return components_[entityToComponent_.at(entity.id())];
+      }
+
+      void onEntityRemoved(Entity& entity) override {
         if (entityToComponent_.contains(entity.id())) remove(entity);
       }
 
@@ -136,14 +154,14 @@ namespace ff {
       std::unordered_map<size_t, Entity::ID> componentToEntity_{}; // for removing entity data
     };
   public:
-    ECSManager();
-    ~ECSManager();
+    ECSManager() = default;
+    ~ECSManager() = default;
 
-    void addEntity(const Entity& entity);
+    //Entity createEntity() { return makeShared<Entity_>(this); }
     // Maybe automate with Shared<>
-    void removeEntity(const Entity& entity);
+    void removeEntity(Entity& entity);
 
-    void onEntityBitsetMutated(const Entity& entity);
+    void onEntityBitsetMutated(Entity& entity);
 
     template<class C>
     void registerComponent() {
@@ -152,26 +170,32 @@ namespace ff {
       componentMaps_.insert(std::make_pair(Component<C>::id(), makeShared<ComponentMap<C>>()));
     }
 
-    template<class C>
-    void addComponent(const Entity& entity, C component) {
+    template<class C, typename... Args>
+    void addComponent(Entity& entity, Args&& ...args) {
       if (!componentMaps_.contains(Component<C>::id())) registerComponent<C>();
-      staticComponentMap<C>()->add(entity, std::move(component));
+      componentMap<C>()->add(entity, std::move(C{args...}));
       bitSetMap_[entity.id()].set(Component<C>::id());
       onEntityBitsetMutated(entity);
     }
 
     template<class C>
-    void removeComponent(const Entity& entity) {
+    void removeComponent(Entity& entity) {
       FF_ASSERT_E(componentMaps_.contains(Component<C>::id()), "Attempted removal of unregistered component.");
-      staticComponentMap<C>()->remove(entity);
+      componentMap<C>()->remove(entity);
       bitSetMap_[entity.id()].reset(Component<C>::id());
       onEntityBitsetMutated(entity);
     }
 
     template<class C>
-    C& component(const Entity& entity) {
+    C& component(Entity& entity) {
       FF_ASSERT_E(componentMaps_.contains(Component<C>::id()), "Attempted access of unregistered component.");
-      return staticComponentMap<C>()->data(entity);
+      return componentMap<C>()->data(entity);
+    }
+
+    template<class C>
+    const C& component(const Entity& entity) const {
+      FF_ASSERT_E(componentMaps_.contains(Component<C>::id()), "Attempted access of unregistered component.");
+      return componentMap<C>()->data(entity);
     }
 
     [[nodiscard]] const Entity::BitSet& components(const Entity& entity) const {
@@ -185,39 +209,65 @@ namespace ff {
       systems_.insert({name, makeShared<S>()});
     }
 
-    void executeSystems() {
-      for (auto& [id, system] : systems_) {
-        system->onUpdate();
-      }
+    template<Derived<SystemBase> S>
+    void executeSystem() {
+      std::string name{typeid(S).name()};
+      FF_ASSERT_E(systems_.contains(name), "Attempted execution of unregistered system.");
+      systems_[name]->onUpdate();
     }
 
+//    void executeSystems() {
+//      for (auto& [id, system] : systems_) {
+//        system->onUpdate();
+//      }
+//    }
+
   private:
-    boost::unordered_map<Entity::ID, Entity::BitSet> bitSetMap_{};
+    std::unordered_map<Entity::ID, Entity::BitSet> bitSetMap_{};
     std::unordered_map<ComponentBase::ID, Shared<ComponentMapBase>> componentMaps_{};
     std::unordered_map<std::string, Shared<SystemBase>> systems_{};
 
     template<class C>
-    Shared<ComponentMap<C>> staticComponentMap() {
+    Shared<ComponentMap<C>> componentMap() {
       FF_ASSERT_E(componentMaps_.contains(Component<C>::id()), "Attempted access of unregistered component.");
       return std::static_pointer_cast<ComponentMap<C>>(componentMaps_[Component<C>::id()]);
     };
+
+    template<class C>
+    Shared<const ComponentMap<C>> componentMap() const {
+      FF_ASSERT_E(componentMaps_.contains(Component<C>::id()), "Attempted access of unregistered component.");
+      return std::const_pointer_cast<const ComponentMap<C>>(
+          std::static_pointer_cast<ComponentMap<C>>(componentMaps_.at(Component<C>::id()))
+      );
+    };
   };
 
-  template<class C>
-  Entity& Entity::addComponent(C component) {
-    ecsManager_->template addComponent<C>(*this, std::move(component));
+
+  template<class C, typename... Args>
+  Entity& Entity::add(Args&& ...args) {
+    ecsManager_->template addComponent<C>(*this, std::forward<Args>(args)...);
     return *this;
   }
 
   template<class C>
-  Entity& Entity::removeComponent() {
+  Entity& Entity::remove() {
     ecsManager_->template removeComponent<C>(*this);
     return *this;
   }
 
   template<class C>
-  C& Entity::component() {
+  C& Entity::getRef() {
     return ecsManager_->template component<C>(*this);
+  }
+
+  template<class C>
+  const C& Entity::get() const {
+    return ecsManager_->template component<C>(*this);
+  }
+
+  template<class C, typename... Args>
+  void Entity::set(Args&& ...args) {
+    ecsManager_->template component<C>(*this) = std::move(C{args...});
   }
 }
 

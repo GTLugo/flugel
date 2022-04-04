@@ -5,8 +5,7 @@
 #pragma once
 
 namespace ff {
-  class Transform {
-  public:
+  struct Transform {
     vec3 position{};
     quat rotation{};
     vec3 scale{1.f, 1.f, 1.f};

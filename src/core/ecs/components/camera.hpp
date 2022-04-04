@@ -4,11 +4,8 @@
 
 #pragma once
 
-#include "core/ecs/components/transform.hpp"
-#include "core/ecs/components/camera.hpp"
-
 namespace ff {
-  class Camera {
+  struct Camera {
   public:
     mat4 projMatrix{};
     mat4 viewMatrix{};

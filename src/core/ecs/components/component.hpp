@@ -4,8 +4,13 @@
 
 #pragma once
 
-namespace ff {
+#include "core/ecs/components/name.hpp"
+#include "core/ecs/components/transform.hpp"
+#include "core/ecs/components/mesh.hpp"
 
+#include "core/ecs/components/camera.hpp"
+
+namespace ff {
   class ComponentBase {
   public:
     static const inline size_t maxComponents{512};

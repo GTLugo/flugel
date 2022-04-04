@@ -17,11 +17,12 @@ namespace ff {
 
   bool WorldLayer::onLogicEvent(const LogicEvent& e) {
     auto world{App::instance().activeWorld()};
-    return world->World::onLogicEvent(e) || world->onLogicEvent(e);
+    return world->onLogicEvent(e) || world->World::onLogicEvent(e);
   }
 
   bool WorldLayer::onRenderEvent(const RenderEvent& e) {
-    return App::instance().activeWorld()->onRenderEvent(e);
+    auto world{App::instance().activeWorld()};
+    return world->onRenderEvent(e) || world->World::onRenderEvent(e);
   }
 
   bool WorldLayer::onKeyboardEvent(const KeyboardEvent& e) {
