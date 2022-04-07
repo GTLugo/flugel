@@ -10,35 +10,39 @@ namespace ff {
   }
 
   bool World::onGameEvent(const GameEvent& e) {
-    switch (e.action()) {
-      case GameEvent::Awake: {
-        // Register systems
-        ecs().registerSystem<CameraSystem>();
-        ecs().registerSystem<RenderSystem>();
-        break;
-      }
-      case GameEvent::Start: {
-        ff::Log::debug_e("master_camera: {}", masterCamera_.id());
-        masterCamera_.add<ff::Name>("master_camera")
-            .add<ff::Transform>()
-            .add<ff::Camera>(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
-        break;
-      }
-      case GameEvent::Update: {
-        ecs().executeSystem<CameraSystem>();
-        break;
-      }
-      case GameEvent::RenderGame: {
-        ecs().executeSystem<RenderSystem>();
-        break;
-      }
-      case GameEvent::Stop: {
-        masterCamera_.kill();
-        break;
-      }
-      default: break;
-    }
-    return false;
+    return std::visit(EventVisitor{
+        [=](const GameAwakeEvent&) {
+          // Register systems
+          ecs().registerSystem<CameraSystem>();
+          ecs().registerSystem<RenderSystem>();
+
+          return true;
+        },
+        [=](const GameStartEvent&) {
+          ff::Log::debug_e("master_camera: {}", masterCamera_.id());
+          masterCamera_.add<ff::Name>("master_camera")
+              .add<ff::Transform>()
+              .add<ff::Camera>(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
+
+          return true;
+        },
+        [=](const GameUpdateEvent&) {
+          ecs().executeSystem<CameraSystem>();
+
+          return true;
+        },
+        [=](const GameDrawEvent&) {
+          ecs().executeSystem<RenderSystem>();
+
+          return true;
+        },
+        [=](const GameStopEvent&) {
+          masterCamera_.kill();
+
+          return true;
+        },
+        [](const auto& event) { return false; }
+    }, e);
   }
 
   bool World::onWindowEvent(const WindowEvent& e) {

@@ -17,6 +17,9 @@ namespace ff {
   };
   template<class... T> EventVisitor(T...) -> EventVisitor<T...>;
 
+  using MainEvent = std::variant<std::monostate, MainAwakeEvent, MainStartEvent, MainPollEvent, MainUpdateEvent, MainStopEvent>;
+  using GameEvent = std::variant<std::monostate, GameAwakeEvent, GameStartEvent, GameTickEvent, GameUpdateEvent,
+      GameBeginFrameEvent, GameDrawEvent, GameImGuiEvent, GameEndFrameEvent, GameStopEvent>;
   using WindowEvent = std::variant<std::monostate, WindowCloseEvent, WindowResizeEvent, WindowMovedEvent>;
   using InputEvent = std::variant<std::monostate, InputKeyEvent, InputMouseEvent, InputCursorEvent, InputScrollEvent>;
 

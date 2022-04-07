@@ -28,45 +28,45 @@ namespace ff {
   }
 
   bool ImGuiLayer::onGameEvent(const GameEvent& e) {
-    switch (e.action()) {
-      case GameEvent::Start: {
-        vsyncEnabled_ = app->window().isVSync();
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiBackendFlags_HasMouseCursors;
-        io.ConfigFlags |= ImGuiBackendFlags_HasSetMousePos;
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    return std::visit(EventVisitor{
+        [=](const GameStartEvent&) {
+          vsyncEnabled_ = app->window().isVSync();
+          IMGUI_CHECKVERSION();
+          ImGui::CreateContext();
+          ImGuiIO& io = ImGui::GetIO();
+          io.ConfigFlags |= ImGuiBackendFlags_HasMouseCursors;
+          io.ConfigFlags |= ImGuiBackendFlags_HasSetMousePos;
+          io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+          //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-        ImGui::StyleColorsDark();
-        setDarkThemeColors();
+          ImGui::StyleColorsDark();
+          setDarkThemeColors();
 
-        windowInit();
-        rendererInit();
-        return false;
-      }
-      case GameEvent::RenderBegin: {
-        ImGuiIO& io{ImGui::GetIO()};
-        io.DisplaySize = ImVec2(static_cast<float>(app->window().dims().x), static_cast<float>(app->window().dims().y));
-        io.DeltaTime = static_cast<float>(Time::delta<Seconds>());
+          windowInit();
+          rendererInit();
+          return false;
+        },
+        [=](const GameBeginFrameEvent&) {
+          ImGuiIO& io{ImGui::GetIO()};
+          io.DisplaySize = ImVec2(static_cast<float>(app->window().dims().x), static_cast<float>(app->window().dims().y));
+          io.DeltaTime = static_cast<float>(Time::delta<Seconds>());
 
-        newFrame();
-        return false;
-      }
-      case GameEvent::RenderImGui: {
-        ImGuiIO& io{ImGui::GetIO()};
-        ImGuiViewport* viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(viewport->WorkPos);
-        ImGui::SetNextWindowSize(viewport->WorkSize);
-        ImGui::SetNextWindowViewport(viewport->ID);
+          newFrame();
+          return false;
+        },
+        [=](const GameImGuiEvent&) {
+          ImGuiIO& io{ImGui::GetIO()};
+          ImGuiViewport* viewport = ImGui::GetMainViewport();
+          ImGui::SetNextWindowPos(viewport->WorkPos);
+          ImGui::SetNextWindowSize(viewport->WorkSize);
+          ImGui::SetNextWindowViewport(viewport->ID);
 
-        // Main docking zone
-        std::string title{"Flugel Engine | " + App::instance().window().title()};
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        //ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.0f, 0.0f});
-        ImGui::Begin(title.c_str(), nullptr, dockspaceWindowFlags_); ImGui::PopStyleVar(2); {
+          // Main docking zone
+          std::string title{"Flugel Engine | " + App::instance().window().title()};
+          ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+          //ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+          ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.0f, 0.0f});
+          ImGui::Begin(title.c_str(), nullptr, dockspaceWindowFlags_); ImGui::PopStyleVar(2); {
           ImGuiID dockspaceId{ImGui::GetID("Engine Dock Space")};
           ImGui::DockSpace(dockspaceId, {0.0f, 0.0f}, dockspaceFlags_);
 
@@ -83,15 +83,15 @@ namespace ff {
           } else; // go harder
         } ImGui::End();
 
-        // Main app window
-        // https://gamedev.stackexchange.com/questions/140693/how-can-i-render-an-opengl-scene-into-an-imgui-window
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
-        ImGuiWindowClass windowClass;
-        windowClass.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoDockingOverMe;
-        ImGui::SetNextWindowClass(&windowClass);
-        ImGui::Begin("MainApp", nullptr, mainAppWindowFlags_); ImGui::PopStyleVar(3); {
+          // Main app window
+          // https://gamedev.stackexchange.com/questions/140693/how-can-i-render-an-opengl-scene-into-an-imgui-window
+          ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
+          ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+          ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
+          ImGuiWindowClass windowClass;
+          windowClass.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoDockingOverMe;
+          ImGui::SetNextWindowClass(&windowClass);
+          ImGui::Begin("MainApp", nullptr, mainAppWindowFlags_); ImGui::PopStyleVar(3); {
           ImVec2 winPos{ImGui::GetWindowPos()};
           ImVec2 winSize{ImGui::GetWindowSize()};
           appWinSize_ = vec2{winSize.x, winSize.y};
@@ -119,43 +119,41 @@ namespace ff {
           } ImGui::EndChild();
         } ImGui::End();
 
-        // Stats overlay
-        if (showStats_) {
-          ImGui::Begin("Engine Stats");
-          ImGui::Checkbox("Vsync", &vsyncEnabled_);
-          app->window().setVSync(vsyncEnabled_);
-          ImGui::SameLine();
-          ImGui::Text("| FPS: %i", static_cast<int>(floor(io.Framerate)));
-          ImGui::Text("Frametime: %.3f ms", 1000. / io.Framerate);
-          ImGui::End();
-        }
+          // Stats overlay
+          if (showStats_) {
+            ImGui::Begin("Engine Stats");
+            ImGui::Checkbox("Vsync", &vsyncEnabled_);
+            app->window().setVSync(vsyncEnabled_);
+            ImGui::SameLine();
+            ImGui::Text("| FPS: %i", static_cast<int>(floor(io.Framerate)));
+            ImGui::Text("Frametime: %.3f ms", 1000. / io.Framerate);
+            ImGui::End();
+          }
 
-        return false;
-      }
-      case GameEvent::RenderEnd: {
-        ImGuiIO& io{ImGui::GetIO()};
-        ImGui::Render();
-        renderDrawData();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-          // Update and Render additional Platform Windows
-          // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-          //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
-          ImGui::UpdatePlatformWindows();
-          ImGui::RenderPlatformWindowsDefault();
-          App::instance().window().context().setCurrent(true);
-        }
-        return false;
-      }
-      case GameEvent::Stop: {
-        shutdownRenderer();
-        shutdownWindow();
-        ImGui::DestroyContext();
-        return false;
-      }
-      default: {
-        return false;
-      }
-    }
+          return false;
+        },
+        [](const GameEndFrameEvent&) {
+          ImGuiIO& io{ImGui::GetIO()};
+          ImGui::Render();
+          renderDrawData();
+          if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+            // Update and Render additional Platform Windows
+            // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+            //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            App::instance().window().context().setCurrent(true);
+          }
+          return false;
+        },
+        [](const GameStopEvent&) {
+          shutdownRenderer();
+          shutdownWindow();
+          ImGui::DestroyContext();
+          return false;
+        },
+        [](const auto& event) { return false; }
+    }, e);
   }
 
   bool ImGuiLayer::onInputEvent(const InputEvent& e) {

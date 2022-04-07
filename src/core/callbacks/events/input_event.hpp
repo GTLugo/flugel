@@ -16,7 +16,6 @@ namespace ff {
       Keyboard, Mouse, Scroll, Cursor,
     };
 
-    [[nodiscard]] EventBase::Type type() const override { return EventBase::Type::Input; }
     [[nodiscard]] Action action() const { return action_; }
     [[nodiscard]] std::string toString() const override {
       std::string name{"<INPUT> "};

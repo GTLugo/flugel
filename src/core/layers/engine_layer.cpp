@@ -5,47 +5,43 @@
 
 namespace ff {
   bool EngineLayer::onMainEvent(const MainEvent& e) {
-    switch (e.action()) {
-      case MainEvent::Poll: {
+    return std::visit(EventVisitor{
+      [](const MainPollEvent&) {
         App::instance().window().pollEvents();
         return true;
-      }
-      default: {
-        return false;
-      }
-    }
+      },
+      [](const auto& event) { return false; }
+    }, e);
   }
 
   bool EngineLayer::onGameEvent(const GameEvent& e) {
-    switch (e.action()) {
-      case GameEvent::Start: {
-        App& app{App::instance()};
-        defaultFrameBuffer_ = FrameBuffer::create(
-            TextureBuffer::Format::RGB,
-            App::instance().window().dims().x,
-            App::instance().window().dims().y,
-            nullptr);
-        Renderer::setDefaultFrameBuffer(defaultFrameBuffer_);
+    return std::visit(EventVisitor{
+        [=](const GameStartEvent&) {
+          App& app{App::instance()};
+          defaultFrameBuffer_ = FrameBuffer::create(
+              TextureBuffer::Format::RGB,
+              App::instance().window().dims().x,
+              App::instance().window().dims().y,
+              nullptr);
+          Renderer::setDefaultFrameBuffer(defaultFrameBuffer_);
 
-        return true;
-      }
-      case GameEvent::RenderBegin: {
-        Renderer::clear(clearColor_);
-        Renderer::beginScene();
+          return true;
+        },
+        [=](const GameBeginFrameEvent&) {
+          Renderer::clear(clearColor_);
+          Renderer::beginScene();
 
-        return true;
-      }
-      case GameEvent::RenderEnd: {
-        Renderer::endScene();
-        //Renderer::flush();
-        App::instance().window().context().swapBuffers();
+          return true;
+        },
+        [=](const GameEndFrameEvent&) {
+          Renderer::endScene();
+          //Renderer::flush();
+          App::instance().window().context().swapBuffers();
 
-        return true;
-      }
-      default: {
-        return false;
-      }
-    }
+          return true;
+        },
+        [](const auto& event) { return false; }
+    }, e);
   }
 
   bool EngineLayer::onWindowEvent(const WindowEvent& e) {

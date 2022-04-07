@@ -58,13 +58,13 @@ namespace ff {
     // GAME THREAD - App logic & rendering
     std::jthread gameThread{FF_LAMBDA(App::gameLoop)}; // jthread automatically joins on destruction
     // MAIN THREAD - OS message pump & main thread sensitive items
-    EventSystem::handleEvent(MainEvent::Awake);
-    EventSystem::handleEvent(MainEvent::Start);
+    EventSystem::handleEvent(MainAwakeEvent{});
+    EventSystem::handleEvent(MainStartEvent{});
     while (!shouldClose_) {
-      EventSystem::handleEvent(MainEvent::Poll);
-      EventSystem::handleEvent(MainEvent::Update);
+      EventSystem::handleEvent(MainPollEvent{});
+      EventSystem::handleEvent(MainUpdateEvent{});
     }
-    EventSystem::handleEvent(MainEvent::Stop);
+    EventSystem::handleEvent(MainStopEvent{});
     gameThread.request_stop();
 
     Log::trace_e("Stopped main thread");
@@ -78,28 +78,28 @@ namespace ff {
     Log::trace_e("Started game thread (ID: {})", std::this_thread::get_id());
     window_->context().setCurrent(true);
 
-    EventSystem::handleEvent(GameEvent::Awake);
-    EventSystem::handleEvent(GameEvent::Start);
+    EventSystem::handleEvent(GameAwakeEvent{});
+    EventSystem::handleEvent(GameStartEvent{});
     while (!stopToken.stop_requested()) {
       // Logic
       while (Time::shouldDoTick()) {
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
         // Source: https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
-        EventSystem::handleEvent(GameEvent::Tick);
+        EventSystem::handleEvent(GameTickEvent{});
 
         Time::tick();
       }
-      EventSystem::handleEvent(GameEvent::Update);
+      EventSystem::handleEvent(GameUpdateEvent{});
 
       // Rendering pipeline
-      EventSystem::handleEvent(GameEvent::RenderBegin);
-      EventSystem::handleEvent(GameEvent::RenderGame);
-      EventSystem::handleEvent(GameEvent::RenderImGui);
-      EventSystem::handleEvent(GameEvent::RenderEnd);
+      EventSystem::handleEvent(GameBeginFrameEvent{});
+      EventSystem::handleEvent(GameDrawEvent{});
+      EventSystem::handleEvent(GameImGuiEvent{});
+      EventSystem::handleEvent(GameEndFrameEvent{});
 
       Time::update();
     }
-    EventSystem::handleEvent(GameEvent::Stop);
+    EventSystem::handleEvent(GameStopEvent{});
 
     Log::trace_e("Stopped game thread");
   }

@@ -3,35 +3,62 @@
 #include "event.hpp"
 
 namespace ff {
-  class GameEvent : public EventBase {
+  class GameEventBase : public EventBase {
   public:
-    enum Action { // Order of Main thread
-      None = 0,
-      Awake, Start, Stop,
-      Tick, Update,
-      RenderBegin, RenderGame, RenderImGui, RenderEnd,
-    };
+    [[nodiscard]] std::string toString() const override { return "<GAME>"; }
+  };
 
-    GameEvent(Action action) : action_{action} {}
+  class GameAwakeEvent : public GameEventBase {
+  public:
+    GameAwakeEvent() = default;
+    [[nodiscard]] std::string toString() const override { return GameEventBase::toString() + " Awake"; }
+  };
 
-    [[nodiscard]] EventBase::Type type() const override { return EventBase::Type::GameThread; }
-    [[nodiscard]] Action action() const { return action_; }
-    [[nodiscard]] std::string toString() const override {
-      std::string name{"<GAME> "};
-      switch (action_) {
-        case Action::Awake:       return name + "AWAKE";
-        case Action::Start:       return name + "START";
-        case Action::Tick:        return name + "TICK";
-        case Action::Update:      return name + "UPDATE";
-        case Action::RenderBegin: return name + "RENDER_BEGIN";
-        case Action::RenderGame:  return name + "RENDER_GAME";
-        case Action::RenderImGui: return name + "RENDER_IMGUI";
-        case Action::RenderEnd:   return name + "RENDER_END";
-        case Action::Stop:        return name + "STOP";
-        default:                  return name + "UNKNOWN";
-      }
-    }
-  protected:
-    const Action action_;
+  class GameStartEvent : public GameEventBase {
+  public:
+    GameStartEvent() = default;
+    [[nodiscard]] std::string toString() const override { return GameEventBase::toString() + " Start"; }
+  };
+
+  class GameTickEvent : public GameEventBase {
+  public:
+    GameTickEvent() = default;
+    [[nodiscard]] std::string toString() const override { return GameEventBase::toString() + " Tick"; }
+  };
+
+  class GameUpdateEvent : public GameEventBase {
+  public:
+    GameUpdateEvent() = default;
+    [[nodiscard]] std::string toString() const override { return GameEventBase::toString() + " Update"; }
+  };
+
+  class GameBeginFrameEvent : public GameEventBase {
+  public:
+    GameBeginFrameEvent() = default;
+    [[nodiscard]] std::string toString() const override { return GameEventBase::toString() + " Begin Frame"; }
+  };
+
+  class GameDrawEvent : public GameEventBase {
+  public:
+    GameDrawEvent() = default;
+    [[nodiscard]] std::string toString() const override { return GameEventBase::toString() + " Draw"; }
+  };
+
+  class GameImGuiEvent : public GameEventBase {
+  public:
+    GameImGuiEvent() = default;
+    [[nodiscard]] std::string toString() const override { return GameEventBase::toString() + " ImGui"; }
+  };
+
+  class GameEndFrameEvent : public GameEventBase {
+  public:
+    GameEndFrameEvent() = default;
+    [[nodiscard]] std::string toString() const override { return GameEventBase::toString() + " End Frame"; }
+  };
+
+  class GameStopEvent : public GameEventBase {
+  public:
+    GameStopEvent() = default;
+    [[nodiscard]] std::string toString() const override { return GameEventBase::toString() + " Stop"; }
   };
 }

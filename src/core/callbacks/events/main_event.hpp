@@ -3,30 +3,38 @@
 #include "event.hpp"
 
 namespace ff {
-  class MainEvent : public EventBase {
+  class MainEventBase : public EventBase {
   public:
-    enum Action { // Order of Main thread
-      None = 0,
-      Awake, Start, Stop,
-      Poll, Update,
-    };
+    [[nodiscard]] std::string toString() const override { return "<MAIN>"; }
+  };
 
-    MainEvent(Action action) : action_{action} {}
+  class MainAwakeEvent : public MainEventBase {
+  public:
+    MainAwakeEvent() = default;
+    [[nodiscard]] std::string toString() const override { return MainEventBase::toString() + " Awake"; }
+  };
 
-    [[nodiscard]] EventBase::Type type() const override { return EventBase::Type::MainThread; }
-    [[nodiscard]] Action action() const { return action_; }
-    [[nodiscard]] std::string toString() const override {
-      std::string name{"<MAIN> "};
-      switch (action_) {
-        case Action::Awake:  return name + "AWAKE";
-        case Action::Start:  return name + "START";
-        case Action::Poll:   return name + "POLL";
-        case Action::Update: return name + "UPDATE";
-        case Action::Stop:   return name + "STOP";
-        default:             return name + "UNKNOWN";
-      }
-    }
-  protected:
-    const Action action_;
+  class MainStartEvent : public MainEventBase {
+  public:
+    MainStartEvent() = default;
+    [[nodiscard]] std::string toString() const override { return MainEventBase::toString() + " Start"; }
+  };
+
+  class MainPollEvent : public MainEventBase {
+  public:
+    MainPollEvent() = default;
+    [[nodiscard]] std::string toString() const override { return MainEventBase::toString() + " Poll"; }
+  };
+
+  class MainUpdateEvent : public MainEventBase {
+  public:
+    MainUpdateEvent() = default;
+    [[nodiscard]] std::string toString() const override { return MainEventBase::toString() + " Update"; }
+  };
+
+  class MainStopEvent : public MainEventBase {
+  public:
+    MainStopEvent() = default;
+    [[nodiscard]] std::string toString() const override { return MainEventBase::toString() + " Stop"; }
   };
 }

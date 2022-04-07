@@ -10,7 +10,6 @@ namespace ff {
       Close, Resize, Focus, LostFocus, Moved,
     };
 
-    [[nodiscard]] Type type() const override { return EventBase::Type::Window; }
     [[nodiscard]] Action action() const { return action_; }
     [[nodiscard]] std::string toString() const override {
       std::string name{"<WINDOW> "};
