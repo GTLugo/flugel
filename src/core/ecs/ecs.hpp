@@ -15,6 +15,26 @@
 #include <boost/unordered_map.hpp>
 
 namespace ff {
+/// TODO: Come back to this if component checking REALLY needs to be faster
+//  class ComponentBits {
+//    using BitSet = std::bitset<64>;
+//  public:
+//    void set(size_t pos, bool value = true) {
+//      FF_ASSERT_E(pos < maxPos_, "Invalid position");
+//      bits_[pos / 64].set(pos % 64, value);
+//    }
+//
+//    void reset(size_t pos) { set(pos, false); }
+//
+//    bool test(size_t pos) {
+//      FF_ASSERT_E(pos < maxPos_, "Invalid position");
+//      return bits_[pos / 64][pos % 64];
+//    }
+//  private:
+//    static const size_t setCount_{4};
+//    static const size_t maxPos_{setCount_ * 64};
+//    std::array<BitSet, setCount_> bits_{{{}, {}, {}, {}}};
+//  };
 
   struct Entity {
     friend class ECSManager;
@@ -46,6 +66,12 @@ namespace ff {
 
     template<class C, typename... Args>
     void set(Args&& ...args);
+
+    template<typename T, typename... Args>
+    bool has() {
+      auto& comps{components()};
+      return ((comps.test(Component<T>::id())) && ... && (comps.test(Component<Args>::id())));
+    }
 
     bool operator<(const Entity& rhs) const { return id_ < rhs.id_; }
     bool operator==(const Entity& rhs) const { return id_ == rhs.id_; }
@@ -158,6 +184,7 @@ namespace ff {
     ~ECSManager() = default;
 
     //Entity createEntity() { return makeShared<Entity_>(this); }
+    void registerEntity(Entity& entity) { bitSetMap_[entity.id()] = {}; }
     // Maybe automate with Shared<>
     void removeEntity(Entity& entity);
 
@@ -165,14 +192,23 @@ namespace ff {
 
     template<class C>
     void registerComponent() {
-      FF_ASSERT_E(!componentMaps_.contains(Component<C>::id()), "Attempted duplicate component registration.");
+      FF_ASSERT_E(!componentRegistered<C>(), "Attempted duplicate component registration.");
       FF_ASSERT_E(ComponentBase::componentCount() <= ComponentBase::maxComponents, "Maximum component count reached.");
       componentMaps_.insert(std::make_pair(Component<C>::id(), makeShared<ComponentMap<C>>()));
     }
 
+    template<class C>
+    bool tryRegisterComponent() {
+      if (!componentRegistered<C>() && ComponentBase::componentCount() <= ComponentBase::maxComponents) {
+        componentMaps_.insert(std::make_pair(Component<C>::id(), makeShared<ComponentMap<C>>()));
+        return true;
+      }
+      return false;
+    }
+
     template<class C, typename... Args>
     void addComponent(Entity& entity, Args&& ...args) {
-      if (!componentMaps_.contains(Component<C>::id())) registerComponent<C>();
+      if (!componentRegistered<C>()) registerComponent<C>();
       componentMap<C>()->add(entity, std::move(C{args...}));
       bitSetMap_[entity.id()].set(Component<C>::id());
       onEntityBitsetMutated(entity);
@@ -180,7 +216,7 @@ namespace ff {
 
     template<class C>
     void removeComponent(Entity& entity) {
-      FF_ASSERT_E(componentMaps_.contains(Component<C>::id()), "Attempted removal of unregistered component.");
+      FF_ASSERT_E(componentRegistered<C>(), "Attempted removal of unregistered component.");
       componentMap<C>()->remove(entity);
       bitSetMap_[entity.id()].reset(Component<C>::id());
       onEntityBitsetMutated(entity);
@@ -188,13 +224,13 @@ namespace ff {
 
     template<class C>
     C& component(Entity& entity) {
-      FF_ASSERT_E(componentMaps_.contains(Component<C>::id()), "Attempted access of unregistered component.");
+      FF_ASSERT_E(componentRegistered<C>(), "Attempted access of unregistered component.");
       return componentMap<C>()->data(entity);
     }
 
     template<class C>
     const C& component(const Entity& entity) const {
-      FF_ASSERT_E(componentMaps_.contains(Component<C>::id()), "Attempted access of unregistered component.");
+      FF_ASSERT_E(componentRegistered<C>(), "Attempted access of unregistered component.");
       return componentMap<C>()->data(entity);
     }
 
@@ -229,17 +265,22 @@ namespace ff {
 
     template<class C>
     Shared<ComponentMap<C>> componentMap() {
-      FF_ASSERT_E(componentMaps_.contains(Component<C>::id()), "Attempted access of unregistered component.");
+      FF_ASSERT_E(componentRegistered<C>(), "Attempted access of unregistered component.");
       return std::static_pointer_cast<ComponentMap<C>>(componentMaps_[Component<C>::id()]);
     };
 
     template<class C>
     Shared<const ComponentMap<C>> componentMap() const {
-      FF_ASSERT_E(componentMaps_.contains(Component<C>::id()), "Attempted access of unregistered component.");
+      FF_ASSERT_E(componentRegistered<C>(), "Attempted access of unregistered component.");
       return std::const_pointer_cast<const ComponentMap<C>>(
           std::static_pointer_cast<ComponentMap<C>>(componentMaps_.at(Component<C>::id()))
       );
     };
+
+    template<class C>
+    bool componentRegistered() {
+      return componentMaps_.contains(Component<C>::id());
+    }
   };
 
 

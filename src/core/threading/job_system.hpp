@@ -58,6 +58,6 @@ namespace ff {
     ConcurrentQueue<Job*> jobs_{};
     std::vector<std::jthread> workers_{};
 
-    void workerLoop(std::stop_token stopToken);
+    void workerLoop(const std::stop_token& stopToken);
   };
 }

@@ -11,12 +11,8 @@ namespace ff {
   public:
     ImGuiLayer();
 
-    // for some reason, clang is just broken and thinks
-    // these functions are not implemented when they
-    // very much are implemented
-    bool onRenderEvent(const RenderEvent& e) final;
-    bool onKeyboardEvent(const KeyboardEvent& e) final;
-    bool onMouseEvent(const MouseEvent& e) final;
+    bool onGameEvent(const GameEvent& e) final;
+    bool onInputEvent(const InputEvent& e) final;
     
   private:
     App* app;

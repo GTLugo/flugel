@@ -6,12 +6,7 @@
 #include "core/layers/layer_stack.hpp"
 
 #include "core/threading/job_system.hpp"
-
 #include "core/callbacks/event_system.hpp"
-#include "core/callbacks/events/event.hpp"
-#include "core/callbacks/events/app_event.hpp"
-#include "core/callbacks/events/render_event.hpp"
-#include "core/callbacks/events/logic_event.hpp"
 #include "core/callbacks/notifier/notifier.hpp"
 
 #include "core/ecs/world.hpp"
@@ -67,9 +62,9 @@ namespace ff {
     };
 
     struct EventSystemJob : Job {
-      EventSystem::EventCallbackFn callbackFn;
+      EventSystem::EventCallback callbackFn;
 
-      EventSystemJob(EventSystem::EventCallbackFn callbackFn) : callbackFn{std::move(callbackFn)} {}
+      EventSystemJob(EventSystem::EventCallback callbackFn) : callbackFn{std::move(callbackFn)} {}
 
       void execute() override {
         EventSystem::init(std::move(callbackFn));

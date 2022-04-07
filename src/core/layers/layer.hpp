@@ -1,12 +1,6 @@
 #pragma once
 
-#include "core/callbacks/events/event.hpp"
-#include "core/callbacks/events/app_event.hpp"
-#include "core/callbacks/events/render_event.hpp"
-#include "core/callbacks/events/logic_event.hpp"
-#include "core/callbacks/events/window_event.hpp"
-#include "core/callbacks/events/keyboard_event.hpp"
-#include "core/callbacks/events/mouse_event.hpp"
+#include "core/callbacks/event_system.hpp"
 
 #include "core/callbacks/subscribable.hpp"
 
@@ -24,42 +18,30 @@ namespace ff {
 
     [[nodiscard]] const std::string& name() const { return name_; }
     
-    void onEvent(const Event& e) {
-      if (!enabled_) return;
-      switch (e.type()) {
-        case Event::App:      { return e.tryHandleAs<AppEvent>     (FF_LAMBDA(onAppEvent_eng));      }
-        case Event::Logic:    { return e.tryHandleAs<LogicEvent>   (FF_LAMBDA(onLogicEvent_eng));    }
-        case Event::Render:   { return e.tryHandleAs<RenderEvent>  (FF_LAMBDA(onRenderEvent_eng));   }
-        case Event::Window:   { return e.tryHandleAs<WindowEvent>  (FF_LAMBDA(onWindowEvent_eng));   }
-        case Event::Keyboard: { return e.tryHandleAs<KeyboardEvent>(FF_LAMBDA(onKeyboardEvent_eng)); }
-        case Event::Mouse:    { return e.tryHandleAs<MouseEvent>   (FF_LAMBDA(onMouseEvent_eng));    }
-        case Event::Cursor:   { return e.tryHandleAs<CursorEvent>  (FF_LAMBDA(onCursorEvent_eng));   }
-        case Event::Scroll:   { return e.tryHandleAs<ScrollEvent>  (FF_LAMBDA(onScrollEvent_eng));   }
-        default: break;
-      }
+    bool onEvent(const Event& e) { // https://www.cppstories.com/2018/09/visit-variants/
+      if (!enabled_) return false;
+      return std::visit(EventVisitor{
+          [=](const MainEvent& event) { return onMainEvent_eng(event); },
+          [=](const GameEvent& event) { return onGameEvent_eng(event); },
+          [=](const WindowEvent& event) { return onWindowEvent_eng(event); },
+          [=](const InputEvent& event) { return onInputEvent_eng(event); },
+          [](const auto&) { return false; }
+      }, e);
     }
 
   protected:
     std::string name_;
     bool enabled_{true};
 
-    virtual bool onAppEvent(const AppEvent& e) { return false; }
-    virtual bool onLogicEvent(const LogicEvent& e) { return false; }
-    virtual bool onRenderEvent(const RenderEvent& e) { return false; }
+    virtual bool onMainEvent(const MainEvent& e) { return false; }
+    virtual bool onGameEvent(const GameEvent& e) { return false; }
     virtual bool onWindowEvent(const WindowEvent& e) { return false; }
-    virtual bool onKeyboardEvent(const KeyboardEvent& e) { return false; }
-    virtual bool onMouseEvent(const MouseEvent& e) { return false; }
-    virtual bool onCursorEvent(const CursorEvent& e) { return false; }
-    virtual bool onScrollEvent(const ScrollEvent& e) { return false; }
+    virtual bool onInputEvent(const InputEvent& e) { return false; }
 
   private:
-    virtual bool onAppEvent_eng(const AppEvent& e);
-    virtual bool onLogicEvent_eng(const LogicEvent& e);
-    virtual bool onRenderEvent_eng(const RenderEvent& e);
+    virtual bool onMainEvent_eng(const MainEvent& e);
+    virtual bool onGameEvent_eng(const GameEvent& e);
     virtual bool onWindowEvent_eng(const WindowEvent& e);
-    virtual bool onKeyboardEvent_eng(const KeyboardEvent& e);
-    virtual bool onMouseEvent_eng(const MouseEvent& e);
-    virtual bool onCursorEvent_eng(const CursorEvent& e);
-    virtual bool onScrollEvent_eng(const ScrollEvent& e);
+    virtual bool onInputEvent_eng(const InputEvent& e);
   };
 }

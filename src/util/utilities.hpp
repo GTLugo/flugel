@@ -24,9 +24,9 @@
 #endif
 
 #define BIT(x) (1 << x)
-
 #define FF_BIT_COMPARE_TO(x, y) (x & y) == y
-
+#define FF_STRINGIFY_VAL(x) FF_STRINGIFY(x)
+#define FF_STRINGIFY(x) #x
 #define FF_LAMBDA_INS(fn, instance) [objPtr = instance](auto&&... args) { return objPtr->fn(std::forward<decltype(args)>(args)...); }
 #define FF_LAMBDA(fn) FF_LAMBDA_INS(fn, this)
 

@@ -9,6 +9,9 @@
 
 namespace ff {
   struct Mesh {
+    // TODO: Overhaul mesh creation.
+
+
     Shared<VertexArray> vertexArray;
     Shared<Shader> shader;
   };

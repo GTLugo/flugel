@@ -8,6 +8,7 @@ namespace ff {
   Entity::Entity(ECSManager* ecs)
     : ecsManager_{ecs} {
     Log::debug_e(R"(Creating entity "{}")", id_);
+    ecsManager_->registerEntity(*this);
   }
 
   Entity::~Entity() {

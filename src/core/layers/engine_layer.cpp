@@ -4,23 +4,9 @@
 #include "core/input/input.hpp"
 
 namespace ff {
-  bool EngineLayer::onWindowEvent(const WindowEvent& e) {
-    //Log::debug_e("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
+  bool EngineLayer::onMainEvent(const MainEvent& e) {
     switch (e.action()) {
-      case WindowEvent::Close: {
-        Log::debug_e("{0}: {1}", name_, e);
-        App::instance().close();
-        return true;
-      }
-      default: {
-        return false;
-      }
-    }
-  }
-  
-  bool EngineLayer::onAppEvent(const AppEvent& e) {
-    switch (e.action()) {
-      case AppEvent::Poll: {
+      case MainEvent::Poll: {
         App::instance().window().pollEvents();
         return true;
       }
@@ -30,9 +16,9 @@ namespace ff {
     }
   }
 
-  bool EngineLayer::onRenderEvent(const RenderEvent& e) {
+  bool EngineLayer::onGameEvent(const GameEvent& e) {
     switch (e.action()) {
-      case RenderEvent::Start: {
+      case GameEvent::Start: {
         App& app{App::instance()};
         defaultFrameBuffer_ = FrameBuffer::create(
             TextureBuffer::Format::RGB,
@@ -43,13 +29,13 @@ namespace ff {
 
         return true;
       }
-      case RenderEvent::BeginFrame: {
+      case GameEvent::RenderBegin: {
         Renderer::clear(clearColor_);
         Renderer::beginScene();
 
         return true;
       }
-      case RenderEvent::EndFrame: {
+      case GameEvent::RenderEnd: {
         Renderer::endScene();
         //Renderer::flush();
         App::instance().window().context().swapBuffers();
@@ -62,33 +48,44 @@ namespace ff {
     }
   }
 
-  bool EngineLayer::onKeyboardEvent(const KeyboardEvent& e) {
-    if (Input::isPressed(Key::Enter) && Input::isPressed(Modifier::Alt)) {
-      Log::debug_e("{0}: Fullscreen({1})", name_, !App::instance().window().isFullscreen());
-      App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
-    }
-    return true;
+  bool EngineLayer::onWindowEvent(const WindowEvent& e) {
+    return std::visit(EventVisitor{
+        [=](const WindowCloseEvent& keyEvent) {
+          Log::debug_e("{0}: {1}", name_, keyEvent);
+          App::instance().close();
+          return true;
+        },
+        [=](const auto& keyEvent) { return false; },
+    }, e);
   }
 
-  bool EngineLayer::onMouseEvent(const MouseEvent& e) {
-    // custom dragging and close button
-    if (App::instance().window().isUsingCustomDecor()) {
-      pollCustomDecor(e);
-    }
-    return true;
+  bool EngineLayer::onInputEvent(const InputEvent& e) {
+    return std::visit(EventVisitor{
+      [=](const InputKeyEvent& keyEvent) {
+        if (Input::isPressed(Key::Enter) && Input::isPressed(Modifier::Alt)) {
+          Log::debug_e("{0}: Fullscreen({1})", name_, !App::instance().window().isFullscreen());
+          App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
+        }
+        return true;
+      },
+      [=](const InputMouseEvent& mouseEvent) {
+        // custom dragging and close button
+        if (App::instance().window().isUsingCustomDecor()) {
+          pollCustomDecor(mouseEvent);
+        }
+        return true;
+      },
+      [=](const InputCursorEvent& cursorEvent) {
+        if (draggingWindowDecor_) {
+          App::instance().window().dragWindow(windowDragOffset_);
+        }
+        return true;
+      },
+      [](const auto& keyEvent) { return false; },
+    }, e);
   }
 
-  bool EngineLayer::onCursorEvent(const CursorEvent& e) {
-    if (draggingWindowDecor_) {
-      App::instance().window().dragWindow(windowDragOffset_);
-    }
-    return true;
-  }
-
-  bool EngineLayer::onScrollEvent(const ScrollEvent& e) {
-    return true;
-  }
-  void EngineLayer::pollCustomDecor(const MouseEvent& e) {
+  void EngineLayer::pollCustomDecor(const InputMouseEvent& e) {
     if (App::instance().window().isFullscreen()) {
       draggingWindowDecor_ = false;
       closingWindowDecor_ = false;

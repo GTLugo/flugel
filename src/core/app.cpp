@@ -25,7 +25,7 @@ namespace ff {
     eventSystemJob.wait();
 
     window_ = Window::create(props);
-    window_->setEventCallback(FF_LAMBDA(eventHandler));
+    //window_->setEventCallback(FF_LAMBDA(eventHandler));
 
 //    i32 width, height;
 //    u8* icon{stbi_load("res/flugel/icon.png", &width, &height, nullptr, 4)};
@@ -58,13 +58,13 @@ namespace ff {
     // GAME THREAD - App logic & rendering
     std::jthread gameThread{FF_LAMBDA(App::gameLoop)}; // jthread automatically joins on destruction
     // MAIN THREAD - OS message pump & main thread sensitive items
-    EventSystem::handleEvent(AppEvent{AppEvent::Awake});
-    EventSystem::handleEvent(AppEvent{AppEvent::Start});
+    EventSystem::handleEvent(MainEvent::Awake);
+    EventSystem::handleEvent(MainEvent::Start);
     while (!shouldClose_) {
-      EventSystem::handleEvent(AppEvent{AppEvent::Poll});
-      EventSystem::handleEvent(AppEvent{AppEvent::Update});
+      EventSystem::handleEvent(MainEvent::Poll);
+      EventSystem::handleEvent(MainEvent::Update);
     }
-    EventSystem::handleEvent(AppEvent{AppEvent::Stop});
+    EventSystem::handleEvent(MainEvent::Stop);
     gameThread.request_stop();
 
     Log::trace_e("Stopped main thread");
@@ -78,39 +78,39 @@ namespace ff {
     Log::trace_e("Started game thread (ID: {})", std::this_thread::get_id());
     window_->context().setCurrent(true);
 
-    EventSystem::handleEvent(LogicEvent{LogicEvent::Awake});
-    EventSystem::handleEvent(LogicEvent{LogicEvent::Start});
-    EventSystem::handleEvent(RenderEvent{RenderEvent::Awake});
-    EventSystem::handleEvent(RenderEvent{RenderEvent::Start});
+    EventSystem::handleEvent(GameEvent::Awake);
+    EventSystem::handleEvent(GameEvent::Start);
     while (!stopToken.stop_requested()) {
       // Logic
       while (Time::shouldDoTick()) {
         // Physics & timestep sensitive stuff happens in here, where timestep is fixed
         // Source: https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
-        EventSystem::handleEvent(LogicEvent{LogicEvent::Tick});
+        EventSystem::handleEvent(GameEvent::Tick);
 
         Time::tick();
       }
-      EventSystem::handleEvent(LogicEvent{LogicEvent::Update});
+      EventSystem::handleEvent(GameEvent::Update);
 
-      // Rendering
-      EventSystem::handleEvent(RenderEvent{RenderEvent::BeginFrame});
-      EventSystem::handleEvent(RenderEvent{RenderEvent::AppStep});
-      EventSystem::handleEvent(RenderEvent{RenderEvent::ImGuiStep});
-      EventSystem::handleEvent(RenderEvent{RenderEvent::EndFrame});
+      // Rendering pipeline
+      EventSystem::handleEvent(GameEvent::RenderBegin);
+      EventSystem::handleEvent(GameEvent::RenderGame);
+      EventSystem::handleEvent(GameEvent::RenderImGui);
+      EventSystem::handleEvent(GameEvent::RenderEnd);
 
       Time::update();
     }
-    EventSystem::handleEvent(LogicEvent{LogicEvent::Stop});
-    EventSystem::handleEvent(RenderEvent{RenderEvent::Stop});
+    EventSystem::handleEvent(GameEvent::Stop);
 
     Log::trace_e("Stopped game thread");
   }
 
   void App::eventHandler(const Event& e) {
     for (auto& layer : layerStack_ | std::views::reverse) {
-      if (e.wasHandled()) break;
-      layer->onEvent(e);
+      // TODO: Fix event handling
+      bool handled{layer->onEvent(e)};
+      // e.handled_ = handled;
     }
   }
 }
+
+// if you are reading this, just know that Shirakami Fubuki is the best fox waifu friend

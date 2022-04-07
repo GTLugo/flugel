@@ -5,27 +5,35 @@
 #include "world.hpp"
 
 namespace ff {
-  bool World::onLogicEvent(const LogicEvent& e) {
+  bool World::onMainEvent(const MainEvent& e) {
+    return false;
+  }
+
+  bool World::onGameEvent(const GameEvent& e) {
     switch (e.action()) {
-      case LogicEvent::Awake: {
+      case GameEvent::Awake: {
         // Register systems
         ecs().registerSystem<CameraSystem>();
         ecs().registerSystem<RenderSystem>();
         break;
       }
-      case LogicEvent::Start: {
-        ff::Log::debug_e("master_camera: {}", camera_.id());
-        camera_.add<ff::Name>("master_camera")
+      case GameEvent::Start: {
+        ff::Log::debug_e("master_camera: {}", masterCamera_.id());
+        masterCamera_.add<ff::Name>("master_camera")
             .add<ff::Transform>()
             .add<ff::Camera>(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
         break;
       }
-      case LogicEvent::Update: {
+      case GameEvent::Update: {
         ecs().executeSystem<CameraSystem>();
         break;
       }
-      case LogicEvent::Stop: {
-        camera_.kill();
+      case GameEvent::RenderGame: {
+        ecs().executeSystem<RenderSystem>();
+        break;
+      }
+      case GameEvent::Stop: {
+        masterCamera_.kill();
         break;
       }
       default: break;
@@ -33,14 +41,11 @@ namespace ff {
     return false;
   }
 
-  bool World::onRenderEvent(const RenderEvent& e) {
-    switch (e.action()) {
-      case RenderEvent::AppStep: {
-        ecs().executeSystem<RenderSystem>();
-        break;
-      }
-      default: break;
-    }
+  bool World::onWindowEvent(const WindowEvent& e) {
+    return false;
+  }
+
+  bool World::onInputEvent(const InputEvent& e) {
     return false;
   }
 }

@@ -20,11 +20,11 @@ namespace ff {
   // Notifier sends notifications for a single type of event
   // Usage: Create a member variable of this class in whatever class should be
   //        sending out notifications.
-  template<typename Event_t>
+  template<typename E>
   class Notifier {
   public:
-    using EventFn = std::function<bool(const Event_t&)>;
-    using SubscriberCollection = std::map<UUID, EventFn>;
+    using Callback = std::function<bool(const E&)>;
+    using SubscriberCollection = std::map<UUID, Callback>;
 
     Notifier() = default;
     virtual ~Notifier() {
@@ -34,9 +34,9 @@ namespace ff {
     };
 
     // Subscribe and Unsubscribe should be given wrappers in the notifying class
-    UUID subscribe(EventFn eventFn) {
+    UUID subscribe(Callback callback) {
       UUID id{};
-      subscribers_.insert(std::pair<UUID, EventFn>(id, eventFn));
+      subscribers_.insert(std::pair<UUID, Callback>(id, callback));
       return id;
     }
 
@@ -47,7 +47,7 @@ namespace ff {
     // Notify should be called from within the class. It should never be called from
     // outside the class as that would introduce coupling and risk runaway events
 
-    bool notify(const Event_t& event) {
+    bool notify(const E& event) {
       bool handled{false};
       for (const auto& [id, sub] : subscribers_) {
         handled = sub(event);

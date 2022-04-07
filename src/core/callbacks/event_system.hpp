@@ -5,17 +5,32 @@
 #pragma once
 
 #include "core/callbacks/events/event.hpp"
+#include "core/callbacks/events/main_event.hpp"
+#include "core/callbacks/events/game_event.hpp"
+#include "core/callbacks/events/window_event.hpp"
+#include "core/callbacks/events/input_event.hpp"
 
 namespace ff {
+  template<class... T>
+  struct EventVisitor : T... {
+    using T::operator()...;
+  };
+  template<class... T> EventVisitor(T...) -> EventVisitor<T...>;
+
+  using WindowEvent = std::variant<std::monostate, WindowCloseEvent, WindowResizeEvent, WindowMovedEvent>;
+  using InputEvent = std::variant<std::monostate, InputKeyEvent, InputMouseEvent, InputCursorEvent, InputScrollEvent>;
+
+  using Event = std::variant<std::monostate, MainEvent, GameEvent, WindowEvent, InputEvent>;
+
   class EventSystem {
   public:
-    using EventCallbackFn = std::function<void(const Event&)>;
+    using EventCallback = std::function<void(const Event&)>;
 
-    static void init(EventCallbackFn callbackFn) {
+    static void init(EventCallback callback) {
       if (instance_) return;
       Log::trace_e("Initializing Event System...");
       instance_ = new EventSystem{};
-      instance_->eventCallback_ = std::move(callbackFn);
+      instance_->eventCallback_ = std::move(callback);
     }
     static void shutdown() { delete instance_; }
 
@@ -28,7 +43,20 @@ namespace ff {
   private:
     static inline EventSystem* instance_{nullptr};
 
-    EventCallbackFn eventCallback_;
+    EventCallback eventCallback_;
+
+//    static inline auto eventVisitor_ = EventVisitor{
+//        [](const MainEvent&) {},
+//        [](const GameEvent&) {},
+//        [](const WindowCloseEvent&) {},
+//        [](const WindowResizeEvent&) {},
+//        [](const WindowMovedEvent&) {},
+//        [](const InputKeyEvent&) {},
+//        [](const InputMouseEvent&) {},
+//        [](const InputCursorEvent&) {},
+//        [](const InputScrollEvent&) {},
+//        [](const auto&) {},
+//    };
 
     EventSystem() = default;
     ~EventSystem() = default;

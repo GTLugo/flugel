@@ -4,23 +4,18 @@
 
 int main(int argCount = 0, char* args[] = nullptr) {
   ff::Log::init();
-
-  ff::Unique<ff::App> app{ff::createApp()};
   try {
+    ff::Unique<ff::App> app{ff::createApp()};
     app->run();
   } catch(const std::exception& e) {
-    ff::Log::error(e.what());
+    ff::Log::critical_e(e.what());
     return EXIT_FAILURE;
   }
-
-  return EXIT_SUCCESS;
+  ff::Log::trace_e("Engine stopped successfully.");
 }
 
 #if defined(_WIN32) and defined(NDEBUG)
-ff::i32 WINAPI WinMain(HINSTANCE hInstance,
-                        HINSTANCE hPrevInstance,
-                        LPSTR lpCmdLine,
-                        ff::i32 nCmdShow) {
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
   return main(__argc, __argv);
 }
 #endif

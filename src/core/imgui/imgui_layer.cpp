@@ -27,9 +27,9 @@ namespace ff {
     app = &App::instance();
   }
 
-  bool ImGuiLayer::onRenderEvent(const RenderEvent& e) {
+  bool ImGuiLayer::onGameEvent(const GameEvent& e) {
     switch (e.action()) {
-      case RenderEvent::Start: {
+      case GameEvent::Start: {
         vsyncEnabled_ = app->window().isVSync();
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -46,7 +46,7 @@ namespace ff {
         rendererInit();
         return false;
       }
-      case RenderEvent::BeginFrame: {
+      case GameEvent::RenderBegin: {
         ImGuiIO& io{ImGui::GetIO()};
         io.DisplaySize = ImVec2(static_cast<float>(app->window().dims().x), static_cast<float>(app->window().dims().y));
         io.DeltaTime = static_cast<float>(Time::delta<Seconds>());
@@ -54,7 +54,7 @@ namespace ff {
         newFrame();
         return false;
       }
-      case RenderEvent::ImGuiStep: {
+      case GameEvent::RenderImGui: {
         ImGuiIO& io{ImGui::GetIO()};
         ImGuiViewport* viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->WorkPos);
@@ -102,9 +102,9 @@ namespace ff {
                 ImGuiLayer::keepAspect);
             float magicVerticalPaddingNumberIHaveNoIdeaWhyExists{10};
             ImGui::SetNextWindowPos({
-                winPos.x + (appWinSize_.x / 2.f) - (appImageSize_.x / 2.f),
-                winPos.y + (appWinSize_.y / 2.f) - (appImageSize_.y / 2.f) //+ magicVerticalPaddingNumberIHaveNoIdeaWhyExists
-            });
+                                        winPos.x + (appWinSize_.x / 2.f) - (appImageSize_.x / 2.f),
+                                        winPos.y + (appWinSize_.y / 2.f) - (appImageSize_.y / 2.f) //+ magicVerticalPaddingNumberIHaveNoIdeaWhyExists
+                                    });
           } else {
             appImageSize_ = appWinSize_;
           }
@@ -132,7 +132,7 @@ namespace ff {
 
         return false;
       }
-      case RenderEvent::EndFrame: {
+      case GameEvent::RenderEnd: {
         ImGuiIO& io{ImGui::GetIO()};
         ImGui::Render();
         renderDrawData();
@@ -146,10 +146,10 @@ namespace ff {
         }
         return false;
       }
-      case RenderEvent::Stop: {
+      case GameEvent::Stop: {
         shutdownRenderer();
         shutdownWindow();
-		    ImGui::DestroyContext();
+        ImGui::DestroyContext();
         return false;
       }
       default: {
@@ -158,25 +158,29 @@ namespace ff {
     }
   }
 
-  bool ImGuiLayer::onKeyboardEvent(const KeyboardEvent& e) {
-    if (e.check<Key::Accent>(Key::Pressed) && e.check<Modifier::Control>(Key::Pressed)) {
-      showStats_ = !showStats_;
-      Log::debug_e("Show Stats: {}", showStats_);
-    }
+  bool ImGuiLayer::onInputEvent(const InputEvent& e) {
+    return std::visit(EventVisitor{
+      [=](const InputKeyEvent& event) {
+        if (event.test<Key::Accent>(Key::Pressed) && event.test<Modifier::Control>(Key::Pressed)) {
+          showStats_ = !showStats_;
+          Log::debug_e("Show Stats: {}", showStats_);
+        }
 
-    if (blockInputEvents_) {
-      ImGuiIO& io = ImGui::GetIO();
-      return io.WantCaptureKeyboard;
-    }
-    return false;
-  }
-
-  bool ImGuiLayer::onMouseEvent(const MouseEvent& e) {
-    if (blockInputEvents_) {
-      ImGuiIO& io = ImGui::GetIO();
-      return io.WantCaptureMouse;
-    }
-    return false;
+        if (blockInputEvents_) {
+          ImGuiIO& io = ImGui::GetIO();
+          return io.WantCaptureKeyboard;
+        }
+        return false;
+      },
+      [=](const InputMouseEvent& event) {
+        if (blockInputEvents_) {
+          ImGuiIO& io = ImGui::GetIO();
+          return io.WantCaptureMouse;
+        }
+        return false;
+      },
+      [](const auto& event) { return false; }
+    }, e);
   }
 
   void ImGuiLayer::keepAspect(ImGuiSizeCallbackData* data) {

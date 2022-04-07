@@ -12,14 +12,10 @@ namespace ff {
     WorldLayer() : Layer{"world_layer"} {}
 
   private:
-    bool onAppEvent(const AppEvent& e) final;
-    bool onLogicEvent(const LogicEvent& e) final;
-    bool onRenderEvent(const RenderEvent& e) final;
+    bool onMainEvent(const MainEvent& e) final;
+    bool onGameEvent(const GameEvent& e) final;
     bool onWindowEvent(const WindowEvent& e) final;
-    bool onKeyboardEvent(const KeyboardEvent& e) final;
-    bool onMouseEvent(const MouseEvent& e) final;
-    bool onCursorEvent(const CursorEvent& e) final;
-    bool onScrollEvent(const ScrollEvent& e) final;
+    bool onInputEvent(const InputEvent& e) final;
   };
 }
 

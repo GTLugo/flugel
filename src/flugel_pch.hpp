@@ -33,6 +33,7 @@
 #include <condition_variable>
 #include <stop_token>
 // Data Structures
+#include <variant>
 #include <bitset>
 #include <string>
 #include <array>

@@ -11,6 +11,20 @@ namespace ff {
     static std::shared_ptr<spdlog::logger>& engineLogger() { return engineLogger_; }
     static std::shared_ptr<spdlog::logger>& appLogger() { return appLogger_; }
 
+    template<typename T>
+    static inline void trace(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      appLogger()->trace(arg);
+      #endif
+    }
+
+    template<typename T>
+    static inline void trace_e(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      engineLogger()->trace(arg);
+      #endif
+    }
+
     template<typename... Args>
     static inline void trace(fmt::format_string<Args...> fmt, Args &&...args) {
       #if defined(DEBUG) or defined(RELDEB)
@@ -22,6 +36,20 @@ namespace ff {
     static inline void trace_e(fmt::format_string<Args...> fmt, Args &&...args) {
       #if defined(DEBUG) or defined(RELDEB)
       engineLogger()->trace(fmt, std::forward<Args>(args)...);
+      #endif
+    }
+
+    template<typename T>
+    static inline void debug(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      appLogger()->debug(arg);
+      #endif
+    }
+
+    template<typename T>
+    static inline void debug_e(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      engineLogger()->debug(arg);
       #endif
     }
 
@@ -39,6 +67,20 @@ namespace ff {
       #endif
     }
 
+    template<typename T>
+    static inline void info(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      appLogger()->info(arg);
+      #endif
+    }
+
+    template<typename T>
+    static inline void info_e(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      engineLogger()->info(arg);
+      #endif
+    }
+
     template<typename... Args>
     static inline void info(fmt::format_string<Args...> fmt, Args &&...args) {
       #if defined(DEBUG) or defined(RELDEB)
@@ -50,6 +92,20 @@ namespace ff {
     static inline void info_e(fmt::format_string<Args...> fmt, Args &&...args) {
       #if defined(DEBUG) or defined(RELDEB)
       engineLogger()->info(fmt, std::forward<Args>(args)...);
+      #endif
+    }
+
+    template<typename T>
+    static inline void warning(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      appLogger()->warn(arg);
+      #endif
+    }
+
+    template<typename T>
+    static inline void warning_e(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      engineLogger()->warn(arg);
       #endif
     }
 
@@ -67,6 +123,20 @@ namespace ff {
       #endif
     }
 
+    template<typename T>
+    static inline void error(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      appLogger()->error(arg);
+      #endif
+    }
+
+    template<typename T>
+    static inline void error_e(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      engineLogger()->error(arg);
+      #endif
+    }
+
     template<typename... Args>
     static inline void error(fmt::format_string<Args...> fmt, Args &&...args) {
       #if defined(DEBUG) or defined(RELDEB)
@@ -78,6 +148,20 @@ namespace ff {
     static inline void error_e(fmt::format_string<Args...> fmt, Args &&...args) {
       #if defined(DEBUG) or defined(RELDEB)
       engineLogger()->error(fmt, std::forward<Args>(args)...);
+      #endif
+    }
+
+    template<typename T>
+    static inline void critical(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      appLogger()->critical(arg);
+      #endif
+    }
+
+    template<typename T>
+    static inline void critical_e(const T& arg) {
+      #if defined(DEBUG) or defined(RELDEB)
+      engineLogger()->critical(arg);
       #endif
     }
 

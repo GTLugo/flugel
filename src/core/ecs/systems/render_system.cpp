@@ -8,7 +8,7 @@
 
 namespace ff {
   void RenderSystem::onUpdate() {
-    auto& cameraEntity{App::instance().activeWorld()->camera()};
+    auto& cameraEntity{App::instance().activeWorld()->masterCamera()};
     auto& camera{cameraEntity.getRef<Camera>()};
 
     for (auto& entity : entities) {

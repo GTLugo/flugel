@@ -4,13 +4,7 @@
 
 #pragma once
 
-#include "core/callbacks/events/event.hpp"
-#include "core/callbacks/events/app_event.hpp"
-#include "core/callbacks/events/render_event.hpp"
-#include "core/callbacks/events/logic_event.hpp"
-#include "core/callbacks/events/window_event.hpp"
-#include "core/callbacks/events/keyboard_event.hpp"
-#include "core/callbacks/events/mouse_event.hpp"
+#include "core/callbacks/event_system.hpp"
 
 #include "ecs.hpp"
 
@@ -27,16 +21,12 @@ namespace ff {
     ~World() = default;
 
     [[nodiscard]] std::string name() const { return name_; }
-    [[nodiscard]] Entity& camera() { return camera_; }
+    [[nodiscard]] Entity& masterCamera() { return masterCamera_; }
 
-    virtual bool onAppEvent(const AppEvent& e) { return false; }
-    virtual bool onLogicEvent(const LogicEvent& e);
-    virtual bool onRenderEvent(const RenderEvent& e);
-    virtual bool onWindowEvent(const WindowEvent& e) { return false; }
-    virtual bool onKeyboardEvent(const KeyboardEvent& e) { return false; }
-    virtual bool onMouseEvent(const MouseEvent& e) { return false; }
-    virtual bool onCursorEvent(const CursorEvent& e) { return false; }
-    virtual bool onScrollEvent(const ScrollEvent& e) { return false; }
+    virtual bool onMainEvent(const MainEvent& e);
+    virtual bool onGameEvent(const GameEvent& e);
+    virtual bool onWindowEvent(const WindowEvent& e);
+    virtual bool onInputEvent(const InputEvent& e);
 
     bool operator<(const World& rhs) const { return name_ < rhs.name_; }
     bool operator==(const World& rhs) const { return name_ == rhs.name_; }
@@ -48,7 +38,7 @@ namespace ff {
     const std::string name_;
     ECSManager ecs_{};
 
-    Entity camera_{&ecs()};
+    Entity masterCamera_{&ecs()};
   };
 }
 

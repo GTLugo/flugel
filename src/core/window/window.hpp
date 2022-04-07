@@ -4,11 +4,6 @@
 
 #include "core/renderer/renderer.hpp"
 #include "core/renderer/context.hpp"
-#include "core/callbacks/events/event.hpp"
-#include "core/callbacks/events/window_event.hpp"
-#include "core/callbacks/events/keyboard_event.hpp"
-#include "core/callbacks/events/mouse_event.hpp"
-#include "core/callbacks/notifier/notifier.hpp"
 
 namespace ff {
   struct WindowProperties {
@@ -24,7 +19,7 @@ namespace ff {
 
   class Window {
   protected:
-    using EventCallbackFn = std::function<void(const Event&)>;
+    //using EventCallbackFn = std::function<void(const Event&)>;
   public:
     static Window& instance() { return *instance_; }
 
@@ -48,7 +43,7 @@ namespace ff {
     [[nodiscard]] bool isVSync() const { return data_.vSync; }
     [[nodiscard]] bool isFullscreen() const { return data_.fullScreen; }
     [[nodiscard]] bool isUsingCustomDecor() const { return data_.customDecor; }
-    void setEventCallback(const EventCallbackFn& callback) { data_.eventCallback = callback; }
+    //void setEventCallback(const EventCallbackFn& callback) { data_.eventCallback = callback; }
     
     static Unique<Window> create(const WindowProperties& props = {});
   protected:
@@ -69,7 +64,7 @@ namespace ff {
       bool fullScreen;
       bool borderless;
       bool customDecor;
-      EventCallbackFn eventCallback;
+      //EventCallbackFn eventCallback;
 
       explicit WindowState(const WindowProperties& props)
         : title{props.title},

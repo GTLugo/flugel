@@ -18,12 +18,6 @@
 #include "core/ecs/components/transform.hpp"
 #include "core/ecs/components/camera.hpp"
 // events
-#include "core/callbacks/events/event.hpp"
-#include "core/callbacks/events/app_event.hpp"
-#include "core/callbacks/events/render_event.hpp"
-#include "core/callbacks/events/logic_event.hpp"
-#include "core/callbacks/events/window_event.hpp"
-#include "core/callbacks/events/keyboard_event.hpp"
-#include "core/callbacks/events/mouse_event.hpp"
+#include "core/callbacks/event_system.hpp"
 // rendering
 #include "core/renderer/renderer.hpp"

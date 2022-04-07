@@ -34,7 +34,7 @@ namespace ff {
     }
   }
 
-  void JobSystem::workerLoop(std::stop_token stopToken) {
+  void JobSystem::workerLoop(const std::stop_token& stopToken) {
     while (!stopToken.stop_requested()) {
       auto currentJob{jobs_.pop()};
       if (currentJob.has_value()) {
