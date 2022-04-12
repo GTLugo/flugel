@@ -7,7 +7,6 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
-// TODO: Swap all of this for switch cases
 #include <backends/imgui_impl_glfw.h>
 // RENDER API
 #ifdef FLUGEL_USE_OPENGL

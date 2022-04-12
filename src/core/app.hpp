@@ -20,10 +20,10 @@ namespace ff {
     static App& instance() { return *instance_; }
     Window& window() { return *window_; }
 
-    void insertWorld(Unique<World> world) { worlds_.insert({world->name(), std::move(world)}); }
+    void insertWorld(const Shared<World>& world) { worlds_.insert({world->name(), world}); }
     World* activeWorld() { return activeWorld_; }
     void setActiveWorld(const std::string& name) { activeWorld_ = worlds_[name].get(); }
-    //ECSManager& activeEntityManager() { return activeWorld_->entityManager(); } // helper function
+    void setActiveWorld(const Shared<World>& world) { activeWorld_ = worlds_[world->name()].get(); }
 
     void pushLayer(Layer* layer);
     void pushOverlay(Layer* overlay);
@@ -44,12 +44,23 @@ namespace ff {
     LayerStack layerStack_;
 
     // Misc
-    std::unordered_map<std::string, Unique<World>> worlds_{};
+    std::unordered_map<std::string, Shared<World>> worlds_{};
     World* activeWorld_{nullptr};
 
-    void gameLoop(const std::stop_token& stopToken);
+    void gameLoop();
 
     void eventHandler(const Event& e);
+
+    struct GameJob : Job {
+      App* app;
+
+      GameJob(App& app) : app{&app} {}
+
+      void execute() override {
+        Log::trace_e("GameJob thread: {}", std::this_thread::get_id());
+        app->gameLoop();
+      }
+    };
 
     struct TimeJob : Job {
       float tickRate{};
@@ -57,6 +68,7 @@ namespace ff {
       TimeJob(float tickRate) : tickRate{tickRate} {}
 
       void execute() override {
+        Log::trace_e("TimeJob thread: {}", std::this_thread::get_id());
         Time::init(tickRate);
       }
     };
@@ -67,6 +79,7 @@ namespace ff {
       EventSystemJob(EventSystem::EventCallback callbackFn) : callbackFn{std::move(callbackFn)} {}
 
       void execute() override {
+        Log::trace_e("EventSystemJob thread: {}", std::this_thread::get_id());
         EventSystem::init(std::move(callbackFn));
       }
     };

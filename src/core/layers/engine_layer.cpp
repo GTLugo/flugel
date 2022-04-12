@@ -46,9 +46,13 @@ namespace ff {
 
   bool EngineLayer::onWindowEvent(const WindowEvent& e) {
     return std::visit(EventVisitor{
-        [=](const WindowCloseEvent& keyEvent) {
-          Log::debug_e("{0}: {1}", name_, keyEvent);
+        [=](const WindowCloseEvent& closeEvent) {
+          Log::debug_e("{0}: {1}", name_, closeEvent);
           App::instance().close();
+          return true;
+        },
+        [=](const WindowFocusEvent& focusEvent) {
+          Log::debug_e("{0}: {1}", name_, focusEvent);
           return true;
         },
         [=](const auto& keyEvent) { return false; },

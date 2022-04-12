@@ -11,31 +11,9 @@
 
 #include "core/ecs/components/component.hpp"
 #include "core/threading/concurrent_queue.hpp"
-
-#include <boost/unordered_map.hpp>
+#include "core/threading/job_system.hpp"
 
 namespace ff {
-/// TODO: Come back to this if component checking REALLY needs to be faster
-//  class ComponentBits {
-//    using BitSet = std::bitset<64>;
-//  public:
-//    void set(size_t pos, bool value = true) {
-//      FF_ASSERT_E(pos < maxPos_, "Invalid position");
-//      bits_[pos / 64].set(pos % 64, value);
-//    }
-//
-//    void reset(size_t pos) { set(pos, false); }
-//
-//    bool test(size_t pos) {
-//      FF_ASSERT_E(pos < maxPos_, "Invalid position");
-//      return bits_[pos / 64][pos % 64];
-//    }
-//  private:
-//    static const size_t setCount_{4};
-//    static const size_t maxPos_{setCount_ * 64};
-//    std::array<BitSet, setCount_> bits_{{{}, {}, {}, {}}};
-//  };
-
   struct Entity {
     friend class ECSManager;
   public:
@@ -96,13 +74,29 @@ namespace std {
 
 namespace ff {
   class SystemBase {
+    using SystemAction = std::function<void(Entity&)>;
+
+    struct SystemJob : Job {
+      std::vector<Entity> entities{};
+      SystemAction action{};
+
+      explicit SystemJob(std::vector<Entity> entities_, SystemAction action_)
+          : entities{std::move(entities_)}, action{std::move(action_)} {}
+
+      void execute() override {
+        for (auto& entity : entities) { action(entity); }
+      }
+    };
+
   public:
+    std::vector<Entity> entities{};
+
     virtual ~SystemBase() = default;
 
-    std::vector<Entity> entities{};
     [[nodiscard]] const Entity::BitSet& components() const { return bitSet_; }
 
     virtual void onUpdate() = 0;
+    void parallelFor(const std::function<void(Entity&)>& action);
 
   protected:
     Entity::BitSet bitSet_{};
@@ -238,14 +232,14 @@ namespace ff {
       return bitSetMap_.at(entity.id());
     }
 
-    template<Derived<SystemBase> S>
+    template<Derives<SystemBase> S>
     void registerSystem() {
       std::string name{typeid(S).name()};
       FF_ASSERT_E(!systems_.contains(name), "Attempted duplicate system registration.");
       systems_.insert({name, makeShared<S>()});
     }
 
-    template<Derived<SystemBase> S>
+    template<Derives<SystemBase> S>
     void executeSystem() {
       std::string name{typeid(S).name()};
       FF_ASSERT_E(systems_.contains(name), "Attempted execution of unregistered system.");

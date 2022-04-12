@@ -105,6 +105,10 @@ namespace ff {
       data.windowPos = {xPos, yPos};
       EventSystem::handleEvent(WindowMovedEvent{data.windowPos.x, data.windowPos.y});
     });
+    glfwSetWindowFocusCallback(glfwWindow_, [](GLFWwindow* window, i32 focused) {
+      WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
+      EventSystem::handleEvent(WindowFocusEvent{(focused) != 0});
+    });
 
     // KEYBOARD
     glfwSetKeyCallback(glfwWindow_, [](GLFWwindow* window, i32 key, i32 scanCode, i32 action, i32 mods) {

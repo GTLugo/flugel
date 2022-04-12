@@ -4,45 +4,42 @@
 
 #include "job_system.hpp"
 
-#include <utility>
-
 namespace ff {
-
   void JobSystem::init() {
     if (instance_) return;
     Log::trace_e("Initializing Job System...");
     instance_ = new JobSystem{};
-    for (size_t i{0}; i < instance_->workerThreadCount_; ++i) {
-      instance_->workers_.emplace_back(FF_LAMBDA_INS(JobSystem::workerLoop, instance_));
-    }
+    instance_->workers_ = makeUnique<boost::asio::thread_pool>(workerCount());
   }
 
   void JobSystem::shutdown() {
-    for (auto&& worker : instance_->workers_) {
-      worker.request_stop();
-    }
+    Log::trace_e("Shutting down Job System...");
+    instance_->workers_->stop();
     delete instance_;
+    Log::trace_e("Job System shut down.");
   }
 
-  void JobSystem::kickJob(Job* job) {
-    instance_->jobs_.push(job);
-  }
-
-  void JobSystem::kickJob(const std::vector<Job*>& jobs) {
-    for (auto&& job : jobs) {
-      kickJob(job);
-    }
-  }
-
-  void JobSystem::workerLoop(const std::stop_token& stopToken) {
-    while (!stopToken.stop_requested()) {
-      auto currentJob{jobs_.pop()};
-      if (currentJob.has_value()) {
-        currentJob.value()->execute();
-        currentJob.value()->contract.setValue();
-      } else {
-        std::this_thread::sleep_for(MilliSeconds{0.5f});
+  void JobSystem::submit(const Shared<Job>& job) {
+    boost::asio::post(*instance_->workers_, [=]{
+      try {
+        job->execute();
+        job->contract.promise.set_value();
+      } catch (std::exception&) {
+        job->contract.promise.set_exception(std::current_exception());
       }
+    });
+  }
+
+  void JobSystem::submit(const std::vector<Shared<Job>>& jobs) {
+    for (auto&& job : jobs) {
+      boost::asio::post(*instance_->workers_, [=]{
+        try {
+          job->execute();
+          job->contract.promise.set_value();
+        } catch (std::exception&) {
+          job->contract.promise.set_exception(std::current_exception());
+        }
+      });
     }
   }
 }

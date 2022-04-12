@@ -49,5 +49,5 @@ namespace ff {
   using Weak = std::weak_ptr<T>;
 
   template<class T, class U>
-  concept Derived = std::is_base_of<U, T>::value;
+  concept Derives = std::is_base_of<U, T>::value;
 }

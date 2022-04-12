@@ -7,7 +7,7 @@ namespace ff {
   public:
     enum Action {
       None = 0,
-      Close, Resize, Focus, LostFocus, Moved,
+      Close, Resize, Focus, Moved,
     };
 
     [[nodiscard]] Action action() const { return action_; }
@@ -17,7 +17,6 @@ namespace ff {
         case Action::Close:     return name + "CLOSE";
         case Action::Resize:    return name + "RESIZE";
         case Action::Focus:     return name + "FOCUS";
-        case Action::LostFocus: return name + "LOST_FOCUS";
         case Action::Moved:     return name + "MOVED";
         default:                return name + "UNKNOWN";
       }
@@ -61,5 +60,18 @@ namespace ff {
     }
   private:
     const i32 xPos_, yPos_;
+  };
+
+  class WindowFocusEvent : public WindowEventBase {
+  public:
+    WindowFocusEvent(bool focused) : WindowEventBase{Action::Focus}, focused_{focused} {}
+
+    [[nodiscard]] bool isFocused() const { return focused_; }
+
+    [[nodiscard]] std::string toString() const override {
+      return WindowEventBase::toString() + " (" + std::to_string(focused_) + ")";
+    }
+  private:
+    bool focused_;
   };
 }

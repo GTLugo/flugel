@@ -20,7 +20,7 @@ namespace ff {
   using MainEvent = std::variant<std::monostate, MainAwakeEvent, MainStartEvent, MainPollEvent, MainUpdateEvent, MainStopEvent>;
   using GameEvent = std::variant<std::monostate, GameAwakeEvent, GameStartEvent, GameTickEvent, GameUpdateEvent,
       GameBeginFrameEvent, GameDrawEvent, GameImGuiEvent, GameEndFrameEvent, GameStopEvent>;
-  using WindowEvent = std::variant<std::monostate, WindowCloseEvent, WindowResizeEvent, WindowMovedEvent>;
+  using WindowEvent = std::variant<std::monostate, WindowCloseEvent, WindowResizeEvent, WindowMovedEvent, WindowFocusEvent>;
   using InputEvent = std::variant<std::monostate, InputKeyEvent, InputMouseEvent, InputCursorEvent, InputScrollEvent>;
 
   using Event = std::variant<std::monostate, MainEvent, GameEvent, WindowEvent, InputEvent>;
@@ -41,25 +41,19 @@ namespace ff {
       instance_->eventCallback_(e);
     }
 
+    template<class E, class... Args>
+    static auto visit(E event, Args... args) {
+      return std::visit(EventVisitor{
+          ((args, ...))
+      }, event);
+    }
+
     EventSystem(const EventSystem& other) = delete;
     EventSystem& operator=(const EventSystem& other) = delete;
   private:
     static inline EventSystem* instance_{nullptr};
 
     EventCallback eventCallback_;
-
-//    static inline auto eventVisitor_ = EventVisitor{
-//        [](const MainEvent&) {},
-//        [](const GameEvent&) {},
-//        [](const WindowCloseEvent&) {},
-//        [](const WindowResizeEvent&) {},
-//        [](const WindowMovedEvent&) {},
-//        [](const InputKeyEvent&) {},
-//        [](const InputMouseEvent&) {},
-//        [](const InputCursorEvent&) {},
-//        [](const InputScrollEvent&) {},
-//        [](const auto&) {},
-//    };
 
     EventSystem() = default;
     ~EventSystem() = default;
