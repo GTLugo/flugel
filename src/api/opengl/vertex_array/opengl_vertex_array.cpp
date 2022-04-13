@@ -5,19 +5,19 @@
 #include <glad/gl.h>
 
 namespace ff {
-  static GLenum shaderDataToOpenGLBaseType(BufferElement::Type type) {
+  static GLenum shaderDataToOpenGLBaseType(VertexAttributeBase::Type type) {
     switch (type) {
-      case BufferElement::Type::Bool:   { return GL_BOOL; }
-      case BufferElement::Type::Int:    { return GL_INT; }
-      case BufferElement::Type::Int2:   { return GL_INT; }
-      case BufferElement::Type::Int3:   { return GL_INT; }
-      case BufferElement::Type::Int4:   { return GL_INT; }
-      case BufferElement::Type::Float:  { return GL_FLOAT; }
-      case BufferElement::Type::Float2: { return GL_FLOAT; }
-      case BufferElement::Type::Float3: { return GL_FLOAT; }
-      case BufferElement::Type::Float4: { return GL_FLOAT; }
-      case BufferElement::Type::Mat3:   { return GL_FLOAT; }
-      case BufferElement::Type::Mat4:   { return GL_FLOAT; }
+      case VertexAttributeBase::Type::Bool:   { return GL_BOOL; }
+      case VertexAttributeBase::Type::Int:    { return GL_INT; }
+      case VertexAttributeBase::Type::Int2:   { return GL_INT; }
+      case VertexAttributeBase::Type::Int3:   { return GL_INT; }
+      case VertexAttributeBase::Type::Int4:   { return GL_INT; }
+      case VertexAttributeBase::Type::Float:  { return GL_FLOAT; }
+      case VertexAttributeBase::Type::Float2: { return GL_FLOAT; }
+      case VertexAttributeBase::Type::Float3: { return GL_FLOAT; }
+      case VertexAttributeBase::Type::Float4: { return GL_FLOAT; }
+      case VertexAttributeBase::Type::Mat3:   { return GL_FLOAT; }
+      case VertexAttributeBase::Type::Mat4:   { return GL_FLOAT; }
       default:                     { return 0; }
     }
   }
@@ -59,8 +59,8 @@ namespace ff {
       gl->EnableVertexAttribArray(i);
       gl->VertexAttribPointer(i,
         element.componentCount,
-        shaderDataToOpenGLBaseType(element.type), 
-        element.normalized, 
+        shaderDataToOpenGLBaseType(element.type),
+        element.normalized,
         vertexBuffer->layout().stride(), // size of an entire vertex including all attr
         (const void*)static_cast<u64>(element.offset) // offset of this attr in the vertex
       );

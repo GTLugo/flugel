@@ -3,7 +3,7 @@
 #define BUFFER_ELEMENT(type, name) fge::BufferElement{fge::BufferElement::dataTypeToShaderDataType<type>(), #name}
 
 namespace ff {
-  struct BufferElement {
+  struct VertexAttributeBase {
     enum class Type {
       None = 0,
       Bool,
@@ -13,167 +13,176 @@ namespace ff {
     };
 
     Type type{Type::Float};
-    std::string name{"unnamed_buffer_element"};
+    std::string name{"unnamed_attribute"};
     u32 componentCount{1};
     u32 size{sizeof(float)};
     u32 offset{0};
     bool normalized{false};
+  };
 
-    template<typename T>
-    static BufferElement create(std::string name_, bool normalized_ = false) {
-      FF_ASSERT_E(false, "Unsupported buffer element data type!");
-      return {.name = std::move(name_), .normalized = normalized_};
+  template<class T>
+  struct VertexAttribute : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::None,
+        .name = std::move(name_),
+        .componentCount = 1,
+        .size = sizeof(T),
+        .offset = 0,
+        .normalized = normalized_
+    } {
+      FF_ASSERT_E(false, "Unsupported vertex attribute data type!");
     }
+  };
 
-    template<>
-    BufferElement create<bool>(std::string name_, bool normalized_) {
-      return {
-          .type = Type::Bool,
-          .name = std::move(name_),
-          .componentCount = 1,
-          .size = sizeof(bool),
-          .offset = 0,
-          .normalized = normalized_
-      };
-    }
+  template<>
+  struct VertexAttribute<bool> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::Bool,
+        .name = std::move(name_),
+        .componentCount = 1,
+        .size = sizeof(bool),
+        .offset = 0,
+        .normalized = normalized_
+    } {}
+  };
 
-    template<>
-    BufferElement create<int>(std::string name_, bool normalized_) {
-      return {
+  template<>
+  struct VertexAttribute<int> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
         .type = Type::Int,
         .name = std::move(name_),
         .componentCount = 1,
         .size = sizeof(int),
         .offset = 0,
         .normalized = normalized_
-      };
-    }
+    } {}
+  };
 
-    template<>
-    BufferElement create<ivec2>(std::string name_, bool normalized_) {
-      return {
-          .type = Type::Int2,
-          .name = std::move(name_),
-          .componentCount = 2,
-          .size = sizeof(int) * 2,
-          .offset = 0,
-          .normalized = normalized_
-      };
-    }
+  template<>
+  struct VertexAttribute<ivec2> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::Int2,
+        .name = std::move(name_),
+        .componentCount = 2,
+        .size = sizeof(ivec2),
+        .offset = 0,
+        .normalized = normalized_
+    } {}
+  };
 
-    template<>
-    BufferElement create<ivec3>(std::string name_, bool normalized_) {
-      return {
-          .type = Type::Int3,
-          .name = std::move(name_),
-          .componentCount = 3,
-          .size = sizeof(int) * 3,
-          .offset = 0,
-          .normalized = normalized_
-      };
-    }
+  template<>
+  struct VertexAttribute<ivec3> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::Int3,
+        .name = std::move(name_),
+        .componentCount = 3,
+        .size = sizeof(ivec3),
+        .offset = 0,
+        .normalized = normalized_
+    } {}
+  };
 
-    template<>
-    BufferElement create<ivec4>(std::string name_, bool normalized_) {
-      return {
-          .type = Type::Int4,
-          .name = std::move(name_),
-          .componentCount = 4,
-          .size = sizeof(int) * 4,
-          .offset = 0,
-          .normalized = normalized_
-      };
-    }
+  template<>
+  struct VertexAttribute<ivec4> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::Int4,
+        .name = std::move(name_),
+        .componentCount = 4,
+        .size = sizeof(ivec4),
+        .offset = 0,
+        .normalized = normalized_
+    } {}
+  };
 
-    template<>
-    BufferElement create<float>(std::string name_, bool normalized_) {
-      return {
-          .type = Type::Float,
-          .name = std::move(name_),
-          .componentCount = 1,
-          .size = sizeof(float),
-          .offset = 0,
-          .normalized = normalized_
-      };
-    }
+  template<>
+  struct VertexAttribute<float> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::Float,
+        .name = std::move(name_),
+        .componentCount = 1,
+        .size = sizeof(float),
+        .offset = 0,
+        .normalized = normalized_
+    } {}
+  };
 
-    template<>
-    BufferElement create<vec2>(std::string name_, bool normalized_) {
-      return {
-          .type = Type::Float2,
-          .name = std::move(name_),
-          .componentCount = 2,
-          .size = sizeof(float) * 2,
-          .offset = 0,
-          .normalized = normalized_
-      };
-    }
+  template<>
+  struct VertexAttribute<vec2> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::Float2,
+        .name = std::move(name_),
+        .componentCount = 2,
+        .size = sizeof(vec2),
+        .offset = 0,
+        .normalized = normalized_
+    } {}
+  };
 
-    template<>
-    BufferElement create<vec3>(std::string name_, bool normalized_) {
-      return {
-          .type = Type::Float3,
-          .name = std::move(name_),
-          .componentCount = 3,
-          .size = sizeof(float) * 3,
-          .offset = 0,
-          .normalized = normalized_
-      };
-    }
+  template<>
+  struct VertexAttribute<vec3> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::Float3,
+        .name = std::move(name_),
+        .componentCount = 3,
+        .size = sizeof(vec3),
+        .offset = 0,
+        .normalized = normalized_
+    } {}
+  };
 
-    template<>
-    BufferElement create<vec4>(std::string name_, bool normalized_) {
-      return {
-          .type = Type::Float4,
-          .name = std::move(name_),
-          .componentCount = 4,
-          .size = sizeof(float) * 4,
-          .offset = 0,
-          .normalized = normalized_
-      };
-    }
+  template<>
+  struct VertexAttribute<vec4> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::Float4,
+        .name = std::move(name_),
+        .componentCount = 4,
+        .size = sizeof(vec4),
+        .offset = 0,
+        .normalized = normalized_
+    } {}
+  };
 
-    template<>
-    BufferElement create<mat3>(std::string name_, bool normalized_) {
-      return {
-          .type = Type::Mat3,
-          .name = std::move(name_),
-          .componentCount = 3 * 3,
-          .size = sizeof(float) * 3 * 3,
-          .offset = 0,
-          .normalized = normalized_
-      };
-    }
+  template<>
+  struct VertexAttribute<mat3> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::Mat3,
+        .name = std::move(name_),
+        .componentCount = 3 * 3,
+        .size = sizeof(mat3),
+        .offset = 0,
+        .normalized = normalized_
+    } {}
+  };
 
-    template<>
-    BufferElement create<mat4>(std::string name_, bool normalized_) {
-      return {
-          .type = Type::Mat4,
-          .name = std::move(name_),
-          .componentCount = 4 * 4,
-          .size = sizeof(float) * 4 * 4,
-          .offset = 0,
-          .normalized = normalized_
-      };
-    }
+  template<>
+  struct VertexAttribute<mat4> : public VertexAttributeBase {
+    VertexAttribute(std::string name_, bool normalized_ = false): VertexAttributeBase{
+        .type = Type::Mat4,
+        .name = std::move(name_),
+        .componentCount = 4 * 4,
+        .size = sizeof(mat4),
+        .offset = 0,
+        .normalized = normalized_
+    } {}
   };
 
   class VertexBufferLayout {
   public:
-    VertexBufferLayout(const std::initializer_list<BufferElement>& elements = {{}})
+    VertexBufferLayout(const std::initializer_list<VertexAttributeBase>& elements = {{}})
       : elements_{elements} {
       calculateOffsetAndStride();
     }
 
-    [[nodiscard]] const std::vector<BufferElement>& elements() const { return elements_; }
+    [[nodiscard]] const std::vector<VertexAttributeBase>& elements() const { return elements_; }
     [[nodiscard]] u32 stride() const { return stride_; }
 
-    [[nodiscard]] std::vector<BufferElement>::iterator begin() { return elements_.begin(); }
-    [[nodiscard]] std::vector<BufferElement>::iterator end()   { return elements_.end(); }
-    [[nodiscard]] std::vector<BufferElement>::const_iterator begin() const { return elements_.begin(); }
-    [[nodiscard]] std::vector<BufferElement>::const_iterator end()   const { return elements_.end(); }
+    [[nodiscard]] std::vector<VertexAttributeBase>::iterator begin() { return elements_.begin(); }
+    [[nodiscard]] std::vector<VertexAttributeBase>::iterator end()   { return elements_.end(); }
+    [[nodiscard]] std::vector<VertexAttributeBase>::const_iterator begin() const { return elements_.begin(); }
+    [[nodiscard]] std::vector<VertexAttributeBase>::const_iterator end()   const { return elements_.end(); }
   private:
-    std::vector<BufferElement> elements_;
+    // Polymorphism is unnecessary, so this is stored as pure base class, not base class ptr
+    std::vector<VertexAttributeBase> elements_;
     u32 stride_{0};
 
     void calculateOffsetAndStride() {

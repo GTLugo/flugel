@@ -38,7 +38,7 @@ namespace ff {
     const std::string name_;
     ECSManager ecs_{};
 
-    Entity masterCamera_{&ecs()};
+    Entity masterCamera_{ecs()};
   };
 }
 

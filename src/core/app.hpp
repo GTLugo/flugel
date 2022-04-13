@@ -18,12 +18,18 @@ namespace ff {
     virtual ~App();
 
     static App& instance() { return *instance_; }
+
     Window& window() { return *window_; }
 
-    void insertWorld(const Shared<World>& world) { worlds_.insert({world->name(), world}); }
     World* activeWorld() { return activeWorld_; }
     void setActiveWorld(const std::string& name) { activeWorld_ = worlds_[name].get(); }
     void setActiveWorld(const Shared<World>& world) { activeWorld_ = worlds_[world->name()].get(); }
+
+    void insertWorld(const Shared<World>& world) { worlds_.insert({world->name(), world}); }
+    void insertWorldAsActive(const Shared<World>& world) {
+      insertWorld(world);
+      setActiveWorld(world);
+    }
 
     void pushLayer(Layer* layer);
     void pushOverlay(Layer* overlay);
@@ -52,13 +58,13 @@ namespace ff {
     void eventHandler(const Event& e);
 
     struct GameJob : Job {
-      App* app;
+      App& app;
 
-      GameJob(App& app) : app{&app} {}
+      GameJob(App& app) : app{app} {}
 
       void execute() override {
         Log::trace_e("GameJob thread: {}", std::this_thread::get_id());
-        app->gameLoop();
+        app.gameLoop();
       }
     };
 
@@ -74,13 +80,13 @@ namespace ff {
     };
 
     struct EventSystemJob : Job {
-      EventSystem::EventCallback callbackFn;
+      EventManager::EventCallback callbackFn;
 
-      EventSystemJob(EventSystem::EventCallback callbackFn) : callbackFn{std::move(callbackFn)} {}
+      EventSystemJob(EventManager::EventCallback callbackFn) : callbackFn{std::move(callbackFn)} {}
 
       void execute() override {
         Log::trace_e("EventSystemJob thread: {}", std::this_thread::get_id());
-        EventSystem::init(std::move(callbackFn));
+        EventManager::init(std::move(callbackFn));
       }
     };
   };

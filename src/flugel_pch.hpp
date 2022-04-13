@@ -2,7 +2,6 @@
 /*----------------------
   STD LIBRARY
 ----------------------*/
-
 // IO
 #include <iostream>
 #include <fstream>
@@ -47,10 +46,6 @@
 #include <map>
 #include <unordered_map>
 
-#if defined(_WIN32) && defined(NDEBUG)
-#include <windows.h>
-#endif
-
 /*----------------------
   VENDOR LIBRARIES
 ----------------------*/
@@ -61,6 +56,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include <boost/asio.hpp> // fix "WinSock.h has already been included" error
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -69,6 +65,10 @@
 #include <boost/algorithm/clamp.hpp>
 #include <boost/random.hpp>
 #include <boost/nondet_random.hpp>
+
+#if defined(_WIN32) && defined(NDEBUG)
+#include <windows.h>
+#endif
 
 /*----------------------
   FLUGEL LIBRARY
