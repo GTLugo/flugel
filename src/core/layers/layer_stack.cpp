@@ -1,6 +1,6 @@
 #include "layer_stack.hpp"
 
-namespace fge {
+namespace ff {
   LayerStack::~LayerStack() {
     for (auto ritr = rbegin(); ritr != rend(); ++ritr) {
       (*ritr)->detach();
@@ -18,7 +18,7 @@ namespace fge {
     overlay->attach();
   }
 
-  void LayerStack::pushBottomStack(Layer *layer) {
+  void LayerStack::pushBottomStack(Layer* layer) {
     layers_.emplace_back(layer);
     layer->attach();
   }
@@ -41,7 +41,7 @@ namespace fge {
     }
   }
 
-  void LayerStack::popBottomStack(Layer *layer) {
+  void LayerStack::popBottomStack(Layer* layer) {
     auto itr = std::find(begin(), end(), layer);
     if (itr != end()) {
       layer->detach();

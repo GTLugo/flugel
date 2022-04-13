@@ -1,21 +1,18 @@
 #pragma once
 
-#include "core/thread_pool/thread_pool.hpp"
+#include <utility>
+
 #include "core/window/window.hpp"
 #include "core/layers/layer_stack.hpp"
-#include "core/layers/engine_layer.hpp"
-#include "core/layers/render_layer.hpp"
 
-#include "core/callbacks/events/event.hpp"
-#include "core/callbacks/events/app_event.hpp"
-#include "core/callbacks/events/render_event.hpp"
-#include "core/callbacks/events/logic_event.hpp"
-#include "core/callbacks/events/window_event.hpp"
-#include "core/callbacks/events/mouse_event.hpp"
+#include "core/threading/job_system.hpp"
+#include "core/callbacks/event_system.hpp"
+#include "core/callbacks/notifier/notifier.hpp"
 
-namespace fge {
-  class FGE_API App {
-    using RenderEvents = std::array<RenderEvent, 4>;
+#include "core/ecs/world.hpp"
+
+namespace ff {
+  class App {
   public:
     explicit App(const WindowProperties& props = {});
     virtual ~App();
@@ -23,40 +20,69 @@ namespace fge {
     static App& instance() { return *instance_; }
     Window& window() { return *window_; }
 
+    void insertWorld(const Shared<World>& world) { worlds_.insert({world->name(), world}); }
+    World* activeWorld() { return activeWorld_; }
+    void setActiveWorld(const std::string& name) { activeWorld_ = worlds_[name].get(); }
+    void setActiveWorld(const Shared<World>& world) { activeWorld_ = worlds_[world->name()].get(); }
+
     void pushLayer(Layer* layer);
     void pushOverlay(Layer* overlay);
-
-    void toggleImGui(bool enabled);
 
     void run();
     void close();
 
     App(const App& app) = delete;
+    App& operator=(const App& app) = delete;
   private:
     static inline App* instance_{nullptr};
-    // Util
-    const u32 maxFramesInFlight_{2};
-    float tickRate_{128.};
+
     // Window
     Unique<Window> window_;
     bool shouldClose_{false};
 
-    // Threads
-    ThreadPool threadPool_{};
-    std::mutex renderMutex_;
-    std::condition_variable renderCondition_;
-    std::queue<RenderEvents*> renderQueue_{};
-
     // Layers
     LayerStack layerStack_;
-    
-    void gameLoop();
-    void renderLoop();
-    
-    void waitForRenderJob();
-    void pushRenderJob(RenderEvents* renderEvents);
 
-    void eventDispatch(Event& e);
+    // Misc
+    std::unordered_map<std::string, Shared<World>> worlds_{};
+    World* activeWorld_{nullptr};
+
+    void gameLoop();
+
+    void eventHandler(const Event& e);
+
+    struct GameJob : Job {
+      App* app;
+
+      GameJob(App& app) : app{&app} {}
+
+      void execute() override {
+        Log::trace_e("GameJob thread: {}", std::this_thread::get_id());
+        app->gameLoop();
+      }
+    };
+
+    struct TimeJob : Job {
+      float tickRate{};
+
+      TimeJob(float tickRate) : tickRate{tickRate} {}
+
+      void execute() override {
+        Log::trace_e("TimeJob thread: {}", std::this_thread::get_id());
+        Time::init(tickRate);
+      }
+    };
+
+    struct EventSystemJob : Job {
+      EventSystem::EventCallback callbackFn;
+
+      EventSystemJob(EventSystem::EventCallback callbackFn) : callbackFn{std::move(callbackFn)} {}
+
+      void execute() override {
+        Log::trace_e("EventSystemJob thread: {}", std::this_thread::get_id());
+        EventSystem::init(std::move(callbackFn));
+      }
+    };
   };
 
   Unique<App> createApp();

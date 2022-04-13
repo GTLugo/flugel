@@ -4,7 +4,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 
-namespace fge {
+namespace ff {
   class level_formatter_flag : public spdlog::custom_flag_formatter {
   public:
     void format(const spdlog::details::log_msg& msg, const std::tm& tm, spdlog::memory_buf_t& dest) override {
@@ -58,7 +58,7 @@ namespace fge {
       appLogger_->set_level(spdlog::level::trace);
     #endif
 
-    FGE_DEBUG_ENG("Initialized engine logger!");
-    FGE_DEBUG("Initialized app logger!");
+    trace_e("Initialized engine logger!");
+    trace("Initialized app logger!");
   }
 }

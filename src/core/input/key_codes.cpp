@@ -1,6 +1,12 @@
 #include "key_codes.hpp"
 
-namespace fge{
+namespace ff{
+  std::map<Key::State, std::string> Key::stateNameMap_{
+      {Key::Released, "Rels"},
+      {Key::Pressed , "Pres"},
+      {Key::Held    , "Hold"},
+  };
+
   std::map<Key::Code, std::string> Key::nameMap_{
     {Key::Unknown,      "Unknown"},
     //num row

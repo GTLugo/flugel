@@ -4,7 +4,7 @@
 
 #include <glad/gl.h>
 
-namespace fge {
+namespace ff {
   static GLenum shaderDataToOpenGLBaseType(BufferElement::Type type) {
     switch (type) {
       case BufferElement::Type::Bool:   { return GL_BOOL; }
@@ -47,7 +47,7 @@ namespace fge {
   }
 
   void OpenGLVertexArray::addVertexBuffer(Shared<VertexBuffer> vertexBuffer) {
-    FGE_ASSERT_ENG(!vertexBuffer->layout().elements().empty(), "Vertex buffer has no layout!");
+    FF_ASSERT_E(!vertexBuffer->layout().elements().empty(), "Vertex buffer has no layout!");
     auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
 
     //auto gl{gladGetGLContext()};

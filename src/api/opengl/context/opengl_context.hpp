@@ -5,7 +5,7 @@
 struct GLFWwindow;
 struct GladGLContext;
 
-namespace fge {
+namespace ff {
   class OpenGLContext : public RenderContext {
   public:
     explicit OpenGLContext(GLFWwindow* windowHandle);

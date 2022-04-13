@@ -6,9 +6,7 @@
 #include "color.hpp"
 #include "util/color/srgb_transform/srgb_transform.hpp"
 
-namespace fge {
-  bool Color::using_srgb_color_space = false;
-
+namespace ff {
   Color::Color(float r, float g, float b, float a)
     : r(r), g(g), b(b), a(a) {
     if (using_srgb_color_space) {

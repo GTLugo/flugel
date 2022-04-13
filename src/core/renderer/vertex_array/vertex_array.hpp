@@ -1,9 +1,21 @@
 #pragma once
 
-#include "core/renderer/vertex_array/buffer.hpp"
+#include "core/renderer/buffer/buffer.hpp"
 
-namespace fge {
-  class FGE_API VertexArray {
+namespace ff {
+  struct Vertex {
+    vec3 pos{0.f, 0.f, 0.f};
+    vec4 color{1.f, 0.f, 1.f, 1.f};
+    vec2 uv{0.f, 0.f};
+
+
+//    Vertex(vec3 pos_)
+//        : position{pos_}, color{std::nullopt}, uv{std::nullopt} {}
+//    Vertex(vec3 pos_, vec4 color_, vec2 uv_)
+//        : position{pos_}, color{color_}, uv{uv_} {}
+  };
+
+  class VertexArray {
   public:
     virtual ~VertexArray() = default;
 
@@ -18,13 +30,13 @@ namespace fge {
     static Shared<VertexArray> create(Shared<VertexBuffer> vertexBuffer,
                                       Shared<IndexBuffer> indexBuffer);
     static Shared<VertexArray> create(float* vertices, u32 vertBitSize,
-                                      const BufferLayout& layout,
+                                      const VertexBufferLayout& layout,
                                       u32* indices, u32 count);
     static Shared<VertexArray> create(std::vector<float>& vertices,
-                                      const BufferLayout& layout,
+                                      const VertexBufferLayout& layout,
                                       std::vector<u32>& indices);
     static Shared<VertexArray> create(const std::initializer_list<float>& vertices,
-                                      const BufferLayout& layout,
+                                      const VertexBufferLayout& layout,
                                       const std::initializer_list<u32>& indices);
   };
 }

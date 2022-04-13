@@ -1,6 +1,6 @@
 #pragma once
 
-namespace fge {
+namespace ff {
   class Mouse {
   public:
     enum State : i32 {
@@ -32,19 +32,20 @@ namespace fge {
     }
 
     static Code fromNative(i32 button) {
-      for (const auto& itr : mouseMap_) {
-        if (itr.second == button) {
-          return itr.first;
-        }
-      } 
-      return Unknown;
+      return nativeMap_.at(button);
     };
 
     static std::string toString(Code keyCode) {
       return nameMap_.at(keyCode);
     }
+
+    static std::string toString(State keyCode) {
+      return stateNameMap_.at(keyCode);
+    }
   protected:
     static std::map<Code, i32> mouseMap_;
+    static std::map<i32, Code> nativeMap_;
     static std::map<Code, std::string> nameMap_;
+    static std::map<State, std::string> stateNameMap_;
   };
 }

@@ -25,7 +25,7 @@
 #include "srgb_transform.hpp"
 
 
-namespace fge {
+namespace ff {
 
 /*---- sRGB values to is_linear intensities ----*/
 

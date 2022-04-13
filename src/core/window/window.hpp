@@ -4,10 +4,9 @@
 
 #include "core/renderer/renderer.hpp"
 #include "core/renderer/context.hpp"
-#include "core/callbacks/events/event.hpp"
 
-namespace fge {
-  struct FGE_API WindowProperties {
+namespace ff {
+  struct WindowProperties {
     const std::string title{"FLUGEL ENGINE"};
     const i32 width{800};
     const i32 height{450};
@@ -18,10 +17,12 @@ namespace fge {
     const bool customDecor{false};
   };
 
-  class FGE_API Window {
+  class Window {
   protected:
-    using EventCallbackFn = std::function<void(Event&)>;
+    //using EventCallbackFn = std::function<void(const Event&)>;
   public:
+    static Window& instance() { return *instance_; }
+
     virtual ~Window() = default;
     
     virtual void pollEvents() = 0;
@@ -42,12 +43,15 @@ namespace fge {
     [[nodiscard]] bool isVSync() const { return data_.vSync; }
     [[nodiscard]] bool isFullscreen() const { return data_.fullScreen; }
     [[nodiscard]] bool isUsingCustomDecor() const { return data_.customDecor; }
-    void setEventCallback(const EventCallbackFn& callback) { data_.eventCallback = callback; }
+    //void setEventCallback(const EventCallbackFn& callback) { data_.eventCallback = callback; }
     
     static Unique<Window> create(const WindowProperties& props = {});
   protected:
+    static inline Window* instance_{nullptr};
+
     explicit Window(const WindowProperties& props)
       : data_{props} {
+      instance_ = this;
       Renderer::setApi(props.renderApi);
     }
 
@@ -60,7 +64,7 @@ namespace fge {
       bool fullScreen;
       bool borderless;
       bool customDecor;
-      EventCallbackFn eventCallback;
+      //EventCallbackFn eventCallback;
 
       explicit WindowState(const WindowProperties& props)
         : title{props.title},

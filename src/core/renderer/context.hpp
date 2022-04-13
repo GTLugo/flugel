@@ -1,6 +1,6 @@
 #pragma once
 
-namespace fge {
+namespace ff {
   class RenderContext {
   public:
     virtual void* nativeContext() = 0;

@@ -3,7 +3,7 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-namespace fge {
+namespace ff {
   void GLAPIENTRY messageCallback(GLenum source,
                                   GLenum type,
                                   GLuint id,
@@ -13,23 +13,23 @@ namespace fge {
                                   const void* userParam ) {
     switch (type) {
       case GL_DEBUG_TYPE_ERROR: { 
-        FGE_ERROR_ENG("OPENGL ERROR | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        Log::debug_e("OPENGL ERROR | Type: {0} | Severity: {1} | {2}", type, severity, message);
         return;
       }
       case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: {
-        FGE_ERROR_ENG("OPENGL DEPRECATED BEHAVIOR | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        Log::debug_e("OPENGL DEPRECATED BEHAVIOR | Type: {0} | Severity: {1} | {2}", type, severity, message);
         return;
       }
       case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: {
-        FGE_ERROR_ENG("OPENGL UNDEFINED BEHAVIOR | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        Log::debug_e("OPENGL UNDEFINED BEHAVIOR | Type: {0} | Severity: {1} | {2}", type, severity, message);
         return;
       }
       case GL_DEBUG_TYPE_PORTABILITY: {
-        FGE_ERROR_ENG("OPENGL PORTABILITY | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        Log::debug_e("OPENGL PORTABILITY | Type: {0} | Severity: {1} | {2}", type, severity, message);
         return;
       }
       case GL_DEBUG_TYPE_PERFORMANCE: {
-        FGE_ERROR_ENG("OPENGL PERFORMANCE | Type: {0} | Severity: {1} | {2}", type, severity, message);
+        Log::debug_e("OPENGL PERFORMANCE | Type: {0} | Severity: {1} | {2}", type, severity, message);
         return;
       }
       default: { return; }
@@ -38,15 +38,15 @@ namespace fge {
 
   OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
     : windowHandle_{windowHandle} {
-    FGE_ASSERT_ENG(windowHandle, "Window handle is nullptr!");
+    FF_ASSERT_E(windowHandle, "Window handle is nullptr!");
     setCurrent(true);
 
     context_ = new GladGLContext();
     i32 gladVersion = gladLoadGLContext(context_, glfwGetProcAddress);
     //gladSetGLContext(context_);
     //i32 gladVersion = gladLoadGL(glfwGetProcAddress);
-    FGE_ASSERT_ENG(gladVersion, "Failed to initialize GLAD!");
-    FGE_INFO_ENG("Using OpenGL | Vendor: {} | Renderer: {} | Version: {}.{}",
+    FF_ASSERT_E(gladVersion, "Failed to initialize GLAD!");
+    Log::info_e("Using OpenGL | Vendor: {} | Renderer: {} | Version: {}.{}",
                  context_->GetString(GL_VENDOR),
                  context_->GetString(GL_RENDERER),
                  GLAD_VERSION_MAJOR(gladVersion),
@@ -63,16 +63,16 @@ namespace fge {
   }
 
   OpenGLContext::~OpenGLContext() {
-    FGE_TRACE_ENG("Destructing render context...");
+    Log::trace_e("Destructing render context...");
     delete context_;
   }
 
   void OpenGLContext::setCurrent(bool isCurrent) {
     if (isCurrent) {
-      //FGE_DEBUG_ENG("Making GL context current to thread: {}", std::this_thread::get_id());
+      //Log::debug_e("Making GL context current to thread: {}", std::this_thread::get_id());
       glfwMakeContextCurrent(windowHandle_);
     } else {
-      //FGE_DEBUG_ENG("Making GL context non-current to thread: {}", std::this_thread::get_id());
+      //Log::debug_e("Making GL context non-current to thread: {}", std::this_thread::get_id());
       glfwMakeContextCurrent(nullptr);
     }
   }

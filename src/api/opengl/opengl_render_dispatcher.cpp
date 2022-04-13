@@ -8,7 +8,7 @@
 
 #include <glad/gl.h>
 
-namespace fge {
+namespace ff {
   void OpenGLRenderDispatcher::clear(Color color) {
     auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
     gl->ClearColor(color.r, color.g, color.b, color.a);

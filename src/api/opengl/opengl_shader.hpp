@@ -2,7 +2,7 @@
 
 #include "core/renderer/shader.hpp"
 
-namespace fge {
+namespace ff {
   class OpenGLShader : public Shader {
   public:
     explicit OpenGLShader(const std::string& shaderFilePath);
@@ -11,6 +11,8 @@ namespace fge {
 
     void bind() const override;
     void unbind() const override;
+
+    void pushMat4(const mat4& matrix, const std::string& name) const override;
   private:
     u32 shaderId_{};
 

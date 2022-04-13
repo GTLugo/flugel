@@ -1,25 +1,24 @@
 #pragma once
 
 #include "layer.hpp"
+#include "core/renderer/buffer/frame_buffer.hpp"
 
-namespace fge {
-  class FGE_API EngineLayer : public Layer {
+namespace ff {
+  class EngineLayer final : public Layer {
   public:
-    EngineLayer()
-      : Layer{"fge_engine_layer"} {}
+    EngineLayer() : Layer{"engine_layer"} {}
   private:
     vec2 windowDragOffset_{}; // cursor position at time of clicking to drag window
     bool draggingWindowDecor_{false};
     bool closingWindowDecor_{false};
-    
-    bool onAppEvent(AppEvent& e) override;
-    bool onRenderEvent(RenderEvent& e) override;
-    bool onWindowEvent(WindowEvent& e) override;
-    bool onKeyboardEvent(KeyboardEvent& e) override;
-    bool onMouseEvent(MouseEvent& e) override;
-    bool onCursorEvent(CursorEvent& e) override;
-    bool onScrollEvent(ScrollEvent& e) override;
+    Color clearColor_{0x696969FF}; // 0x2D2A2AFF
+    Shared<FrameBuffer> defaultFrameBuffer_;
 
-    void pollCustomDecor(MouseEvent& e);
+    bool onMainEvent(const MainEvent& e) final;
+    bool onGameEvent(const GameEvent& e) final;
+    bool onWindowEvent(const WindowEvent& e) final;
+    bool onInputEvent(const InputEvent& e) final;
+
+    void pollCustomDecor(const InputMouseEvent& e);
   };
 }

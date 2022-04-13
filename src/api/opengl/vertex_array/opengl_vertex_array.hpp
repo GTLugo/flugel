@@ -2,7 +2,7 @@
 
 #include "core/renderer/vertex_array/vertex_array.hpp"
 
-namespace fge {
+namespace ff {
   class OpenGLVertexArray : public VertexArray {
   public:
     OpenGLVertexArray(Shared<VertexBuffer> vertexBuffer, Shared<IndexBuffer> indexBuffer);

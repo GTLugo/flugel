@@ -3,11 +3,11 @@
 //
 #pragma once
 
-namespace fge {
+namespace ff {
   struct Color {
     float r, g, b, a;
     bool is_linear = false;
-    static bool using_srgb_color_space;
+    static inline bool using_srgb_color_space{true};
 
     Color(float r, float g, float b, float a = 1.f);
     explicit Color(u32 hexValue);

@@ -8,7 +8,7 @@
 
 #include <glad/gl.h>
 
-namespace fge {
+namespace ff {
   OpenGLTextureBuffer::OpenGLTextureBuffer(TextureBuffer::Format format, i32 width, i32 height, void* data) {
     auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
     gl->GenTextures(1, &textureId_);
@@ -21,7 +21,7 @@ namespace fge {
       case Format::RGB:
         glFormat = GL_RGB;
         break;
-      default: FGE_ASSERT_ENG(false, "Unsupported texture buffer format!");
+      default: FF_ASSERT_E(false, "Unsupported texture buffer format!");
     }
     gl->TexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, GL_UNSIGNED_BYTE, data);
 
@@ -45,7 +45,7 @@ namespace fge {
     gl->BindTexture(GL_TEXTURE_2D, 0);
   }
 
-  void* OpenGLTextureBuffer::handle() const {
-    return reinterpret_cast<void*>(textureId_);
+  u32 OpenGLTextureBuffer::handle() const {
+    return textureId_;
   }
 }

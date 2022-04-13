@@ -16,16 +16,16 @@
 
 #include "core/callbacks/events/event.hpp"
 
-namespace fge {
+namespace ff {
   // Notifier sends notifications for a single type of event
   // Usage: Create a member variable of this class in whatever class should be
   //        sending out notifications.
-  template<typename Event_T>
-  class FGE_API Notifier {
-    using EventFn = std::function<bool(Event_T&)>;
-    /// TODO: change u64 for UUID
-    using SubscriberCollection = std::map<UUID, EventFn>;
+  template<typename E>
+  class Notifier {
   public:
+    using Callback = std::function<bool(const E&)>;
+    using SubscriberCollection = std::map<UUID, Callback>;
+
     Notifier() = default;
     virtual ~Notifier() {
       if (!subscribers_.empty()) {
@@ -34,40 +34,65 @@ namespace fge {
     };
 
     // Subscribe and Unsubscribe should be given wrappers in the notifying class
-    UUID subscribe(EventFn eventFn) {
+    UUID subscribe(Callback callback) {
       UUID id{};
-      subscribers_.insert(std::pair<UUID, EventFn>(id, eventFn));
-      FGE_DEBUG_ENG("Subscribed: <{0}> {1}", Event_T::getStaticName(), id);
+      subscribers_.insert(std::pair<UUID, Callback>(id, callback));
       return id;
     }
 
     void unsubscribe(const UUID& id) {
       subscribers_.erase(id);
-      FGE_DEBUG_ENG("Unsubscribed: <{0}> {1}", Event_T::getStaticName(), id);
     }
 
     // Notify should be called from within the class. It should never be called from
     // outside the class as that would introduce coupling and risk runaway events
-    // void notify(Event_T& event) {
-    //   callSubscribers(event);
-    // }
 
-    void notify(Event_T event) {
-      callSubscribers(event);
+    bool notify(const E& event) {
+      bool handled{false};
+      for (const auto& [id, sub] : subscribers_) {
+        handled = sub(event);
+      }
+      return handled;
     }
   private:
     SubscriberCollection subscribers_;
-  private:
-    void callSubscribers(Event_T& event) {
-      bool handled{false};
-      for (auto& [id, sub] : subscribers_) {
-        handled = sub(event);
-        /// TODO: implement ordering events based on priority and skipping when handled already
-        if (handled) {
-          break;
-        }
-      }
-    }
   };
+
+//  class NotifierNew {
+//  public:
+//    using EventFn = std::function<bool(const Event&)>;
+//    using SubscriberCollection = std::map<UUID, EventFn>;
+//
+//    NotifierNew() = default;
+//    virtual ~NotifierNew() {
+//      if (!subscribers_.empty()) {
+//        subscribers_.clear();
+//      }
+//    };
+//
+//    // Subscribe and Unsubscribe should be given wrappers in the notifying class
+//    UUID subscribe(EventFn eventFn) {
+//      UUID id{};
+//      subscribers_.insert(std::pair<UUID, EventFn>(id, eventFn));
+//      return id;
+//    }
+//
+//    void unsubscribe(const UUID& id) {
+//      subscribers_.erase(id);
+//    }
+//
+//    // Notify should be called from within the class. It should never be called from
+//    // outside the class as that would introduce coupling and risk runaway events
+//
+//    bool notify(const Event& event) {
+//      bool handled{false};
+//      for (const auto& [id, sub] : subscribers_) {
+//        handled = sub(event);
+//      }
+//      return handled;
+//    }
+//  private:
+//    SubscriberCollection subscribers_;
+//  };
 }
 

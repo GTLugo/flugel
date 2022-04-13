@@ -1,12 +1,12 @@
 #pragma once
 
-namespace fge {
+namespace ff {
   class Key {
   public:
     enum State : i32 {
       Released,
       Pressed,
-      Repeat
+      Held
     };
 
     // Based on GLFW
@@ -143,20 +143,21 @@ namespace fge {
     }
 
     static Code fromNative(i32 key) {
-      for (const auto& itr : keyMap_) {
-        if (itr.second == key) {
-          return itr.first;
-        }
-      } 
-      return Code::Unknown;
+      return nativeMap_.at(key);
     };
 
     static std::string toString(Code keyCode) {
       return nameMap_.at(keyCode);
     }
+
+    static std::string toString(State keyCode) {
+      return stateNameMap_.at(keyCode);
+    }
   protected:
     static std::map<Code, i32> keyMap_;
+    static std::map<i32, Code> nativeMap_;
     static std::map<Code, std::string> nameMap_;
+    static std::map<State, std::string> stateNameMap_;
   };
   
   class Modifier {
@@ -190,13 +191,7 @@ namespace fge {
     }
 
     static Code fromNative(i32 mod) {
-      i32 modifiers{0};
-      for (const auto& itr : modMap_) {
-        if (itr.second == mod) {
-          return itr.first;
-        }
-      }
-      return None;
+      return nativeMap_.at(mod);
     };
 
     static BitCodes fromNativeBits(i32 mods) {
@@ -211,5 +206,6 @@ namespace fge {
     }
   protected:
     static std::map<Code, i32> modMap_;
+    static std::map<i32, Code> nativeMap_;
   };
 }

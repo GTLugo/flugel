@@ -4,6 +4,6 @@
 
 #include "render_dispatcher.hpp"
 
-namespace fge {
+namespace ff {
 
 }

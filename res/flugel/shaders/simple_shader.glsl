@@ -4,11 +4,13 @@
 layout (location = 0) in vec4 pos;
 layout (location = 1) in vec4 color;
 
+uniform mat4 vpMatrix;
+
 out vec4 vertColor;
 
 void main() {
     vertColor = color;
-    gl_Position = pos;
+    gl_Position = vpMatrix * pos;
 }
 
 #type fragment

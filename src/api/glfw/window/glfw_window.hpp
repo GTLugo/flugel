@@ -5,7 +5,7 @@
 
 #include <GLFW/glfw3.h>
 
-namespace fge {
+namespace ff {
   class GlfwWindow : public Window {
   public:
     explicit GlfwWindow(const WindowProperties& props);
@@ -24,6 +24,7 @@ namespace fge {
     
   private:
     GLFWwindow* glfwWindow_{};
+    static inline u8 glfwWindowCount_{0};
     const GLFWvidmode* vidMode_{};
 
     GLFWimage icons_[1]{};

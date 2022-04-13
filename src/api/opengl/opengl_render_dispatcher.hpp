@@ -5,7 +5,7 @@
 
 #include "core/renderer/render_dispatcher.hpp"
 
-namespace fge {
+namespace ff {
   class OpenGLRenderDispatcher : public RenderDispatcher {
   public:
     void clear(Color color) final;

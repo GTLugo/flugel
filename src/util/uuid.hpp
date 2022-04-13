@@ -3,8 +3,8 @@
 // Based on TheCherno's implementation of UUID
 // https://youtu.be/O_0nUE4S8T8
 
-namespace fge {
-  class FGE_API UUID {
+namespace ff {
+  class UUID {
   public:
     UUID()
       : uuid_{Random::intBetween(std::numeric_limits<u128>::min(), std::numeric_limits<u128>::max())} {}
@@ -13,6 +13,7 @@ namespace fge {
     UUID(const UUID&) = default;
 
     explicit operator u128() const { return uuid_; }
+    bool operator<(const UUID& rhs) const { return uuid_ < rhs.uuid_; }
     friend std::ostream& operator<<(std::ostream& o, const UUID& uuid) {
       return o << uuid.uuid_;
     }
@@ -24,9 +25,9 @@ namespace fge {
 // Allow hashing
 namespace std {
   template<>
-  struct hash<fge::UUID> {
-    std::size_t operator()(const fge::UUID& uuid) const {
-      return hash<fge::u128>()((fge::u128)uuid);
+  struct hash<ff::UUID> {
+    std::size_t operator()(const ff::UUID& uuid) const {
+      return hash<ff::u128>()((ff::u128)uuid);
     }
   };
 }

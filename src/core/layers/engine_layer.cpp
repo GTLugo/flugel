@@ -3,75 +3,89 @@
 #include "core/app.hpp"
 #include "core/input/input.hpp"
 
-#include <glad/gl.h>
-
-namespace fge {
-  bool EngineLayer::onWindowEvent(WindowEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    switch (e.action()) {
-      case WindowEvent::Close: {
-        FGE_DEBUG_ENG("{0}: {1}", name_, e);
-        App::instance().close();
-        return true;
-      }
-      default: {
-        return false;
-      }
-    }
-  }
-  
-  bool EngineLayer::onAppEvent(AppEvent& e) {
-    switch (e.action()) {
-      case AppEvent::Poll: {
+namespace ff {
+  bool EngineLayer::onMainEvent(const MainEvent& e) {
+    return std::visit(EventVisitor{
+      [](const MainPollEvent&) {
         App::instance().window().pollEvents();
-        return false;
-      }
-      default: {
-        return false;
-      }
-    }
+        return true;
+      },
+      [](const auto& event) { return false; }
+    }, e);
   }
 
-  bool EngineLayer::onRenderEvent(RenderEvent& e) {
-    switch (e.action()) {
-      default: {
-        return false;
-      }
-    }
+  bool EngineLayer::onGameEvent(const GameEvent& e) {
+    return std::visit(EventVisitor{
+        [=](const GameStartEvent&) {
+          App& app{App::instance()};
+          defaultFrameBuffer_ = FrameBuffer::create(
+              TextureBuffer::Format::RGB,
+              App::instance().window().dims().x,
+              App::instance().window().dims().y,
+              nullptr);
+          Renderer::setDefaultFrameBuffer(defaultFrameBuffer_);
+
+          return true;
+        },
+        [=](const GameBeginFrameEvent&) {
+          Renderer::clear(clearColor_);
+          Renderer::beginScene();
+
+          return true;
+        },
+        [=](const GameEndFrameEvent&) {
+          Renderer::endScene();
+          //Renderer::flush();
+          App::instance().window().context().swapBuffers();
+
+          return true;
+        },
+        [](const auto& event) { return false; }
+    }, e);
   }
 
-  bool EngineLayer::onKeyboardEvent(KeyboardEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    if (Input::isPressed(Key::Enter) && Input::isPressed(Modifier::Alt)) {
-      FGE_DEBUG_ENG("{0}: Fullscreen({1})", name_, !App::instance().window().isFullscreen());
-      App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
-    }
-    return true;
+  bool EngineLayer::onWindowEvent(const WindowEvent& e) {
+    return std::visit(EventVisitor{
+        [=](const WindowCloseEvent& closeEvent) {
+          Log::debug_e("{0}: {1}", name_, closeEvent);
+          App::instance().close();
+          return true;
+        },
+        [=](const WindowFocusEvent& focusEvent) {
+          Log::debug_e("{0}: {1}", name_, focusEvent);
+          return true;
+        },
+        [=](const auto& keyEvent) { return false; },
+    }, e);
   }
 
-  bool EngineLayer::onMouseEvent(MouseEvent& e) {
-    // custom dragging and close button
-    if (App::instance().window().isUsingCustomDecor()) {
-      pollCustomDecor(e);
-    }
-    return true;
+  bool EngineLayer::onInputEvent(const InputEvent& e) {
+    return std::visit(EventVisitor{
+      [=](const InputKeyEvent& keyEvent) {
+        if (Input::isPressed(Key::Enter) && Input::isPressed(Modifier::Alt)) {
+          Log::debug_e("{0}: Fullscreen({1})", name_, !App::instance().window().isFullscreen());
+          App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
+        }
+        return true;
+      },
+      [=](const InputMouseEvent& mouseEvent) {
+        // custom dragging and close button
+        if (App::instance().window().isUsingCustomDecor()) {
+          pollCustomDecor(mouseEvent);
+        }
+        return true;
+      },
+      [=](const InputCursorEvent& cursorEvent) {
+        if (draggingWindowDecor_) {
+          App::instance().window().dragWindow(windowDragOffset_);
+        }
+        return true;
+      },
+      [](const auto& keyEvent) { return false; },
+    }, e);
   }
 
-  bool EngineLayer::onCursorEvent(CursorEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    if (draggingWindowDecor_) {
-      App::instance().window().dragWindow(windowDragOffset_);
-    }
-    
-    return true;
-  }
-
-  bool EngineLayer::onScrollEvent(ScrollEvent& e) {
-    //FGE_DEBUG_ENG("{0} [Thread: {1}]", e, threadNames_.at(std::this_thread::get_id()));
-    
-    return true;
-  }
-  void EngineLayer::pollCustomDecor(MouseEvent& e) {
+  void EngineLayer::pollCustomDecor(const InputMouseEvent& e) {
     if (App::instance().window().isFullscreen()) {
       draggingWindowDecor_ = false;
       closingWindowDecor_ = false;

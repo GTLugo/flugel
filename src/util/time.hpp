@@ -1,13 +1,13 @@
+
 #pragma once
 //
 // Created by Gabriel Lugo on 3/27/2021.
-// Flugel Game Engine: https://github.com/GTLugo/flugel_engine
+// Flugel Framework: https://github.com/GTLugo/flugel_framework
 //
 
 #include <chrono>
-#include <iostream>
 
-namespace fge {
+namespace ff {
 
   // duration types
   using NanoSeconds = std::chrono::duration<double, std::nano>;
@@ -35,39 +35,41 @@ namespace fge {
       start(timePoint);
     }
 
+    void start() { start(ClockSteady::now()); }
+
     void start(TimePoint timePoint) {
       start_ = timePoint;
     }
 
-    void start() { start(ClockSteady::now()); }
-
-    template<typename Duration>
+    template<class D>
     [[nodiscard]] double startTime() const {
-      return Duration::duration((start_).time_since_epoch()).count();
+      return D((start_).time_since_epoch()).count();
     }
 
-    template<typename Duration>
+    template<class D>
     [[nodiscard]] double getTimeElapsed() const {
-      return Duration::duration((ClockSteady::now() - start_)).count();
+      return D((ClockSteady::now() - start_)).count();
     }
   private:
     TimePoint start_{};
   };
 
   class Time {
-    // This is awful and messy, but it'll prevent anyone outside the App class
-    // from reinitializing Time, which would cause the engine, the app, life,
-    // the universe, and all catgirls to die.
-    friend class App;
+  public:
 
-    static void init(double tickRate, uint32_t bailCount = 1024U) {
+    static void init(double tickRate = 128., u32 bailCount = 1024U) {
+      // This is awful and messy, but it'll prevent anyone outside the App class
+      // from reinitializing Time, which would cause the engine, the app, life,
+      // the universe, and all catgirls to die.
+      if (!virgin_) return;
+      Log::trace_e("Initializing Time...");
+
       tickRate_ = tickRate;
       bailCount_ = bailCount;
       gameLast_ = TimePoint{ClockSteady::now()};
       gameCurrent_ = TimePoint{ClockSteady::now()};
       fixedTimeStep_ = Seconds{1. / tickRate_};
     }
-  public:
 //    explicit Time(double tickRate, uint32_t bailCount = 1024U)
 //      : tickRate_{tickRate},
 //        bailCount_{bailCount},
@@ -129,15 +131,14 @@ namespace fge {
     }
 
     [[nodiscard]] static bool shouldDoTick() {
-      #ifndef NDEBUG
-        if (stepCount_ >= bailCount_) {
-          std::cerr << "Struggling to catch up with physics rate!\n";
-        }
-      #endif
-      
+      if (stepCount_ >= bailCount_) {
+        Log::warning_e("Struggling to catch up with physics rate!\n");
+      }
+
       return lag_.count() >= fixedTimeStep_.count() && stepCount_ < bailCount_;
     }
   private:
+    static inline bool virgin_{true};
     // fixed number of ticks per second. this will be used for physics and anything else in fixed update
     static inline double tickRate_{};
     static inline Seconds fixedTimeStep_{};

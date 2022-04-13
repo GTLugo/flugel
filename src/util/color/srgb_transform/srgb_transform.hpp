@@ -24,7 +24,7 @@
 #pragma once
 
 
-namespace fge {
+namespace ff {
 
   float srgbToLinear(float x);
   double srgbToLinear(double x);
