@@ -5,21 +5,21 @@
 #include "job_system.hpp"
 
 namespace ff {
-  void JobSystem::init() {
+  void JobManager::init() {
     if (instance_) return;
     Log::trace_e("Initializing Job System...");
-    instance_ = new JobSystem{};
+    instance_ = new JobManager{};
     instance_->workers_ = makeUnique<boost::asio::thread_pool>(workerCount());
   }
 
-  void JobSystem::shutdown() {
+  void JobManager::shutdown() {
     Log::trace_e("Shutting down Job System...");
     instance_->workers_->stop();
     delete instance_;
     Log::trace_e("Job System shut down.");
   }
 
-  void JobSystem::submit(const Shared<Job>& job) {
+  void JobManager::submit(const Shared<Job>& job) {
     boost::asio::post(*instance_->workers_, [=]{
       try {
         job->execute();
@@ -30,7 +30,7 @@ namespace ff {
     });
   }
 
-  void JobSystem::submit(const std::vector<Shared<Job>>& jobs) {
+  void JobManager::submit(const std::vector<Shared < Job>>& jobs) {
     for (auto&& job : jobs) {
       boost::asio::post(*instance_->workers_, [=]{
         try {

@@ -8,8 +8,8 @@
 #include "core/renderer/shader.hpp"
 
 namespace ff {
+  // TODO: Overhaul mesh creation.
   struct Mesh {
-    // TODO: Overhaul mesh creation.
 
 
     Shared<VertexArray> vertexArray;

@@ -25,19 +25,19 @@ namespace ff {
 
   using Event = std::variant<std::monostate, MainEvent, GameEvent, WindowEvent, InputEvent>;
 
-  class EventSystem {
+  class EventManager {
   public:
     using EventCallback = std::function<void(const Event&)>;
 
     static void init(EventCallback callback) {
       if (instance_) return;
       Log::trace_e("Initializing Event System...");
-      instance_ = new EventSystem{};
+      instance_ = new EventManager{};
       instance_->eventCallback_ = std::move(callback);
     }
     static void shutdown() { delete instance_; }
 
-    static void handleEvent(const Event& e) {
+    static void submit(const Event& e) {
       instance_->eventCallback_(e);
     }
 
@@ -48,15 +48,15 @@ namespace ff {
       }, event);
     }
 
-    EventSystem(const EventSystem& other) = delete;
-    EventSystem& operator=(const EventSystem& other) = delete;
+    EventManager(const EventManager& other) = delete;
+    EventManager& operator=(const EventManager& other) = delete;
   private:
-    static inline EventSystem* instance_{nullptr};
+    static inline EventManager* instance_{nullptr};
 
     EventCallback eventCallback_;
 
-    EventSystem() = default;
-    ~EventSystem() = default;
+    EventManager() = default;
+    ~EventManager() = default;
   };
 }
 

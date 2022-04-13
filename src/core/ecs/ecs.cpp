@@ -5,8 +5,8 @@
 #include "ecs.hpp"
 
 namespace ff {
-  Entity::Entity(ECSManager* ecs)
-    : ecsManager_{ecs} {
+  Entity::Entity(ECSManager& ecs)
+    : ecsManager_{&ecs} {
     Log::debug_e(R"(Creating entity "{}")", id_);
     ecsManager_->registerEntity(*this);
   }
@@ -26,10 +26,15 @@ namespace ff {
   }
 
   void ECSManager::removeEntity(Entity& entity) {
+    // Remove entity components
     for (auto&& [id, componentMap]: componentMaps_) {
       componentMap->onEntityRemoved(entity);
     }
-    //bitSetMap_.erase(entity.id());
+    // Remove entity from systems
+    for (auto& [id, system]: systems_) {
+      auto itr{std::find(system->entities.begin(), system->entities.end(), entity)};
+      if (itr != system->entities.end()) system->entities.erase(itr);
+    }
   }
 
   void ECSManager::onEntityBitsetMutated(Entity& entity)  {
@@ -45,7 +50,7 @@ namespace ff {
 
   void SystemBase::parallelFor(const std::function<void(Entity&)>& action) {
     std::vector<Shared<Job>> jobs{};
-    i32 batch{static_cast<i32>(glm::ceil(static_cast<float>(entities.size()) / static_cast<float>(JobSystem::workerCount())))};
+    i32 batch{static_cast<i32>(glm::ceil(static_cast<float>(entities.size()) / static_cast<float>(JobManager::workerCountMinusGameThread())))};
     i32 offset{0};
     i32 leftOver{static_cast<i32>(entities.size())};
 
@@ -56,7 +61,7 @@ namespace ff {
     }
     if (leftOver > 0) jobs.emplace_back(new SystemJob{{entities.begin() + offset, entities.end()}, action});
 
-    JobSystem::submit(jobs);
+    JobManager::submit(jobs);
 
     for (auto& job: jobs) {
       job->wait();

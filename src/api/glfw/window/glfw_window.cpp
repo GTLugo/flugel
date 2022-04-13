@@ -93,21 +93,21 @@ namespace ff {
   void GlfwWindow::setCallbacks() {
     glfwSetWindowCloseCallback(glfwWindow_, [](GLFWwindow* window) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
-      EventSystem::handleEvent(WindowCloseEvent{});
+      EventManager::submit(WindowCloseEvent{});
     });
     glfwSetWindowSizeCallback(glfwWindow_, [](GLFWwindow* window, i32 width, i32 height) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       data.windowDims = {width, height};
-      EventSystem::handleEvent(WindowResizeEvent{data.windowDims.x, data.windowDims.y});
+      EventManager::submit(WindowResizeEvent{data.windowDims.x, data.windowDims.y});
     });
     glfwSetWindowPosCallback(glfwWindow_, [](GLFWwindow* window, i32 xPos, i32 yPos) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       data.windowPos = {xPos, yPos};
-      EventSystem::handleEvent(WindowMovedEvent{data.windowPos.x, data.windowPos.y});
+      EventManager::submit(WindowMovedEvent{data.windowPos.x, data.windowPos.y});
     });
     glfwSetWindowFocusCallback(glfwWindow_, [](GLFWwindow* window, i32 focused) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
-      EventSystem::handleEvent(WindowFocusEvent{(focused) != 0});
+      EventManager::submit(WindowFocusEvent{(focused) != 0});
     });
 
     // KEYBOARD
@@ -115,16 +115,16 @@ namespace ff {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
-          EventSystem::handleEvent(InputKeyEvent{Key::Pressed, Key::fromNative(key), 0, Modifier::fromNativeBits(mods)});
+          EventManager::submit(InputKeyEvent{Key::Pressed, Key::fromNative(key), 0, Modifier::fromNativeBits(mods)});
           break;
         }
         case GLFW_REPEAT: {
           // GLFW doesn't provide a repeat count, so 1 will do for most use cases
-          EventSystem::handleEvent(InputKeyEvent{Key::Held, Key::fromNative(key), 1, Modifier::fromNativeBits(mods)});
+          EventManager::submit(InputKeyEvent{Key::Held, Key::fromNative(key), 1, Modifier::fromNativeBits(mods)});
         }
           break;
         case GLFW_RELEASE:{
-          EventSystem::handleEvent(InputKeyEvent{Key::Released, Key::fromNative(key), 0, Modifier::fromNativeBits(mods)});
+          EventManager::submit(InputKeyEvent{Key::Released, Key::fromNative(key), 0, Modifier::fromNativeBits(mods)});
           break;
         }
         default:
@@ -137,11 +137,13 @@ namespace ff {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
       switch (action) {
         case GLFW_PRESS: {
-          EventSystem::handleEvent(InputMouseEvent{Mouse::Pressed, Mouse::fromNative(button), Modifier::fromNativeBits(mods)});
+          EventManager::submit(
+              InputMouseEvent{Mouse::Pressed, Mouse::fromNative(button), Modifier::fromNativeBits(mods)});
           break;
         }
         case GLFW_RELEASE:{
-          EventSystem::handleEvent(InputMouseEvent{Mouse::Released, Mouse::fromNative(button), Modifier::fromNativeBits(mods)});
+          EventManager::submit(
+              InputMouseEvent{Mouse::Released, Mouse::fromNative(button), Modifier::fromNativeBits(mods)});
           break;
         }
         default:
@@ -155,11 +157,11 @@ namespace ff {
       data.cursorDelta = data.cursorPos - data.cursorPosOld;
       //Log::debug_e("Delta: ({0}, {1})", data.cursorDelta.x, data.cursorDelta.y);
 
-      EventSystem::handleEvent(InputCursorEvent{xPos, yPos});
+      EventManager::submit(InputCursorEvent{xPos, yPos});
     });
     glfwSetScrollCallback(glfwWindow_, [](GLFWwindow* window, double xOffset, double yOffset) {
       WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
-      EventSystem::handleEvent(InputScrollEvent{xOffset, yOffset});
+      EventManager::submit(InputScrollEvent{xOffset, yOffset});
     });
   }
 

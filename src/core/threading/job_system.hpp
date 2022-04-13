@@ -22,7 +22,7 @@ namespace ff {
   };
 
   struct Job {
-    friend class JobSystem;
+    friend class JobManager;
 
     virtual ~Job() = default;
 
@@ -39,7 +39,7 @@ namespace ff {
     JobContract contract{};
   };
 
-  class JobSystem {
+  class JobManager {
   public:
     static void init();
     static void shutdown();
@@ -49,17 +49,25 @@ namespace ff {
 
     static size_t workerCount() { return instance_->workerThreadCount_; }
 
-    JobSystem(const JobSystem& other) = delete;
-    JobSystem& operator=(const JobSystem& other) = delete;
+    //TODO: convert to availableWorkerCount.
+    static size_t workerCountMinusGameThread() { return instance_->workerThreadCount_ - 1; }
+
+    JobManager(const JobManager& other) = delete;
+    JobManager& operator=(const JobManager& other) = delete;
   private:
-    static inline JobSystem* instance_{nullptr};
+    static inline JobManager* instance_{nullptr};
 
     const size_t hardwareThreadCount_{std::thread::hardware_concurrency()};
     const size_t workerThreadCount_{hardwareThreadCount_ - 2};
 
-    JobSystem() = default;
-    ~JobSystem() = default;
-
     Unique<boost::asio::thread_pool> workers_;
+
+    JobManager() = default;
+    ~JobManager() = default;
+
+    void resetWorkers() {
+      workers_->wait();
+      workers_ = makeUnique<boost::asio::thread_pool>(workerCount());
+    }
   };
 }

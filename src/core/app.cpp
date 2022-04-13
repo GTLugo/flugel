@@ -3,26 +3,25 @@
 #include "core/layers/engine_layer.hpp"
 #include "core/layers/world_layer.hpp"
 #include "core/imgui/imgui_layer.hpp"
-#include "core/ecs/components/transform.hpp"
 
 // #include <boost/gil.hpp>
 // #include <boost/gil/extension/io/png.hpp>
 #include <boost/range/adaptor/reversed.hpp>
-
 
 namespace ff {
   App::App(const WindowProperties& props) {
     Log::debug_e("Current working directory: {}", std::filesystem::current_path());
     Log::trace_e("Constructing App...");
     instance_ = this;
-    JobSystem::init();
+    JobManager::init();
 
     // These are pointless, but just show how to use the job system
-    auto timeJob{makeShared<TimeJob>(128.f)};
-    auto eventSystemJob{makeShared<EventSystemJob>(FF_LAMBDA(eventHandler))};
-    JobSystem::submit({timeJob, eventSystemJob});
-    timeJob->wait();
-    eventSystemJob->wait();
+    std::vector<Shared<Job>> jobs{makeShared<TimeJob>(128.f), makeShared<EventSystemJob>(FF_LAMBDA(eventHandler))};
+    JobManager::submit(jobs);
+
+    for (auto&& job: jobs) {
+      job->wait();
+    }
 
     window_ = Window::create(props);
     
@@ -34,7 +33,8 @@ namespace ff {
 
   App::~App() {
     Log::trace_e("Destructing App...");
-    EventSystem::shutdown();
+    JobManager::shutdown();
+    EventManager::shutdown();
   }
 
   void App::pushLayer(Layer* layer) {
@@ -49,22 +49,18 @@ namespace ff {
     Log::trace_e("Started main thread (ID: {})", std::this_thread::get_id());
 
     // GAME THREAD - App logic & rendering
-    auto gameJob{makeShared<GameJob>(*this)};
-    JobSystem::submit(gameJob);
-    //std::jthread gameThread{FF_LAMBDA(App::gameLoop)}; // jthread automatically joins on destruction
-
+    auto gameThreadJob{makeShared<GameJob>(*this)};
+    JobManager::submit(gameThreadJob);
     // MAIN THREAD - OS message pump & main thread sensitive items
-    EventSystem::handleEvent(MainAwakeEvent{});
-    EventSystem::handleEvent(MainStartEvent{});
+    EventManager::submit(MainAwakeEvent{});
+    EventManager::submit(MainStartEvent{});
     while (!shouldClose_) {
-      EventSystem::handleEvent(MainPollEvent{});
-      EventSystem::handleEvent(MainUpdateEvent{});
+      EventManager::submit(MainPollEvent{});
+      EventManager::submit(MainUpdateEvent{});
     }
-    gameJob->wait();
-    //gameThread.request_stop();
-    EventSystem::handleEvent(MainStopEvent{});
+    gameThreadJob->wait();
+    EventManager::submit(MainStopEvent{});
 
-    JobSystem::shutdown();
     Log::trace_e("Stopped main thread");
   }
 
@@ -78,28 +74,28 @@ namespace ff {
     try {
       window_->context().setCurrent(true);
 
-      EventSystem::handleEvent(GameAwakeEvent{});
-      EventSystem::handleEvent(GameStartEvent{});
+      EventManager::submit(GameAwakeEvent{});
+      EventManager::submit(GameStartEvent{});
       while (!shouldClose_) {
         // Logic
         while (Time::shouldDoTick()) {
           // Physics & timestep sensitive stuff happens in here, where timestep is fixed
           // Source: https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
-          EventSystem::handleEvent(GameTickEvent{});
+          EventManager::submit(GameTickEvent{});
 
           Time::tick();
         }
-        EventSystem::handleEvent(GameUpdateEvent{});
+        EventManager::submit(GameUpdateEvent{});
 
         // Rendering pipeline
-        EventSystem::handleEvent(GameBeginFrameEvent{});
-        EventSystem::handleEvent(GameDrawEvent{});
-        EventSystem::handleEvent(GameImGuiEvent{});
-        EventSystem::handleEvent(GameEndFrameEvent{});
+        EventManager::submit(GameBeginFrameEvent{});
+        EventManager::submit(GameDrawEvent{});
+        EventManager::submit(GameImGuiEvent{});
+        EventManager::submit(GameEndFrameEvent{});
 
         Time::update();
       }
-      EventSystem::handleEvent(GameStopEvent{});
+      EventManager::submit(GameStopEvent{});
     } catch (const std::exception& e) {
       ff::Log::critical_e(e.what());
     }

@@ -20,7 +20,7 @@ namespace ff {
     using ID = UUID;
     using BitSet = std::bitset<ComponentBase::maxComponents>;
 
-    explicit Entity(ECSManager* ecsManager);
+    explicit Entity(ECSManager& ecsManager);
 
     ~Entity();
 
@@ -56,7 +56,8 @@ namespace ff {
 
   protected:
     ID id_{};
-    //Entity_::BitSet bitSet_{};
+    // This is stored as a pointer because shallow copying is intentional, as it preserves
+    // which ecsManager is the one who owns the entity.
     ECSManager* ecsManager_;
   };
 }
@@ -96,6 +97,9 @@ namespace ff {
     [[nodiscard]] const Entity::BitSet& components() const { return bitSet_; }
 
     virtual void onUpdate() = 0;
+
+    //TODO: Change algorithm to precalculating division start iterators and then distribute work from there.
+    // This would avoid the issue of copying the entity vectors everywhere.
     void parallelFor(const std::function<void(Entity&)>& action);
 
   protected:
