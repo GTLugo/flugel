@@ -55,7 +55,12 @@ set(OPENGL_FILES
 
 set(VULKAN_FILES
     src/api/vulkan/context/vulkan_context.cpp
+    src/api/vulkan/framebuffer/vulkan_buffer.cpp
+    src/api/vulkan/vertex_array/vulkan_vertex_array.cpp
     src/api/vulkan/vulkan_render_dispatcher.cpp
+    src/api/vulkan/framebuffer/vulkan_frame_buffer.cpp
+    src/api/vulkan/framebuffer/vulkan_texture_buffer.cpp
+    src/api/vulkan/vulkan_shader.cpp
     )
 
 set(D3D11_FILES

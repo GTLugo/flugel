@@ -14,6 +14,7 @@
 #endif
 #ifdef FLUGEL_USE_VULKAN
   #include <backends/imgui_impl_vulkan.h>
+  #include <vulkan/vulkan.hpp>
 #endif
 #ifdef FLUGEL_USE_D3D11
   #include <backends/imgui_impl_dx11.h>
@@ -244,7 +245,22 @@ namespace ff {
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
+//        ImGui_ImplVulkan_InitInfo init_info = {};
+//        init_info.Instance = g_Instance;
+//        init_info.PhysicalDevice = g_PhysicalDevice;
+//        init_info.Device = g_Device;
+//        init_info.QueueFamily = g_QueueFamily;
+//        init_info.Queue = g_Queue;
+//        init_info.PipelineCache = g_PipelineCache;
+//        init_info.DescriptorPool = g_DescriptorPool;
+//        init_info.Subpass = 0;
+//        init_info.MinImageCount = g_MinImageCount;
+//        init_info.ImageCount = wd->ImageCount;
+//        init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+//        init_info.Allocator = g_Allocator;
+//        init_info.CheckVkResultFn = check_vk_result;
+//        ImGui_ImplVulkan_Init(&init_info, wd->RenderPass);
+//        ImGui_ImplVulkan_Init(init_info, wd->RenderPass);
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
         #endif
@@ -282,7 +298,7 @@ namespace ff {
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
+        ImGui_ImplGlfw_InitForVulkan(window, true);
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
         #endif
@@ -319,7 +335,7 @@ namespace ff {
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
+        ImGui_ImplVulkan_NewFrame();
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
         #endif
@@ -359,7 +375,10 @@ namespace ff {
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
+        ImGui_ImplVulkan_RenderDrawData(
+            ImGui::GetDrawData(),
+            *static_cast<vk::CommandBuffer*>(App::instance().window().context().commandBuffer()),
+            *static_cast<vk::Pipeline*>(App::instance().window().context().pipeline()));
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
         #endif
@@ -397,7 +416,7 @@ namespace ff {
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
+        ImGui_ImplVulkan_Shutdown();
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
         #endif

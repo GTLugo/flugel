@@ -3,6 +3,9 @@
 #if defined(FLUGEL_USE_OPENGL)
   #include "api/opengl/vertex_array/opengl_vertex_array.hpp"
 #endif
+#if defined(FLUGEL_USE_VULKAN)
+  #include "api/vulkan/vertex_array/vulkan_vertex_array.hpp"
+#endif
 
 #include "core/renderer/renderer.hpp"
 
@@ -15,19 +18,18 @@ namespace ff {
       }
       case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
-          return makeShared<OpenGLVertexArray>(vertexBuffers, indexBuffer);
+        return makeShared<OpenGLVertexArray>(vertexBuffers, indexBuffer);
         #else
         FF_ASSERT_E(false, "OpenGL not supported!");
-          return nullptr;
+        return nullptr;
         #endif
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
-          return nullptr;
+        return makeShared<VulkanVertexArray>(vertexBuffers, indexBuffer);
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
-          return nullptr;
+        return nullptr;
         #endif
       }
       case Renderer::API::D3D11: {

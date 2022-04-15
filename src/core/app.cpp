@@ -27,7 +27,8 @@ namespace ff {
     // engine layer should be first layer (last to check)
     pushLayer(new EngineLayer{});
     pushLayer(new WorldLayer{});
-    layerStack_.pushBottomStack(new ImGuiLayer{});
+    //TODO: Add Vulkan support for ImGui
+    //layerStack_.pushBottomStack(new ImGuiLayer{});
   }
 
   App::~App() {

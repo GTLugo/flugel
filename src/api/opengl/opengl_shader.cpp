@@ -7,10 +7,10 @@
 
 namespace ff {
   OpenGLShader::OpenGLShader(const std::string &shaderFilePath) {
-    std::unordered_map<Shader::Type, std::string> sources;
-    sources[Shader::Vertex] = readFile(shaderFilePath + "_vertex.spv");
-    sources[Shader::Fragment] = readFile(shaderFilePath + "_fragment.spv");
-    compileAndLinkSpirv(sources);
+    compileAndLinkSpirv({
+        {Shader::Vertex, readFile(shaderFilePath + "_vertex.spv")},
+        {Shader::Fragment, readFile(shaderFilePath + "_fragment.spv")},
+    });
   }
 
   OpenGLShader::OpenGLShader(const std::string &shaderFilePath, bool glsl) {

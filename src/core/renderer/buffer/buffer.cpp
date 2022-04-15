@@ -3,6 +3,9 @@
 #if defined(FLUGEL_USE_OPENGL)
   #include "api/opengl/framebuffer/opengl_buffer.hpp"
 #endif
+#if defined(FLUGEL_USE_VULKAN)
+  #include "api/vulkan/framebuffer/vulkan_buffer.hpp"
+#endif
 
 #include "core/renderer/renderer.hpp"
 
@@ -16,7 +19,7 @@ namespace ff {
       }
       case Renderer::API::OpenGL: {
         #if defined(FLUGEL_USE_OPENGL)
-          return makeShared<OpenGLVertexBuffer>(vertices, bitSize);
+        return makeShared<OpenGLVertexBuffer>(vertices, bitSize);
         #else
         FF_ASSERT_E(false, "OpenGL not supported!");
           return nullptr;
@@ -24,8 +27,7 @@ namespace ff {
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
-          return nullptr;
+        return makeShared<VulkanVertexBuffer>(vertices, bitSize);
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
           return nullptr;
@@ -63,8 +65,7 @@ namespace ff {
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
-          return nullptr;
+        return makeShared<VulkanIndexBuffer>(indices, count);
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
           return nullptr;

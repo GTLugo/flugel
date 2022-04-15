@@ -6,6 +6,9 @@
 #if defined(FLUGEL_USE_OPENGL)
   #include "api/opengl/framebuffer/opengl_frame_buffer.hpp"
 #endif
+#if defined(FLUGEL_USE_VULKAN)
+  #include "api/vulkan/framebuffer/vulkan_frame_buffer.hpp"
+#endif
 
 #include "core/renderer/renderer.hpp"
 
@@ -26,8 +29,7 @@ namespace ff {
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
-          return nullptr;
+        return makeShared<VulkanFrameBuffer>(format, width, height, data);
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
         return nullptr;

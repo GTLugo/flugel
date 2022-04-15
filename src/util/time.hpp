@@ -41,14 +41,14 @@ namespace ff {
       start_ = timePoint;
     }
 
-    template<class D>
+    template<class Duration>
     [[nodiscard]] double startTime() const {
-      return D((start_).time_since_epoch()).count();
+      return Duration{(start_).time_since_epoch()}.count();
     }
 
-    template<class D>
+    template<class Duration>
     [[nodiscard]] double getTimeElapsed() const {
-      return D((ClockSteady::now() - start_)).count();
+      return Duration{(ClockSteady::now() - start_)}.count();
     }
   private:
     TimePoint start_{};
@@ -86,7 +86,7 @@ namespace ff {
 
     template<class Duration>
     [[nodiscard]] static double fixedStep() {
-      return Duration::duration((fixedTimeStep_)).count();
+      return Duration{fixedTimeStep_}.count();
     }
 
     template<class Duration>
@@ -101,17 +101,17 @@ namespace ff {
 
     template<typename Duration>
     [[nodiscard]] static double now() {
-      return Duration::duration(ClockSteady::now().time_since_epoch()).count();
+      return Duration{ClockSteady::now().time_since_epoch()}.count();
     }
 
     template<class Duration>
     [[nodiscard]] static double delta() {
-      return Duration::duration((delta_)).count();
+      return Duration{delta_}.count();
     }
 
     template<class Duration>
     [[nodiscard]] static double lag() {
-      return Duration::duration((lag_)).count();
+      return Duration{lag_}.count();
     }
 
     static void update() {

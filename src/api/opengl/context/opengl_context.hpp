@@ -11,7 +11,9 @@ namespace ff {
     explicit OpenGLContext(GLFWwindow* windowHandle);
     ~OpenGLContext();
 
-    virtual void* nativeContext() override { return context_; }
+    void* commandBuffer() override { return nullptr; }
+    void* pipeline() override { return nullptr; }
+    void* nativeContext() override { return context_; }
     void setCurrent(bool isCurrent) final;
     void swapBuffers() final;
   private:
