@@ -6,7 +6,7 @@ namespace ff {
   class OpenGLShader : public Shader {
   public:
     explicit OpenGLShader(const std::string& shaderFilePath);
-    OpenGLShader(const std::string& vertSrc, const std::string& fragSrc);
+    explicit OpenGLShader(const std::string& shaderFilePath, bool glsl);
     ~OpenGLShader() override;
 
     void bind() const override;
@@ -16,7 +16,9 @@ namespace ff {
   private:
     u32 shaderId_{};
 
-    void init(const std::string& vertSrc, const std::string& fragSrc);
+    u32 compileSpirv(const std::string& src, Shader::Type shaderType);
+    void compileAndLinkSpirv(const std::unordered_map<Shader::Type, std::string>& sources);
+    void compileAndLinkGlsl(const std::string& vertSrc, const std::string& fragSrc);
     std::unordered_map<Shader::Type, std::string> parseFile(const std::string& shaderFilePath) final;
   };
 }

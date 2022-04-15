@@ -32,7 +32,7 @@ namespace ff {
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
         FF_ASSERT_E(false, "Vulkan not implemented!");
-        return projMatrix_ * viewMatrix_;
+        return projMatrix * viewMatrix;
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
         return mat4{1.f};
@@ -41,7 +41,7 @@ namespace ff {
       case Renderer::API::D3D11: {
         #if defined(FLUGEL_USE_D3D11)
         FF_ASSERT_E(false, "D3D11 not implemented!");
-        return projMatrix_ * viewMatrix_;
+        return projMatrix * viewMatrix;
         #else
         FF_ASSERT_E(false, "D3D11 not supported!");
         return mat4{1.f};

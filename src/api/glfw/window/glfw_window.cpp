@@ -3,6 +3,9 @@
 #if defined(FLUGEL_USE_OPENGL)
   #include "api/opengl/context/opengl_context.hpp"
 #endif
+#if defined(FLUGEL_USE_VULKAN)
+  #include "api/vulkan/context/vulkan_context.hpp"
+#endif
 
 #include "core/input/input.hpp"
 #include "core/callbacks/event_system.hpp"
@@ -35,7 +38,21 @@ namespace ff {
     Log::info_e("Using GLFW {}.{}.{}", major, minor, revision);
 
     vidMode_ = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
     glfwWindowHint(GLFW_DECORATED, !data_.customDecor);
+    switch (Renderer::api()) {
+      case Renderer::API::Vulkan: {
+        #if defined(FLUGEL_USE_VULKAN)
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_RESIZABLE, false);
+        #else
+        FF_ASSERT_E(false, "Vulkan not supported!");
+        #endif
+        break;
+      }
+      default: { break; }
+    }
+
     glfwWindow_ = glfwCreateWindow(
       (i32)data_.windowDims.x,
       (i32)data_.windowDims.y,
@@ -60,7 +77,7 @@ namespace ff {
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
+        context_ = makeUnique<VulkanContext>(glfwWindow_);
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
         #endif
@@ -130,6 +147,10 @@ namespace ff {
         default:
           break;
       }
+    });
+    glfwSetCharModsCallback(glfwWindow_, [](GLFWwindow* window, u32 codepoint, i32 mods) {
+      WindowState& data = *(WindowState*)(glfwGetWindowUserPointer(window));
+      EventManager::submit(InputModEvent{Modifier::fromNativeBits(mods)});
     });
 
     // MOUSE

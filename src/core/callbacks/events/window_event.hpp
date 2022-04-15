@@ -69,7 +69,7 @@ namespace ff {
     [[nodiscard]] bool isFocused() const { return focused_; }
 
     [[nodiscard]] std::string toString() const override {
-      return WindowEventBase::toString() + " (" + std::to_string(focused_) + ")";
+      return WindowEventBase::toString() + " (" + std::format("{}", focused_) + ")";
     }
   private:
     bool focused_;

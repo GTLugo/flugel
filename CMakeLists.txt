@@ -54,7 +54,8 @@ set(OPENGL_FILES
     )
 
 set(VULKAN_FILES
-
+    src/api/vulkan/context/vulkan_context.cpp
+    src/api/vulkan/vulkan_render_dispatcher.cpp
     )
 
 set(D3D11_FILES
@@ -68,9 +69,6 @@ set(GLFW_FILES
     src/api/glfw/window/glfw_window.cpp
     )
 
-set(SHADER_FILES
-    res/shaders/simple_shader.glsl)
-
 # ===================================================
 # ADD LIBRARY TARGET
 # ===================================================
@@ -81,14 +79,53 @@ set_target_properties(${TARGET_NAME}
     OUTPUT_NAME "${TARGET_NAME}"
     CXX_VISIBILITY_PRESET hidden)
 
+#execute_process(COMMAND cmd /c ${CMAKE_CURRENT_SOURCE_DIR}/shader_compile.bat)
 # Copy resources folder into output dir
-add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+# https://www.youtube.com/watch?v=sTuIRzrB2dA
+add_custom_target(flugel_delete_resources_out ALL
     COMMAND ${CMAKE_COMMAND} -E remove_directory
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}")
-add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}
+    COMMENT "Cleaning output resource folder")
+add_custom_target(flugel_delete_resources_build ALL
+    COMMAND ${CMAKE_COMMAND} -E remove_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/res/${PROJECT_NAME}
+    COMMENT "Cleaning build resource folder")
+add_custom_target(flugel_copy_resources_to_build ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}")
+    ${CMAKE_CURRENT_BINARY_DIR}/res/${PROJECT_NAME}
+    COMMENT "Copying resource folder to output")
+add_custom_target(flugel_copy_resources_to_out ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}
+    COMMENT "Copying resource folder to output")
+add_custom_target(flugel_delete_shaders ALL
+    COMMAND ${CMAKE_COMMAND} -E remove_directory
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}/shaders
+    COMMENT "Deleting uncompiled shader folder from output")
+
+add_custom_target(flugel_prepare_shader_folder ALL
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/res/${PROJECT_NAME}/shaders_out
+    COMMENT "Preparing shader output folder")
+add_custom_target(flugel_compile_shaders ALL
+    COMMAND cmd /c ${CMAKE_CURRENT_SOURCE_DIR}/shader_compile.bat
+    COMMENT "Compiling shaders")
+add_custom_target(flugel_move_shaders ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/res/${PROJECT_NAME}/shaders_out
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/${PROJECT_NAME}/shaders
+    COMMENT "Copying compiled shader folder to output")
+# These will execute in reverse order due to dependency graph
+add_dependencies(${TARGET_NAME} flugel_move_shaders)
+add_dependencies(flugel_move_shaders flugel_compile_shaders)
+add_dependencies(flugel_compile_shaders flugel_prepare_shader_folder)
+add_dependencies(flugel_prepare_shader_folder flugel_delete_shaders)
+add_dependencies(flugel_delete_shaders flugel_copy_resources_to_out)
+add_dependencies(flugel_copy_resources_to_out flugel_copy_resources_to_build)
+add_dependencies(flugel_copy_resources_to_build flugel_delete_resources_build)
+add_dependencies(flugel_delete_resources_build flugel_delete_resources_out)
 
 # Preprocessor Defines
 target_compile_definitions(${TARGET_NAME}
@@ -238,9 +275,10 @@ if("OPENGL" IN_LIST FLUGEL_RENDERING_API)
   # glad
   set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad)
   add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
+  set(ADDED_GLAD true)
   set(GLAD_LIBRARY glad_gl_core_mx_global_46)
   glad_add_library(${GLAD_LIBRARY}
-      STATIC MX GLOBAL API # #MX
+      STATIC MX GLOBAL API
       gl:core=4.6
       )
   target_link_libraries(${TARGET_NAME}
@@ -254,24 +292,6 @@ if("OPENGL" IN_LIST FLUGEL_RENDERING_API)
 endif()
 if("VULKAN" IN_LIST FLUGEL_RENDERING_API)
   message(STATUS "Using VULKAN!")
-  target_sources(${TARGET_NAME} PRIVATE ${VULKAN_FILES})
-  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_VULKAN=1)
-  # glad
-  set(GLAD_SOURCES_DIR ${PROJECT_SOURCE_DIR}/vendor/glad)
-  add_subdirectory(${GLAD_SOURCES_DIR}/cmake glad_cmake)
-  set(GLAD_LIBRARY glad_vulkan_12)
-  glad_add_library(${GLAD_LIBRARY}
-      STATIC API MX #GLOBAL
-      vulkan=1.2
-      )
-  target_link_libraries(${TARGET_NAME}
-      PRIVATE
-      ${GLAD_LIBRARY}
-      )
-#  target_compile_options(${GLAD_LIBRARY} PRIVATE
-#      $<$<CXX_COMPILER_ID:MSVC>:/w>
-#      $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-#      )
   # vulkan
   find_package(Vulkan REQUIRED)
   target_include_directories(${TARGET_NAME}
@@ -282,6 +302,8 @@ if("VULKAN" IN_LIST FLUGEL_RENDERING_API)
       PRIVATE
       ${Vulkan_LIBRARIES}
       )
+  target_sources(${TARGET_NAME} PRIVATE ${VULKAN_FILES})
+  target_compile_definitions(${TARGET_NAME} PUBLIC FLUGEL_USE_VULKAN=1)
 endif()
 if("D3D11" IN_LIST FLUGEL_RENDERING_API)
   message(STATUS "Using D3D11!")

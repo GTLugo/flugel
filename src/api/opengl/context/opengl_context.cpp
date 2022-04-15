@@ -33,7 +33,7 @@ namespace ff {
         return;
       }
       default: { return; }
-    };
+    }
   }
 
   OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)

@@ -5,14 +5,14 @@
 namespace ff {
   class OpenGLVertexBuffer : public VertexBuffer {
   public:
-    OpenGLVertexBuffer(float* verts, u32 bitSize);
+    OpenGLVertexBuffer(const void* verts, u32 bitSize);
     ~OpenGLVertexBuffer() override;
 
     // set vertex data?
 
     // virtual u32 id() const override { return bufferId_; }
     [[nodiscard]] const VertexBufferLayout& layout() const override { return layout_; }
-    void setLayout(const VertexBufferLayout& layout) override { layout_ = layout; }
+    void setLayout(const VertexBufferLayout& layout) override;
 
     void bind() const override;
     void unbind() const override;
@@ -23,7 +23,7 @@ namespace ff {
 
   class OpenGLIndexBuffer : public IndexBuffer {
   public:
-    OpenGLIndexBuffer(u32* indices, u32 count);
+    OpenGLIndexBuffer(const u32* indices, u32 count);
     ~OpenGLIndexBuffer() override;
 
     void bind() const override;

@@ -28,11 +28,13 @@ namespace ff {
     gl->DeleteVertexArrays(1, &vertexArrayId_);
   }
 
-  OpenGLVertexArray::OpenGLVertexArray(Shared<VertexBuffer> vertexBuffer, Shared<IndexBuffer> indexBuffer) {
+  OpenGLVertexArray::OpenGLVertexArray(const std::vector<Shared<VertexBuffer>>& vertexBuffers, Shared<IndexBuffer> indexBuffer) {
     auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
 
     gl->CreateVertexArrays(1, &vertexArrayId_);
-    addVertexBuffer(vertexBuffer);
+    for (auto&& buffer: vertexBuffers) {
+      addVertexBuffer(buffer);
+    }
     setIndexBuffer(indexBuffer);
   }
 
@@ -54,17 +56,17 @@ namespace ff {
     gl->BindVertexArray(vertexArrayId_);
 
     vertexBuffer->bind();
-    u32 i{0};
+
     for (const auto& element : vertexBuffer->layout()) {
-      gl->EnableVertexAttribArray(i);
-      gl->VertexAttribPointer(i,
+      gl->EnableVertexAttribArray(location_);
+      gl->VertexAttribPointer(location_,
         element.componentCount,
         shaderDataToOpenGLBaseType(element.type),
         element.normalized,
         vertexBuffer->layout().stride(), // size of an entire vertex including all attr
         (const void*)static_cast<u64>(element.offset) // offset of this attr in the vertex
       );
-      ++i;
+      ++location_;
     }
     vertexBuffers_.push_back(vertexBuffer);
 

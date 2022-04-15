@@ -10,7 +10,7 @@ namespace ff {
         App::instance().window().pollEvents();
         return true;
       },
-      [](const auto& event) { return false; }
+      [](const auto&) { return false; }
     }, e);
   }
 
@@ -40,48 +40,48 @@ namespace ff {
 
           return true;
         },
-        [](const auto& event) { return false; }
+        [](const auto&) { return false; }
     }, e);
   }
 
   bool EngineLayer::onWindowEvent(const WindowEvent& e) {
     return std::visit(EventVisitor{
-        [=](const WindowCloseEvent& closeEvent) {
-          Log::debug_e("{0}: {1}", name_, closeEvent);
+        [=](const WindowCloseEvent& event) {
+          Log::debug_e("{0}: {1}", name_, event);
           App::instance().close();
           return true;
         },
-        [=](const WindowFocusEvent& focusEvent) {
-          Log::debug_e("{0}: {1}", name_, focusEvent);
+        [=](const WindowFocusEvent& event) {
+          Log::debug_e("{0}: {1}", name_, event);
           return true;
         },
-        [=](const auto& keyEvent) { return false; },
+        [=](const auto&) { return false; },
     }, e);
   }
 
   bool EngineLayer::onInputEvent(const InputEvent& e) {
     return std::visit(EventVisitor{
-      [=](const InputKeyEvent& keyEvent) {
+      [=](const InputKeyEvent&) {
         if (Input::isPressed(Key::Enter) && Input::isPressed(Modifier::Alt)) {
           Log::debug_e("{0}: Fullscreen({1})", name_, !App::instance().window().isFullscreen());
           App::instance().window().setFullscreen(!App::instance().window().isFullscreen());
         }
         return true;
       },
-      [=](const InputMouseEvent& mouseEvent) {
+      [=](const InputMouseEvent& event) {
         // custom dragging and close button
         if (App::instance().window().isUsingCustomDecor()) {
-          pollCustomDecor(mouseEvent);
+          pollCustomDecor(event);
         }
         return true;
       },
-      [=](const InputCursorEvent& cursorEvent) {
+      [=](const InputCursorEvent&) {
         if (draggingWindowDecor_) {
           App::instance().window().dragWindow(windowDragOffset_);
         }
         return true;
       },
-      [](const auto& keyEvent) { return false; },
+      [](const auto&) { return false; },
     }, e);
   }
 

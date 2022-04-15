@@ -11,7 +11,6 @@ namespace ff {
     virtual ~Shader() = default;
 
     static Shared<Shader> create(const std::string& shaderFilePath);
-    static Shared<Shader> create(const std::string& vertSrc, const std::string& fragSrc);
 
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
@@ -20,11 +19,14 @@ namespace ff {
   protected:
     static inline const std::string preprocessorToken{"#type"};
     static inline std::unordered_map<std::string, Shader::Type> types{
-        {"vertex", Type::Vertex},
+        {"vertex"  , Type::Vertex  },
         {"fragment", Type::Fragment}
     };
+    static inline std::unordered_map<Shader::Type, std::string> names{
+        {Type::Vertex  , "vertex"  },
+        {Type::Fragment, "fragment"}
+    };
 
-  private:
     static std::string readFile(const std::string& shaderFilePath);
     virtual std::unordered_map<Shader::Type, std::string> parseFile(const std::string& shaderFilePath) = 0;
   };

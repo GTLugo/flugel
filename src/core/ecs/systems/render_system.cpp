@@ -8,16 +8,19 @@
 
 namespace ff {
   void RenderSystem::onUpdate() {
-    auto& cameraEntity{App::instance().activeWorld()->masterCamera()};
+    auto& cameraEntity{App::instance().activeWorld().masterCamera()};
     auto& camera{cameraEntity.getRef<Camera>()};
 
     for (auto& entity : entities) {
       auto& mesh{entity.getRef<Mesh>()};
+      if (mesh.isDirty()) {
+        mesh.recalculateMesh();
+      }
 
-      mesh.shader->pushMat4(camera.viewProjMatrix(), "vpMatrix");
-      mesh.shader->bind();
-      Renderer::submit(mesh.vertexArray);
-      mesh.shader->unbind();
+      //mesh.material.shader->pushMat4(camera.viewProjMatrix(), "viewProj");
+      mesh.material.shader->bind();
+      Renderer::submit(mesh.renderMesh().vertexArray);
+      mesh.material.shader->unbind();
     }
   }
 }

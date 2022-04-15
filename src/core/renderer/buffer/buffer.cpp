@@ -7,7 +7,7 @@
 #include "core/renderer/renderer.hpp"
 
 namespace ff {
-  Shared<VertexBuffer> VertexBuffer::create(float* vertices, u32 bitSize) {
+  Shared<VertexBuffer> VertexBuffer::create(const void* vertices, u32 bitSize) {
     FF_ASSERT_E(vertices, "No vertices found for vertex buffer!");
     switch (Renderer::api()) {
       case Renderer::API::None: {
@@ -47,16 +47,7 @@ namespace ff {
     }
   }
 
-  Shared<VertexBuffer> VertexBuffer::create(std::vector<float>& vertices) {
-    return create(vertices.data(), static_cast<u32>(vertices.size() * sizeof(vertices[0])));
-  }
-
-  Shared<VertexBuffer> VertexBuffer::create(const std::initializer_list<float>& vertices) {
-    std::vector<float> verts{vertices};
-    return create(verts);
-  }
-
-  Shared<IndexBuffer> IndexBuffer::create(u32* indices, u32 count) {
+  Shared<IndexBuffer> IndexBuffer::create(const u32* indices, u32 count) {
     switch (Renderer::api()) {
       case Renderer::API::None: {
         FF_ASSERT_E(false, "Running with no API not implemented!");
@@ -95,12 +86,7 @@ namespace ff {
     }
   }
   
-  Shared<IndexBuffer> IndexBuffer::create(const std::initializer_list<u32>& indices) {
-    std::vector<u32> i{indices};
-    return create(i);
-  }
-  
-  Shared<IndexBuffer> IndexBuffer::create(std::vector<u32>& indices) {
+  Shared<IndexBuffer> IndexBuffer::create(const std::vector<u32>& indices) {
     return create(indices.data(), static_cast<u32>(indices.size()));
   }
 }

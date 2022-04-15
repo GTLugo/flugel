@@ -5,7 +5,7 @@
 namespace ff {
   class OpenGLVertexArray : public VertexArray {
   public:
-    OpenGLVertexArray(Shared<VertexBuffer> vertexBuffer, Shared<IndexBuffer> indexBuffer);
+    OpenGLVertexArray(const std::vector<Shared<VertexBuffer>>& vertexBuffers, Shared<IndexBuffer> indexBuffer);
     ~OpenGLVertexArray() override;
 
     void bind() const override;
@@ -19,5 +19,6 @@ namespace ff {
     u32 vertexArrayId_{};
     std::vector<Shared<VertexBuffer>> vertexBuffers_;
     Shared<IndexBuffer> indexBuffer_;
+    u32 location_{0};
   };
 }

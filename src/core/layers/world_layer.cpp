@@ -8,19 +8,19 @@
 
 namespace ff {
   bool WorldLayer::onMainEvent(const MainEvent& e) {
-    return App::instance().activeWorld()->onMainEvent(e);
+    return App::instance().activeWorld().onMainEvent(e);
   }
 
   bool WorldLayer::onGameEvent(const GameEvent& e) {
-    auto world{App::instance().activeWorld()};
-    return world->onGameEvent(e) || world->World::onGameEvent(e);
+    auto& world{App::instance().activeWorld()};
+    return world.onGameEvent(e) || world.World::onGameEvent(e);
   }
 
   bool WorldLayer::onWindowEvent(const WindowEvent& e) {
-    return App::instance().activeWorld()->onWindowEvent(e);
+    return App::instance().activeWorld().onWindowEvent(e);
   }
 
   bool WorldLayer::onInputEvent(const InputEvent& e) {
-    return App::instance().activeWorld()->onInputEvent(e);
+    return App::instance().activeWorld().onInputEvent(e);
   }
 }

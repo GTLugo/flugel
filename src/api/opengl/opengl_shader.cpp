@@ -7,15 +7,109 @@
 
 namespace ff {
   OpenGLShader::OpenGLShader(const std::string &shaderFilePath) {
+    std::unordered_map<Shader::Type, std::string> sources;
+    sources[Shader::Vertex] = readFile(shaderFilePath + "_vertex.spv");
+    sources[Shader::Fragment] = readFile(shaderFilePath + "_fragment.spv");
+    compileAndLinkSpirv(sources);
+  }
+
+  OpenGLShader::OpenGLShader(const std::string &shaderFilePath, bool glsl) {
     auto sources = parseFile(shaderFilePath);
-    init(sources[Shader::Vertex], sources[Shader::Fragment]);
+    compileAndLinkGlsl(sources[Shader::Vertex], sources[Shader::Fragment]);
   }
 
-  OpenGLShader::OpenGLShader(const std::string& vertSrc, const std::string& fragSrc) {
-    init(vertSrc, fragSrc);
+  u32 OpenGLShader::compileSpirv(const std::string& src, Shader::Type shaderType) {
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    i32 glShaderType;
+    switch (shaderType) {
+      case Shader::Vertex: {
+        glShaderType = GL_VERTEX_SHADER;
+        break;
+      }
+      case Shader::Fragment: {
+        glShaderType = GL_FRAGMENT_SHADER;
+        break;
+      }
+      default: { FF_ASSERT_E(false, "Unsupported/unknown shader type!"); }
+    };
+
+    // Create an empty shader handle
+    u32 shader{gl->CreateShader(glShaderType)};
+    gl->ShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V, src.c_str(), static_cast<i32>(src.size()));
+    gl->SpecializeShader(shader, "main", 0, nullptr, nullptr);
+
+    i32 isCompiled{0};
+    gl->GetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+    if(!isCompiled) {
+      i32 maxLength{1};
+      //gl->GetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+      // The maxLength includes the NULL character
+      std::vector<char> infoLog(maxLength);
+      gl->GetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+
+      // We don't need the shader anymore.
+      gl->DeleteShader(shader);
+
+      // Use the infoLog as you see fit.
+      Log::error_e("SHADER ERROR | {}", infoLog.data());
+      FF_ASSERT_E(false, "Failed to compile " + names[shaderType] + " shader!");
+
+      // In this simple program, we'll just leave
+      return -1;
+    }
+
+    return shader;
   }
 
-  void OpenGLShader::init(const std::string& vertSrc, const std::string& fragSrc) {
+  void OpenGLShader::compileAndLinkSpirv(const std::unordered_map<Shader::Type, std::string>& sources) {
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    u32 vert{compileSpirv(sources.at(Shader::Vertex), Shader::Vertex)};
+    u32 frag{compileSpirv(sources.at(Shader::Fragment), Shader::Fragment)};
+
+    // Vertex and fragment shaders are successfully compiled.
+    // Now time to link them together into a program.
+    // Get a program object.
+    shaderId_ = gl->CreateProgram();
+
+    // Attach our shaders to our program
+    gl->AttachShader(shaderId_, vert);
+    gl->AttachShader(shaderId_, frag);
+
+    // Link our program
+    gl->LinkProgram(shaderId_);
+
+    // Note the different functions here: glGetProgram* instead of glGetShader*.
+    i32 isLinked{0};
+    gl->GetProgramiv(shaderId_, GL_LINK_STATUS, (int *)&isLinked);
+    if (!isLinked) {
+      i32 maxLength{1};
+      gl->GetProgramiv(shaderId_, GL_INFO_LOG_LENGTH, &maxLength);
+
+      // The maxLength includes the NULL character
+      std::vector<char> infoLog(maxLength);
+      gl->GetProgramInfoLog(shaderId_, maxLength, &maxLength, &infoLog[0]);
+
+      // We don't need the program anymore.
+      gl->DeleteProgram(shaderId_);
+      // Don't leak shaders either.
+      gl->DeleteShader(vert);
+      gl->DeleteShader(frag);
+
+      // Use the infoLog as you see fit.
+      Log::debug_e("SHADER ERROR | {}", infoLog.data());
+      FF_ASSERT_E(false, "Failed to link shaders!");
+
+      // In this simple program, we'll just leave
+      return;
+    }
+
+    // Always detach shaders after a successful link.
+    gl->DetachShader(shaderId_, vert);
+    gl->DetachShader(shaderId_, frag);
+  }
+
+  void OpenGLShader::compileAndLinkGlsl(const std::string& vertSrc, const std::string& fragSrc) {
     auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
 
     // Create an empty vertex shader handle
@@ -143,7 +237,11 @@ namespace ff {
   void OpenGLShader::pushMat4(const mat4& matrix, const std::string& name) const {
     auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
     gl->UseProgram(shaderId_);
-    gl->UniformMatrix4fv(gl->GetUniformLocation(shaderId_, name.c_str()), 1, false, glm::value_ptr(matrix));
+
+    auto location{gl->GetUniformLocation(shaderId_, name.c_str())};
+    FF_ASSERT_E(location >= 0, "Invalid uniform location!");
+//    FF_ASSERT_E(location != GL_INVALID_INDEX, "Invalid uniform location!");
+    gl->UniformMatrix4fv(location, 1, false, glm::value_ptr(matrix));
     gl->UseProgram(0);
   }
 

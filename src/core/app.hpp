@@ -21,7 +21,7 @@ namespace ff {
 
     Window& window() { return *window_; }
 
-    World* activeWorld() { return activeWorld_; }
+    World& activeWorld() { return *activeWorld_; }
     void setActiveWorld(const std::string& name) { activeWorld_ = worlds_[name].get(); }
     void setActiveWorld(const Shared<World>& world) { activeWorld_ = worlds_[world->name()].get(); }
 

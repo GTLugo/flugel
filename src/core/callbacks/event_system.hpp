@@ -21,7 +21,7 @@ namespace ff {
   using GameEvent = std::variant<std::monostate, GameAwakeEvent, GameStartEvent, GameTickEvent, GameUpdateEvent,
       GameBeginFrameEvent, GameDrawEvent, GameImGuiEvent, GameEndFrameEvent, GameStopEvent>;
   using WindowEvent = std::variant<std::monostate, WindowCloseEvent, WindowResizeEvent, WindowMovedEvent, WindowFocusEvent>;
-  using InputEvent = std::variant<std::monostate, InputKeyEvent, InputMouseEvent, InputCursorEvent, InputScrollEvent>;
+  using InputEvent = std::variant<std::monostate, InputKeyEvent, InputModEvent, InputMouseEvent, InputCursorEvent, InputScrollEvent>;
 
   using Event = std::variant<std::monostate, MainEvent, GameEvent, WindowEvent, InputEvent>;
 
@@ -41,13 +41,6 @@ namespace ff {
       instance_->eventCallback_(e);
     }
 
-    template<class E, class... Args>
-    static auto visit(E event, Args... args) {
-      return std::visit(EventVisitor{
-          ((args, ...))
-      }, event);
-    }
-
     EventManager(const EventManager& other) = delete;
     EventManager& operator=(const EventManager& other) = delete;
   private:
@@ -60,3 +53,4 @@ namespace ff {
   };
 }
 
+#define FF_EVENT_HANDLERS(event, ...) std::visit(ff::EventVisitor{__VA_ARGS__}, event)

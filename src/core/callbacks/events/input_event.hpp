@@ -60,6 +60,24 @@ namespace ff {
     const Modifier::BitCodes mods_;
   };
 
+  class InputModEvent : public InputEventBase {
+  public:
+    InputModEvent(Modifier::BitCodes mods):
+        InputEventBase{Action::Keyboard}, mods_{mods} {}
+
+    /// TODO: Move button state to input enum. Add Held state for key
+    [[nodiscard]] Modifier::BitCodes mods() const { return mods_; }
+
+    template<Modifier::Code M>
+    [[nodiscard]] bool test(Key::State state) const { return (state == Key::Released) ? !(mods_ & M) : mods_ & M; }
+
+    [[nodiscard]] std::string toString() const override {
+      return InputEventBase::toString() + " (" + std::to_string(mods_) + ")";
+    }
+  protected:
+    const Modifier::BitCodes mods_;
+  };
+
   class InputMouseEvent : public InputEventBase {
   public:
     InputMouseEvent(Mouse::State buttonState, Mouse::Code button, Modifier::BitCodes mods)

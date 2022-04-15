@@ -59,13 +59,13 @@ namespace ff {
         #if defined(FLUGEL_USE_OPENGL)
         return makeShared<OpenGLFrameBuffer>(textureBuffer);
         #else
-        FGE_ASSERT_ENG(false, "OpenGL not supported!");
+        FF_ASSERT_E(false, "OpenGL not supported!");
           return nullptr;
         #endif
       }
       case Renderer::API::Vulkan: {
         #if defined(FLUGEL_USE_VULKAN)
-        FGE_ASSERT_ENG(false, "Vulkan not implemented!");
+        FF_ASSERT_E(false, "Vulkan not implemented!");
           return nullptr;
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");

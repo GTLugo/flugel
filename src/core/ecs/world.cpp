@@ -16,7 +16,7 @@ namespace ff {
           ecs().registerSystem<CameraSystem>();
           ecs().registerSystem<RenderSystem>();
 
-          return true;
+          return false;
         },
         [=](const GameStartEvent&) {
           ff::Log::debug_e("master_camera: {}", masterCamera_.id());
@@ -24,22 +24,22 @@ namespace ff {
               .add<ff::Transform>()
               .add<ff::Camera>(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
 
-          return true;
+          return false;
         },
         [=](const GameUpdateEvent&) {
           ecs().executeSystem<CameraSystem>();
 
-          return true;
+          return false;
         },
         [=](const GameDrawEvent&) {
           ecs().executeSystem<RenderSystem>();
 
-          return true;
+          return false;
         },
         [=](const GameStopEvent&) {
           masterCamera_.kill();
 
-          return true;
+          return false;
         },
         [](const auto& event) { return false; }
     }, e);

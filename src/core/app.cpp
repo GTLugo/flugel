@@ -18,7 +18,6 @@ namespace ff {
     // These are pointless, but just show how to use the job system
     std::vector<Shared<Job>> jobs{makeShared<TimeJob>(128.f), makeShared<EventSystemJob>(FF_LAMBDA(eventHandler))};
     JobManager::submit(jobs);
-
     for (auto&& job: jobs) {
       job->wait();
     }
@@ -105,9 +104,7 @@ namespace ff {
 
   void App::eventHandler(const Event& e) {
     for (auto& layer: layerStack_ | std::views::reverse) {
-      // TODO: Fix event handling
-      bool handled{layer->onEvent(e)};
-      // e.handled_ = handled;
+      if(layer->onEvent(e)) break;
     }
   }
 }

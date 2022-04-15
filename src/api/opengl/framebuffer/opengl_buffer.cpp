@@ -8,7 +8,7 @@ namespace ff {
 
   // VERTEX BUFFER --------------------------- //
 
-  OpenGLVertexBuffer::OpenGLVertexBuffer(float* verts, u32 bitSize) {
+  OpenGLVertexBuffer::OpenGLVertexBuffer(const void* verts, u32 bitSize) {
     auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
     gl->CreateBuffers(1, &bufferId_);
     gl->BindBuffer(GL_ARRAY_BUFFER, bufferId_);
@@ -31,9 +31,16 @@ namespace ff {
     gl->BindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
+  void OpenGLVertexBuffer::setLayout(const VertexBufferLayout& layout) {
+    auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
+    gl->BindBuffer(GL_ARRAY_BUFFER, bufferId_);
+    layout_ = layout;
+    gl->BindBuffer(GL_ARRAY_BUFFER, 0);
+  }
+
   // INDEX BUFFER --------------------------- //
 
-  OpenGLIndexBuffer::OpenGLIndexBuffer(u32* indices, u32 count)
+  OpenGLIndexBuffer::OpenGLIndexBuffer(const u32* indices, u32 count)
     : count_{count} {
     auto gl{static_cast<GladGLContext*>(App::instance().window().context().nativeContext())};
     gl->CreateBuffers(1, &bufferId_);

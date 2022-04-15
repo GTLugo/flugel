@@ -207,9 +207,23 @@ namespace ff {
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
 
-    static Shared<VertexBuffer> create(float* vertices, u32 bitSize);
-    static Shared<VertexBuffer> create(std::vector<float>& vertices);
-    static Shared<VertexBuffer> create(const std::initializer_list<float>& vertices);
+    static Shared<VertexBuffer> create(const void* vertices, u32 bitSize);
+    template<class T>
+    static Shared<VertexBuffer> create(const std::vector<T>& vertices) {
+      return create(vertices.data(), static_cast<u32>(vertices.size() * sizeof(T)));
+    }
+
+    static Shared<VertexBuffer> create(const void* vertices, u32 bitSize, const VertexBufferLayout& layout) {
+      auto buffer{create(vertices, bitSize)};
+      buffer->setLayout(layout);
+      return std::move(buffer);
+    }
+    template<class T>
+    static Shared<VertexBuffer> create(const std::vector<T>& vertices, const VertexBufferLayout& layout) {
+      auto buffer{create(vertices.data(), static_cast<u32>(vertices.size() * sizeof(T)))};
+      buffer->setLayout(layout);
+      return std::move(buffer);
+    }
   };
 
   class IndexBuffer {
@@ -221,8 +235,7 @@ namespace ff {
 
     [[nodiscard]] virtual u32 count() const = 0;
 
-    static Shared<IndexBuffer> create(u32* indices, u32 count);
-    static Shared<IndexBuffer> create(std::vector<u32>& indices);
-    static Shared<IndexBuffer> create(const std::initializer_list<u32>& indices);
+    static Shared<IndexBuffer> create(const u32* indices, u32 count);
+    static Shared<IndexBuffer> create(const std::vector<u32>& indices);
   };
 }

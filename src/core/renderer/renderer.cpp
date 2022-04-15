@@ -9,6 +9,9 @@
 #if defined(FLUGEL_USE_OPENGL)
   #include "api/opengl/opengl_render_dispatcher.hpp"
 #endif
+#if defined(FLUGEL_USE_VULKAN)
+  #include "api/vulkan/vulkan_render_dispatcher.hpp"
+#endif
 
 namespace ff {
   void Renderer::setApi(Renderer::API api) {
@@ -31,7 +34,7 @@ namespace ff {
       case Renderer::API::Vulkan: {
         Log::info_e("Selected Rendering API: Vulkan");
         #if defined(FLUGEL_USE_VULKAN)
-        FF_ASSERT_E(false, "Vulkan not implemented!");
+        renderDispatcher_ = makeUnique<VulkanRenderDispatcher>();
         #else
         FF_ASSERT_E(false, "Vulkan not supported!");
         #endif

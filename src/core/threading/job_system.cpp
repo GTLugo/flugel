@@ -14,6 +14,7 @@ namespace ff {
 
   void JobManager::shutdown() {
     Log::trace_e("Shutting down Job System...");
+    instance_->workers_->wait();
     instance_->workers_->stop();
     delete instance_;
     Log::trace_e("Job System shut down.");

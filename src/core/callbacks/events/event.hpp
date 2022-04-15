@@ -8,6 +8,7 @@ namespace ff {
   public:
     [[nodiscard]] virtual std::string toString() const = 0;
     [[nodiscard]] virtual bool wasHandled() const { return wasHandled_; }
+    virtual void setHandled() const { wasHandled_ = true; }
   protected:
     mutable bool wasHandled_{false};
   };

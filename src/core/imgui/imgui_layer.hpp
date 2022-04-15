@@ -17,7 +17,6 @@ namespace ff {
   private:
     App* app;
 		bool blockInputEvents_{false};
-    bool blockAppEvents_{false};
     bool showStats_{false};
     bool vsyncEnabled_{false};
     bool enforceAspectRatio_{false};

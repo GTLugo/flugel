@@ -32,11 +32,8 @@ namespace ff {
           vsyncEnabled_ = app->window().isVSync();
           IMGUI_CHECKVERSION();
           ImGui::CreateContext();
-          ImGuiIO& io = ImGui::GetIO();
-          io.ConfigFlags |= ImGuiBackendFlags_HasMouseCursors;
-          io.ConfigFlags |= ImGuiBackendFlags_HasSetMousePos;
+          ImGuiIO& io = ImGui::GetIO(); (void)io;
           io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-          //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
           ImGui::StyleColorsDark();
           setDarkThemeColors();
@@ -46,7 +43,7 @@ namespace ff {
           return false;
         },
         [=](const GameBeginFrameEvent&) {
-          ImGuiIO& io{ImGui::GetIO()};
+          ImGuiIO& io{ImGui::GetIO()}; (void)io;
           io.DisplaySize = ImVec2(static_cast<float>(app->window().dims().x), static_cast<float>(app->window().dims().y));
           io.DeltaTime = static_cast<float>(Time::delta<Seconds>());
 
@@ -54,7 +51,7 @@ namespace ff {
           return false;
         },
         [=](const GameImGuiEvent&) {
-          ImGuiIO& io{ImGui::GetIO()};
+          ImGuiIO& io{ImGui::GetIO()}; (void)io;
           ImGuiViewport* viewport = ImGui::GetMainViewport();
           ImGui::SetNextWindowPos(viewport->WorkPos);
           ImGui::SetNextWindowSize(viewport->WorkSize);
@@ -132,7 +129,7 @@ namespace ff {
           return false;
         },
         [](const GameEndFrameEvent&) {
-          ImGuiIO& io{ImGui::GetIO()};
+          ImGuiIO& io{ImGui::GetIO()}; (void)io;
           ImGui::Render();
           renderDrawData();
           if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
@@ -164,14 +161,14 @@ namespace ff {
         }
 
         if (blockInputEvents_) {
-          ImGuiIO& io = ImGui::GetIO();
+          ImGuiIO& io = ImGui::GetIO(); (void)io;
           return io.WantCaptureKeyboard;
         }
         return false;
       },
       [=](const InputMouseEvent& event) {
         if (blockInputEvents_) {
-          ImGuiIO& io = ImGui::GetIO();
+          ImGuiIO& io = ImGui::GetIO(); (void)io;
           return io.WantCaptureMouse;
         }
         return false;
